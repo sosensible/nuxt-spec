@@ -92,7 +92,7 @@ Developers and stakeholders need to validate that both layout systems function c
 - **NFR-001**: Frontend pages MUST support SSR for SEO optimization and initial page load performance
 - **NFR-002**: Admin pages MUST support CSR for interactive dashboard functionality and dynamic updates
 - **NFR-003**: Layout components MUST be reusable within their respective contexts (frontend or admin)
-- **NFR-004**: Performance MUST meet <3s FCP for frontend pages, <1s navigation between admin pages
+- **NFR-004**: Performance MUST meet <3s FCP for frontend pages, page-to-page navigation response time <1s between admin pages
 - **NFR-005**: SEO MUST include proper meta tags and structured data for frontend pages only
 - **NFR-006**: Admin section MUST be accessible without authentication for initial layout validation and testing purposes
 - **NFR-007**: Both layouts MUST support responsive design with standard breakpoints: mobile (<768px), tablet (768-1024px), desktop (>1024px)

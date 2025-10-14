@@ -30,6 +30,7 @@
 - [ ] T003 [P] Setup Pinia state management configuration in `nuxt.config.ts`
 - [ ] T004 [P] Create base CSS structure in `app/assets/css/main.css` with design system foundation
 - [ ] T005 [P] Configure TypeScript strict mode and ESLint rules for Nuxt 4 project
+- [ ] T006 [P] Configure @nuxt/image and @nuxt/scripts modules in `nuxt.config.ts` for optimized asset handling
 
 ---
 
@@ -39,15 +40,15 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T006 Create shared TypeScript type definitions in `types/layout.ts` for layout system contracts
-- [ ] T007 [P] Create admin-specific TypeScript type definitions in `types/admin.ts` for admin layout features
-- [ ] T008 Create layout Pinia store in `app/stores/layout.ts` for sidebar state and layout context management
-- [ ] T009 Create navigation Pinia store in `app/stores/navigation.ts` for navigation state and route tracking
-- [ ] T010 [P] Create useLayoutState composable in `app/composables/useLayoutState.ts` for layout state management
-- [ ] T011 [P] Create useNavigation composable in `app/composables/useNavigation.ts` for navigation state management
-- [ ] T012 [P] Create shared design system styles in `app/assets/css/main.css` with CSS variables and base components
-- [ ] T013 [P] Create frontend-specific styles in `app/assets/css/frontend.css` for frontend layout variants
-- [ ] T014 [P] Create admin-specific styles in `app/assets/css/admin.css` for admin layout variants and sidebar behavior
+- [ ] T007 Create shared TypeScript type definitions in `types/layout.ts` for layout system contracts
+- [ ] T008 [P] Create admin-specific TypeScript type definitions in `types/admin.ts` for admin layout features
+- [ ] T009 Create layout Pinia store in `app/stores/layout.ts` for sidebar state and layout context management
+- [ ] T010 Create navigation Pinia store in `app/stores/navigation.ts` for navigation state and route tracking
+- [ ] T011 [P] Create useLayoutState composable in `app/composables/useLayoutState.ts` for layout state management
+- [ ] T012 [P] Create useNavigation composable in `app/composables/useNavigation.ts` for navigation state management
+- [ ] T013 [P] Create shared design system styles in `app/assets/css/main.css` with CSS variables and base components
+- [ ] T014 [P] Create frontend-specific styles in `app/assets/css/frontend.css` for frontend layout variants
+- [ ] T015 [P] Create admin-specific styles in `app/assets/css/admin.css` for admin layout variants and sidebar behavior
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -61,14 +62,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T015 [P] [US1] Create AppHeader component in `app/components/layout/AppHeader.vue` with frontend/admin context adaptation
-- [ ] T016 [P] [US1] Create AppFooter component in `app/components/layout/AppFooter.vue` with site links and branding
-- [ ] T017 [US1] Create default frontend layout in `app/layouts/default.vue` integrating header, footer, and SSR configuration
-- [ ] T018 [P] [US1] Create homepage in `app/pages/index.vue` using default layout with frontend content and SEO meta tags
-- [ ] T019 [P] [US1] Create info page in `app/pages/info.vue` using default layout with consistent navigation and branding
-- [ ] T020 [US1] Configure route rules in `nuxt.config.ts` for SSR rendering mode on frontend pages
-- [ ] T021 [US1] Integrate layout store and navigation store with frontend layout for active navigation states
-- [ ] T022 [US1] Implement responsive navigation behavior in AppHeader component with mobile breakpoint handling
+- [ ] T016 [P] [US1] Create AppHeader component in `app/components/layout/AppHeader.vue` with frontend/admin context adaptation
+- [ ] T017 [P] [US1] Create AppFooter component in `app/components/layout/AppFooter.vue` with site links and branding
+- [ ] T018 [US1] Create default frontend layout in `app/layouts/default.vue` integrating header, footer, and SSR configuration
+- [ ] T019 [P] [US1] Create homepage in `app/pages/index.vue` using default layout with frontend content and SEO meta tags
+- [ ] T020 [P] [US1] Create info page in `app/pages/info.vue` using default layout with consistent navigation and branding
+- [ ] T021 [P] [US1] Add comprehensive SEO meta tags and structured data to frontend pages for search optimization
+- [ ] T022 [US1] Configure route rules in `nuxt.config.ts` for SSR rendering mode on frontend pages
+- [ ] T023 [US1] Integrate layout store and navigation store with frontend layout for active navigation states
+- [ ] T024 [US1] Implement responsive navigation behavior in AppHeader component with mobile breakpoint handling
 
 **Checkpoint**: At this point, User Story 1 should be fully functional - frontend layout with homepage/info page navigation
 
@@ -104,15 +106,16 @@
 
 ### Implementation for User Story 3
 
-- [ ] T032 [P] [US3] Add layout conflict prevention logic in layout components to ensure proper context isolation
-- [ ] T033 [P] [US3] Implement layout validation utilities in `app/composables/useLayoutValidation.ts` for cross-layout testing
-- [ ] T034 [US3] Add comprehensive responsive testing across all defined breakpoints (mobile <768px, tablet 768-1024px, desktop >1024px)
-- [ ] T035 [P] [US3] Create layout switching validation to ensure no conflicts when navigating between frontend and admin sections
-- [ ] T036 [P] [US3] Add browser compatibility testing for layout behavior across different browsers
-- [ ] T037 [US3] Implement graceful degradation for JavaScript-disabled scenarios in both layouts
-- [ ] T038 [US3] Add performance validation to ensure frontend SSR <3s FCP and admin CSR <1s navigation benchmarks
-- [ ] T039 [US3] Create layout inheritance testing for new page addition scenarios
-- [ ] T040 [US3] Validate design system consistency across both layouts with shared components and layout-specific variants
+- [ ] T033 [P] [US3] Add layout conflict prevention logic in layout components to ensure proper context isolation
+- [ ] T036 [P] [US3] Implement layout validation utilities in `app/composables/useLayoutValidation.ts` for cross-layout testing
+- [ ] T037 [P] [US3] Create layout conflict detection middleware in `app/middleware/layout-guard.ts` to prevent style bleeding between contexts
+- [ ] T038 [US3] Add comprehensive responsive testing across all defined breakpoints (mobile <768px, tablet 768-1024px, desktop >1024px)
+- [ ] T039 [P] [US3] Create layout switching validation to ensure no conflicts when navigating between frontend and admin sections
+- [ ] T040 [P] [US3] Add browser compatibility testing for layout behavior across different browsers
+- [ ] T041 [US3] Implement graceful degradation for JavaScript-disabled scenarios in both layouts
+- [ ] T042 [US3] Add performance validation to ensure frontend SSR <3s FCP and admin CSR <1s navigation benchmarks
+- [ ] T043 [US3] Create layout inheritance testing for new page addition scenarios
+- [ ] T044 [US3] Validate design system consistency across both layouts with shared components and layout-specific variants
 
 **Checkpoint**: All user stories should now be independently functional with comprehensive validation coverage
 
@@ -122,15 +125,15 @@
 
 **Purpose**: Improvements that affect multiple user stories and final system optimization
 
-- [ ] T041 [P] Add comprehensive error handling for layout component failures and fallback layouts
-- [ ] T042 [P] Optimize bundle sizes for layout components to meet <100kb total layout system target
-- [ ] T043 [P] Add accessibility (a11y) enhancements to navigation components with keyboard navigation support
-- [ ] T044 Performance optimization for layout rendering and sidebar animations (<200ms animation duration)
-- [ ] T045 [P] Add SEO optimization for frontend pages with proper meta tags and structured data
-- [ ] T046 [P] Create layout documentation in `docs/layouts.md` for future development and maintenance
-- [ ] T047 [P] Add Lighthouse performance auditing integration for frontend layout pages (>90 score target)
-- [ ] T048 Code cleanup and refactoring across all layout components for maintainability
-- [ ] T049 Run comprehensive validation using quickstart.md scenarios and acceptance criteria
+- [ ] T045 [P] Add comprehensive error handling for layout component failures and fallback layouts
+- [ ] T046 [P] Optimize bundle sizes for layout components to meet <100kb total layout system target
+- [ ] T047 [P] Add accessibility (a11y) enhancements to navigation components with keyboard navigation support
+- [ ] T048 Performance optimization for layout rendering and sidebar animations (<200ms animation duration)
+- [ ] T049 [P] Add SEO optimization for frontend pages with proper meta tags and structured data
+- [ ] T050 [P] Create layout documentation in `docs/layouts.md` for future development and maintenance
+- [ ] T051 [P] Add Lighthouse performance auditing integration for frontend layout pages (>90 score target)
+- [ ] T052 Code cleanup and refactoring across all layout components for maintainability
+- [ ] T053 Run comprehensive validation using quickstart.md scenarios and acceptance criteria
 
 ---
 
