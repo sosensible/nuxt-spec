@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "layout based - We want to build a layout with a admin section and with a front end section that includes basic home page, info page site so we can validate the layout. The layout needs to have a default layout for the front end and a secondary layout for the back end."
 
+## Clarifications
+
+### Session 2025-10-14
+
+- Q: Admin Section URL Structure → A: Dedicated subdirectory (/admin/\*)
+- Q: Visual Layout Components → A: Header/Footer/Sidebar components (admin has sidebar, frontend has footer)
+- Q: Layout Responsive Breakpoints → A: Standard web breakpoints (mobile: <768px, tablet: 768-1024px, desktop: >1024px)
+- Q: Admin Sidebar Navigation Style → A: Collapsible sidebar with icons (can expand/collapse, shows icons when collapsed)
+- Q: Layout Theme/Styling Approach → A: Shared design system with layout-specific variants (common colors/fonts, different layouts)
+
 ## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Frontend Visitor Navigation (Priority: P1)
@@ -73,6 +83,9 @@ Developers and stakeholders need to validate that both layout systems function c
 - **FR-005**: Both layouts MUST support consistent branding and navigation within their respective contexts
 - **FR-006**: System MUST allow independent styling and component structure for each layout type
 - **FR-007**: Navigation elements MUST be contextually appropriate for each layout (public navigation vs admin navigation)
+- **FR-008**: Admin section MUST be accessible via dedicated subdirectory URLs (e.g., /admin/\*, /admin/dashboard, /admin/settings)
+- **FR-009**: Admin layout MUST include a collapsible sidebar navigation that displays icons when collapsed and full labels when expanded
+- **FR-010**: Both layouts MUST use a shared design system with common colors, fonts, and base components, while allowing layout-specific styling variants
 
 ### Nuxt-Specific Requirements
 
@@ -82,11 +95,14 @@ Developers and stakeholders need to validate that both layout systems function c
 - **NFR-004**: Performance MUST meet <3s FCP for frontend pages, <1s navigation between admin pages
 - **NFR-005**: SEO MUST include proper meta tags and structured data for frontend pages only
 - **NFR-006**: Admin section MUST be accessible without authentication for initial layout validation and testing purposes
+- **NFR-007**: Both layouts MUST support responsive design with standard breakpoints: mobile (<768px), tablet (768-1024px), desktop (>1024px)
 
 ### Key Entities
 
 - **Frontend Layout**: Default layout structure for public-facing pages including header, navigation, main content area, and footer
-- **Admin Layout**: Specialized layout for administrative interface with admin-specific navigation, sidebar, and content management areas
+- **Admin Layout**: Specialized layout for administrative interface with header, sidebar navigation, and content management areas (no footer)
+- **Shared Header Component**: Reusable header component that adapts styling and navigation based on layout context
+- **Design System**: Shared styling foundation including colors, typography, and base components with layout-specific variants
 - **Page Templates**: Reusable page structures that inherit from their respective layouts
 - **Navigation Context**: Context-aware navigation systems that adapt to frontend vs admin environments
 
