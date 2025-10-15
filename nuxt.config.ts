@@ -1,31 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// Phase 1.1: Minimal Working App - Testing with port 3001
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/eslint',
-    '@nuxt/ui',
-    '@nuxt/image',
-    '@nuxt/scripts',
-    '@nuxt/test-utils'
+    '@nuxt/ui'
   ],
 
-  devtools: {
-    enabled: false
+  devServer: {
+    port: 3001
   },
 
-  css: ['~/assets/css/main.css'],
-
-  routeRules: {
-    '/': { prerender: true }
-  },
-
-  compatibilityDate: '2025-01-15',
-
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
-    }
-  }
+  compatibilityDate: '2025-01-15'
 })
