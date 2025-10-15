@@ -7,25 +7,27 @@
       This is a test page.
     </p>
 
-    <!-- Phase 2.4: Testing Pinia stores -->
+    <!-- Phase 3: Testing Composables -->
     <div class="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-      <h2 class="text-2xl font-semibold mb-4">Store Test</h2>
+      <h2 class="text-2xl font-semibold mb-4">
+        Composable Test
+      </h2>
 
       <div class="space-y-2">
-        <p><strong>Layout Type:</strong> {{ layoutStore.layoutType }}</p>
-        <p><strong>Is Frontend:</strong> {{ layoutStore.isFrontend }}</p>
-        <p><strong>Page Title:</strong> {{ layoutStore.pageTitle || '(not set)' }}</p>
-        <p><strong>Current Path:</strong> {{ navStore.currentPath }}</p>
-        <p><strong>Is Admin Route:</strong> {{ navStore.isAdminRoute }}</p>
+        <p><strong>Layout Type:</strong> {{ layout.layoutType }}</p>
+        <p><strong>Is Frontend:</strong> {{ layout.isFrontend }}</p>
+        <p><strong>Page Title:</strong> {{ layout.pageTitle || '(not set)' }}</p>
+        <p><strong>Current Path:</strong> {{ nav.currentPath }}</p>
+        <p><strong>Is Admin Route:</strong> {{ nav.isAdminRoute }}</p>
       </div>
 
       <div class="mt-4 space-x-2">
-        <button @click="layoutStore.setPageTitle('Test Title', 'Test Description')"
+        <button @click="layout.setPageTitle('Test Title', 'Test Description')"
           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
           Set Page Title
         </button>
-        <button @click="layoutStore.toggleSidebar()" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
-          Toggle Sidebar ({{ layoutStore.sidebarCollapsed ? 'Collapsed' : 'Expanded' }})
+        <button @click="layout.toggleSidebar()" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+          Toggle Sidebar ({{ layout.sidebarCollapsed ? 'Collapsed' : 'Expanded' }})
         </button>
       </div>
     </div>
@@ -33,10 +35,10 @@
 </template>
 
 <script setup lang="ts">
-// Phase 2.4: Test accessing stores from page
-const layoutStore = useLayoutStore()
-const navStore = useNavigationStore()
+// Phase 3: Test composables instead of direct store access
+const layout = useLayoutState()
+const nav = useNavigation()
 
 // Set initial layout type
-layoutStore.setLayoutType('frontend')
+layout.setLayoutType('frontend')
 </script>
