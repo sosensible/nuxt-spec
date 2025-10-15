@@ -11,26 +11,33 @@
         </p>
       </div>
       <NuxtLink to="/admin/users"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors no-underline">
         Manage Users
       </NuxtLink>
     </div>
 
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div v-for="stat in stats" :key="stat.id"
-        class="bg-white rounded-lg border border-gray-200 p-6 hover:shadow-md transition-shadow">
-        <div class="text-3xl mb-2">{{ stat.icon }}</div>
-        <div class="text-2xl font-bold text-gray-900">
-          {{ stat.value }}
+      <UCard v-for="stat in stats" :key="stat.id" class="hover:shadow-md transition-shadow">
+        <div class="flex items-start justify-between">
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-3">
+              <UIcon :name="stat.icon" class="text-3xl text-primary" />
+            </div>
+            <div class="text-2xl font-bold text-gray-900">
+              {{ stat.value }}
+            </div>
+            <div class="text-sm font-medium text-gray-600 mt-1">
+              {{ stat.label }}
+            </div>
+          </div>
         </div>
-        <div class="text-sm font-medium text-gray-600">
-          {{ stat.label }}
+        <div class="text-sm mt-3 flex items-center gap-1" :class="stat.change > 0 ? 'text-green-600' : 'text-red-600'">
+          <UIcon :name="stat.change > 0 ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'"
+            class="text-base" />
+          {{ Math.abs(stat.change) }}% from last month
         </div>
-        <div class="text-sm mt-2" :class="stat.change > 0 ? 'text-green-600' : 'text-red-600'">
-          {{ stat.change > 0 ? '↑' : '↓' }} {{ Math.abs(stat.change) }}% from last month
-        </div>
-      </div>
+      </UCard>
     </div>
 
     <!-- Recent Activity -->
@@ -46,8 +53,8 @@
         </div>
         <div v-else class="space-y-4">
           <div v-for="activity in activities.slice(0, 5)" :key="activity.id" class="flex items-start space-x-3">
-            <div class="flex-shrink-0 text-2xl">
-              {{ activity.icon }}
+            <div class="flex-shrink-0">
+              <UIcon :name="activity.icon" class="text-2xl text-gray-600" />
             </div>
             <div class="flex-1 min-w-0">
               <div class="text-sm font-medium text-gray-900">
@@ -118,28 +125,28 @@ const stats = ref([
     id: 'users',
     label: 'Total Users',
     value: '2,543',
-    icon: '👥',
+    icon: 'i-heroicons-users',
     change: 12.5
   },
   {
     id: 'revenue',
     label: 'Revenue',
     value: '$45,231',
-    icon: '💰',
+    icon: 'i-heroicons-currency-dollar',
     change: 8.2
   },
   {
     id: 'orders',
     label: 'Orders',
     value: '1,423',
-    icon: '🛒',
+    icon: 'i-heroicons-shopping-cart',
     change: -3.1
   },
   {
     id: 'performance',
     label: 'Performance',
     value: '98.5%',
-    icon: '📊',
+    icon: 'i-heroicons-chart-bar',
     change: 2.4
   }
 ])
@@ -149,21 +156,21 @@ const activities = ref([
     id: '1',
     title: 'New user registered',
     description: 'John Doe created an account',
-    icon: '👤',
+    icon: 'i-heroicons-user-circle',
     timestamp: new Date(Date.now() - 30 * 60 * 1000)
   },
   {
     id: '2',
     title: 'System backup completed',
     description: 'Daily backup finished successfully',
-    icon: '💾',
+    icon: 'i-heroicons-server',
     timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000)
   },
   {
     id: '3',
     title: 'Payment processed',
     description: 'Order #1234 payment confirmed',
-    icon: '💳',
+    icon: 'i-heroicons-credit-card',
     timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000)
   }
 ])

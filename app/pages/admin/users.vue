@@ -10,18 +10,18 @@
           Manage user accounts and permissions.
         </p>
       </div>
-      <NuxtLink to="/admin" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors">
+      <UButton to="/admin" variant="soft" color="neutral" icon="i-heroicons-arrow-left">
         Back to Dashboard
-      </NuxtLink>
+      </UButton>
     </div>
 
     <!-- Search and Actions -->
     <div class="flex flex-col sm:flex-row gap-4">
-      <input v-model="searchQuery" type="text" placeholder="Search users..."
-        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-      <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      <UInput v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying-glass" size="lg"
+        class="flex-1" />
+      <UButton variant="solid" color="primary" icon="i-heroicons-plus">
         Add User
-      </button>
+      </UButton>
     </div>
 
     <!-- Users Table -->
@@ -51,7 +51,7 @@
             <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-gray-50">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="text-2xl mr-3">👤</div>
+                  <UIcon name="i-heroicons-user-circle" class="text-3xl text-gray-400 mr-3" />
                   <div>
                     <div class="text-sm font-medium text-gray-900">
                       {{ user.name }}
@@ -63,35 +63,30 @@
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full" :class="{
-                  'bg-red-100 text-red-800': user.role === 'Admin',
-                  'bg-yellow-100 text-yellow-800': user.role === 'Manager',
-                  'bg-gray-100 text-gray-800': user.role === 'User'
-                }">
+                <UBadge :color="user.role === 'Admin' ? 'error' : user.role === 'Editor' ? 'warning' : 'neutral'"
+                  variant="subtle">
                   {{ user.role }}
-                </span>
+                </UBadge>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <div class="w-2 h-2 rounded-full mr-2" :class="{
-                    'bg-green-400': user.isActive,
-                    'bg-gray-400': !user.isActive
-                  }"></div>
-                  <span class="text-sm text-gray-600">
+                  <UBadge :color="user.isActive ? 'success' : 'neutral'" variant="subtle">
                     {{ user.isActive ? 'Active' : 'Inactive' }}
-                  </span>
+                  </UBadge>
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                 {{ formatDate(user.createdAt) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button class="text-blue-600 hover:text-blue-900 mr-3">
-                  Edit
-                </button>
-                <button class="text-red-600 hover:text-red-900">
-                  Delete
-                </button>
+                <div class="flex gap-2">
+                  <UButton variant="ghost" color="primary" size="xs" icon="i-heroicons-pencil">
+                    Edit
+                  </UButton>
+                  <UButton variant="ghost" color="error" size="xs" icon="i-heroicons-trash">
+                    Delete
+                  </UButton>
+                </div>
               </td>
             </tr>
           </tbody>

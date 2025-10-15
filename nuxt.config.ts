@@ -6,6 +6,14 @@ export default defineNuxtConfig({
     '@pinia/nuxt'
   ],
 
+  css: [
+    '~/assets/css/main.css'
+  ],
+
+  experimental: {
+    inlineSSRStyles: false
+  },
+
   devServer: {
     port: 3001
   },
