@@ -152,3 +152,4 @@ The project uses:
 - Stores are accessible via composables
 
 Check out the [Nuxt documentation](https://nuxt.com/docs) and [Nuxt UI documentation](https://ui.nuxt.com) for more information.
+````

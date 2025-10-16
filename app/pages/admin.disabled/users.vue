@@ -12,7 +12,8 @@
       </div>
 
       <div class="admin-users__actions">
-        <UInput v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying-glass" size="sm"
+        <UInput
+v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying-glass" size="sm"
           class="admin-users__search" />
 
         <UButton variant="outline" color="neutral" size="sm" :loading="isExporting" @click="exportUsers">
@@ -44,7 +45,8 @@
         <USelectMenu v-model="sortBy" :options="sortOptions" size="sm" />
       </div>
 
-      <UButton v-if="hasActiveFilters" variant="ghost" size="sm" class="admin-users__clear-filters"
+      <UButton
+v-if="hasActiveFilters" variant="ghost" size="sm" class="admin-users__clear-filters"
         @click="clearFilters">
         <UIcon name="i-heroicons-x-mark" />
         Clear filters
@@ -104,10 +106,12 @@
             </UButton>
           </div>
 
-          <div v-for="user in paginatedUsers" v-else :key="user.id" class="admin-users__table-row"
+          <div
+v-for="user in paginatedUsers" v-else :key="user.id" class="admin-users__table-row"
             :class="{ 'admin-users__table-row--selected': selectedUsers.includes(user.id) }">
             <div class="admin-users__cell admin-users__cell--checkbox">
-              <UCheckbox :model-value="selectedUsers.includes(user.id)"
+              <UCheckbox
+:model-value="selectedUsers.includes(user.id)"
                 @update:model-value="toggleUserSelection(user.id)" />
             </div>
 
@@ -135,7 +139,8 @@
 
             <div class="admin-users__cell admin-users__cell--status">
               <div class="admin-users__status">
-                <div class="admin-users__status-dot" :class="{
+                <div
+class="admin-users__status-dot" :class="{
                   'admin-users__status-dot--active': user.isActive,
                   'admin-users__status-dot--inactive': !user.isActive
                 }" />
@@ -167,7 +172,8 @@
                   Edit
                 </UButton>
 
-                <UButton variant="ghost" size="xs" color="error"
+                <UButton
+variant="ghost" size="xs" color="error"
                   :disabled="user.role === 'Admin' && user.id === currentUserId" @click="deleteUser(user)">
                   Delete
                 </UButton>
@@ -215,13 +221,15 @@
         </UButton>
 
         <div class="admin-users__pagination-pages">
-          <UButton v-for="page in visiblePages" :key="page" :variant="page === currentPage ? 'solid' : 'ghost'"
+          <UButton
+v-for="page in visiblePages" :key="page" :variant="page === currentPage ? 'solid' : 'ghost'"
             size="sm" @click="currentPage = page">
             {{ page }}
           </UButton>
         </div>
 
-        <UButton variant="outline" size="sm" :disabled="currentPage === totalPages"
+        <UButton
+variant="outline" size="sm" :disabled="currentPage === totalPages"
           @click="currentPage = currentPage + 1">
           Next
           <UIcon name="i-heroicons-chevron-right" />

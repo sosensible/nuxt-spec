@@ -22,11 +22,12 @@
       </div>
 
       <div class="mt-4 space-x-2">
-        <button @click="layout.setPageTitle('Test Title', 'Test Description')"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+        <button
+class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          @click="layout.setPageTitle('Test Title', 'Test Description')">
           Set Page Title
         </button>
-        <button @click="layout.toggleSidebar()" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700">
+        <button class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700" @click="layout.toggleSidebar()">
           Toggle Sidebar ({{ layout.sidebarCollapsed ? 'Collapsed' : 'Expanded' }})
         </button>
       </div>

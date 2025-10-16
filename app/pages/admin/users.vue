@@ -17,7 +17,8 @@
 
     <!-- Search and Actions -->
     <div class="flex flex-col sm:flex-row gap-4">
-      <UInput v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying-glass" size="lg"
+      <UInput
+v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying-glass" size="lg"
         class="flex-1" />
       <UButton variant="solid" color="primary" icon="i-heroicons-plus">
         Add User
@@ -63,7 +64,8 @@
                 </div>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                <UBadge :color="user.role === 'Admin' ? 'error' : user.role === 'Editor' ? 'warning' : 'neutral'"
+                <UBadge
+:color="user.role === 'Admin' ? 'error' : user.role === 'Editor' ? 'warning' : 'neutral'"
                   variant="subtle">
                   {{ user.role }}
                 </UBadge>

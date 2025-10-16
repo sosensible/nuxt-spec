@@ -38,9 +38,11 @@
             {{ stat.label }}
           </div>
           <div class="admin-dashboard__stat-change">
-            <UIcon :name="stat.change > 0 ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'"
+            <UIcon
+:name="stat.change > 0 ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'"
               class="admin-dashboard__stat-change-icon" :class="stat.change > 0 ? 'text-green-500' : 'text-red-500'" />
-            <span class="admin-dashboard__stat-change-text"
+            <span
+class="admin-dashboard__stat-change-text"
               :class="stat.change > 0 ? 'text-green-600' : 'text-red-600'">
               {{ Math.abs(stat.change) }}% from last month
             </span>
@@ -115,7 +117,8 @@
                 </div>
               </div>
               <div class="admin-dashboard__status-item-status">
-                <div class="admin-dashboard__status-item-dot" :class="{
+                <div
+class="admin-dashboard__status-item-dot" :class="{
                   'admin-dashboard__status-item-dot--healthy': service.status === 'healthy',
                   'admin-dashboard__status-item-dot--warning': service.status === 'warning',
                   'admin-dashboard__status-item-dot--error': service.status === 'error'
@@ -139,7 +142,8 @@
 
         <div class="admin-dashboard__card-content">
           <div class="admin-dashboard__quick-actions">
-            <UButton v-for="action in quickActions" :key="action.id" :variant="action.variant" :color="action.color"
+            <UButton
+v-for="action in quickActions" :key="action.id" :variant="action.variant" :color="action.color"
               size="sm" :to="action.to" class="admin-dashboard__quick-action">
               <UIcon :name="action.icon" />
               {{ action.label }}
@@ -197,13 +201,15 @@
                   </div>
                 </div>
                 <div class="admin-dashboard__users-cell">
-                  <UBadge :variant="user.role === 'Admin' ? 'solid' : 'soft'"
+                  <UBadge
+:variant="user.role === 'Admin' ? 'solid' : 'soft'"
                     :color="user.role === 'Admin' ? 'error' : 'neutral'" size="xs">
                     {{ user.role }}
                   </UBadge>
                 </div>
                 <div class="admin-dashboard__users-cell">
-                  <UBadge :variant="user.isActive ? 'solid' : 'soft'" :color="user.isActive ? 'success' : 'neutral'"
+                  <UBadge
+:variant="user.isActive ? 'solid' : 'soft'" :color="user.isActive ? 'success' : 'neutral'"
                     size="xs">
                     {{ user.isActive ? 'Active' : 'Inactive' }}
                   </UBadge>

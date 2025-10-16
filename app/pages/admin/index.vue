@@ -10,7 +10,8 @@
           Welcome back! Here's what's happening with your system.
         </p>
       </div>
-      <NuxtLink to="/admin/users"
+      <NuxtLink
+to="/admin/users"
         class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors no-underline">
         Manage Users
       </NuxtLink>
@@ -33,7 +34,8 @@
           </div>
         </div>
         <div class="text-sm mt-3 flex items-center gap-1" :class="stat.change > 0 ? 'text-green-600' : 'text-red-600'">
-          <UIcon :name="stat.change > 0 ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'"
+          <UIcon
+:name="stat.change > 0 ? 'i-heroicons-arrow-trending-up' : 'i-heroicons-arrow-trending-down'"
             class="text-base" />
           {{ Math.abs(stat.change) }}% from last month
         </div>
@@ -79,7 +81,7 @@
           System Status
         </h2>
         <div class="flex items-center space-x-2">
-          <div class="w-2 h-2 rounded-full bg-green-400"></div>
+          <div class="w-2 h-2 rounded-full bg-green-400"/>
           <span class="text-sm text-gray-600">All systems operational</span>
         </div>
       </div>
@@ -95,11 +97,12 @@
               </div>
             </div>
             <div class="flex items-center space-x-2">
-              <div class="w-2 h-2 rounded-full" :class="{
+              <div
+class="w-2 h-2 rounded-full" :class="{
                 'bg-green-400': service.status === 'healthy',
                 'bg-yellow-400': service.status === 'warning',
                 'bg-red-400': service.status === 'error'
-              }"></div>
+              }"/>
               <span class="text-sm text-gray-600">
                 {{ service.statusText }}
               </span>

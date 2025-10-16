@@ -16,7 +16,8 @@
     <nav class="p-4">
       <ul class="space-y-2 list-none m-0 p-0">
         <li v-for="item in navigation" :key="item.path">
-          <UButton :to="item.path" variant="ghost" color="neutral" block :title="isCollapsed ? item.label : ''"
+          <UButton
+:to="item.path" variant="ghost" color="neutral" block :title="isCollapsed ? item.label : ''"
             class="justify-start">
             <template #leading>
               <UIcon :name="item.icon" class="text-xl" />

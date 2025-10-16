@@ -9,7 +9,8 @@
       <!-- Actions -->
       <div class="flex items-center gap-4">
         <!-- Toggle Button - Using UButton -->
-        <UButton variant="soft" color="neutral" size="sm"
+        <UButton
+variant="soft" color="neutral" size="sm"
           :icon="layout.sidebarCollapsed.value ? 'i-heroicons-chevron-double-right' : 'i-heroicons-chevron-double-left'"
           :aria-label="layout.sidebarCollapsed.value ? 'Expand sidebar' : 'Collapse sidebar'"
           @click="layout.toggleSidebar()">

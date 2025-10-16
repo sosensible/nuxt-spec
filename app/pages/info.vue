@@ -57,7 +57,8 @@
           By the Numbers
         </h2>
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          <div v-for="stat in stats" :key="stat.id"
+          <div
+v-for="stat in stats" :key="stat.id"
             class="text-center p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
             <div class="text-4xl font-bold text-blue-600 mb-2">
               {{ stat.number }}
@@ -71,7 +72,8 @@
 
       <!-- Navigation -->
       <section class="text-center">
-        <NuxtLink to="/"
+        <NuxtLink
+to="/"
           class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
           Back to Home
         </NuxtLink>

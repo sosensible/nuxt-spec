@@ -4,7 +4,8 @@
       <!-- Left Section -->
       <div class="admin-header__left">
         <!-- Mobile Menu Toggle (only visible on mobile) -->
-        <UButton variant="ghost" size="sm" class="admin-header__mobile-toggle"
+        <UButton
+variant="ghost" size="sm" class="admin-header__mobile-toggle"
           :aria-label="sidebarCollapsed ? 'Open sidebar' : 'Close sidebar'" @click="toggleSidebar">
           <UIcon name="i-heroicons-bars-3" class="admin-header__mobile-toggle-icon" />
         </UButton>
@@ -24,7 +25,8 @@
       <div class="admin-header__right">
         <!-- Search -->
         <div v-if="showSearch" class="admin-header__search">
-          <UInput v-model="searchQuery" placeholder="Search..." icon="i-heroicons-magnifying-glass" size="sm"
+          <UInput
+v-model="searchQuery" placeholder="Search..." icon="i-heroicons-magnifying-glass" size="sm"
             class="admin-header__search-input" @keydown.enter="handleSearch" />
         </div>
 
@@ -32,7 +34,8 @@
         <div class="admin-header__actions">
           <!-- Notifications -->
           <div v-if="showNotifications" class="admin-header__notifications">
-            <UButton variant="ghost" size="sm" class="admin-header__notification-button"
+            <UButton
+variant="ghost" size="sm" class="admin-header__notification-button"
               :class="{ 'admin-header__notification-button--has-unread': hasUnreadNotifications }"
               :aria-label="`Notifications ${hasUnreadNotifications ? `(${unreadCount} unread)` : ''}`"
               @click="toggleNotifications">
@@ -61,7 +64,8 @@
                   </p>
                 </div>
 
-                <div v-for="notification in notifications.slice(0, 5)" :key="notification.id"
+                <div
+v-for="notification in notifications.slice(0, 5)" :key="notification.id"
                   class="admin-header__notification-item"
                   :class="{ 'admin-header__notification-item--unread': !notification.isRead }">
                   <div class="admin-header__notification-content">
@@ -88,7 +92,8 @@
 
           <!-- User Menu -->
           <div v-if="showUserMenu" class="admin-header__user-menu">
-            <UButton variant="ghost" size="sm" class="admin-header__user-button" :aria-expanded="showUserDropdown"
+            <UButton
+variant="ghost" size="sm" class="admin-header__user-button" :aria-expanded="showUserDropdown"
               aria-haspopup="menu" @click="toggleUserMenu">
               <div class="admin-header__user-avatar">
                 <UIcon name="i-heroicons-user-circle" class="admin-header__user-avatar-icon" />
@@ -97,7 +102,8 @@
                 <span class="admin-header__user-name">Admin User</span>
                 <span class="admin-header__user-role">Administrator</span>
               </div>
-              <UIcon name="i-heroicons-chevron-down" class="admin-header__user-chevron"
+              <UIcon
+name="i-heroicons-chevron-down" class="admin-header__user-chevron"
                 :class="{ 'admin-header__user-chevron--open': showUserDropdown }" />
             </UButton>
 
@@ -115,13 +121,15 @@
               </div>
 
               <div class="admin-header__user-dropdown-menu">
-                <UButton variant="ghost" size="sm" to="/admin/profile" class="admin-header__user-dropdown-item"
+                <UButton
+variant="ghost" size="sm" to="/admin/profile" class="admin-header__user-dropdown-item"
                   role="menuitem">
                   <UIcon name="i-heroicons-user" />
                   Profile
                 </UButton>
 
-                <UButton variant="ghost" size="sm" to="/admin/settings" class="admin-header__user-dropdown-item"
+                <UButton
+variant="ghost" size="sm" to="/admin/settings" class="admin-header__user-dropdown-item"
                   role="menuitem">
                   <UIcon name="i-heroicons-cog-6-tooth" />
                   Settings
@@ -129,7 +137,8 @@
 
                 <div class="admin-header__user-dropdown-divider" />
 
-                <UButton variant="ghost" size="sm"
+                <UButton
+variant="ghost" size="sm"
                   class="admin-header__user-dropdown-item admin-header__user-dropdown-item--danger" role="menuitem"
                   @click="handleLogout">
                   <UIcon name="i-heroicons-arrow-right-on-rectangle" />
