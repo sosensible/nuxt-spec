@@ -1,17 +1,25 @@
 /**
- * Layout Pinia Store - Phase 2.2: Minimal Version
- * Basic state management for layout without complex initialization
+ * Layout Pinia Store - Phase 8.3: Enhanced with persistence
+ * State management for layout with localStorage persistence
  */
 
 import { defineStore } from 'pinia'
 
+const SIDEBAR_STORAGE_KEY = 'nuxt-layout-sidebar-collapsed'
+
 export const useLayoutStore = defineStore('layout', () => {
+  // Initialize sidebar state from localStorage (client-side only)
+  const savedSidebarState = import.meta.client
+    ? localStorage.getItem(SIDEBAR_STORAGE_KEY)
+    : null
+  const initialSidebarCollapsed = savedSidebarState ? savedSidebarState === 'true' : false
+
   // Simple reactive state
   const layoutType = ref<'frontend' | 'admin'>('frontend')
   const pageTitle = ref<string>('')
   const pageDescription = ref<string | undefined>()
   const isLoading = ref(false)
-  const sidebarCollapsed = ref(false)
+  const sidebarCollapsed = ref(initialSidebarCollapsed)
 
   // Computed
   const isFrontend = computed(() => layoutType.value === 'frontend')
@@ -33,6 +41,18 @@ export const useLayoutStore = defineStore('layout', () => {
 
   function toggleSidebar() {
     sidebarCollapsed.value = !sidebarCollapsed.value
+    // Persist to localStorage (client-side only)
+    if (import.meta.client) {
+      localStorage.setItem(SIDEBAR_STORAGE_KEY, String(sidebarCollapsed.value))
+    }
+  }
+
+  function setSidebarCollapsed(collapsed: boolean) {
+    sidebarCollapsed.value = collapsed
+    // Persist to localStorage (client-side only)
+    if (import.meta.client) {
+      localStorage.setItem(SIDEBAR_STORAGE_KEY, String(collapsed))
+    }
   }
 
   return {
@@ -51,6 +71,7 @@ export const useLayoutStore = defineStore('layout', () => {
     setLayoutType,
     setPageTitle,
     setLoading,
-    toggleSidebar
+    toggleSidebar,
+    setSidebarCollapsed
   }
 })
