@@ -32,14 +32,6 @@ export default defineNuxtConfig({
     '/admin-test': { ssr: false }
   },
 
-  // Ignore disabled folders during build (Phase 8.5)
-  ignore: [
-    '**/*.disabled',
-    '**/*.disabled/**',
-    '**/*.backup',
-    '**/*.backup/**'
-  ],
-
   compatibilityDate: '2025-01-15',
 
   devtools: {

@@ -369,19 +369,23 @@ The current implementation is crashing during startup because:
 **Goal:** Add other Nuxt modules safely
 
 #### Step 7.1: Add @nuxt/eslint
+
 - [x] Add `@nuxt/eslint` module
 - [x] **Verified:** Lint command works
 - [x] Auto-fixed formatting issues
 
 #### Step 7.2: Add @nuxt/image
+
 - [x] Add `@nuxt/image` module
 - [x] **Verified:** No errors
 
 #### Step 7.3: Add @nuxt/scripts
+
 - [x] Add `@nuxt/scripts` module
 - [x] **Verified:** No errors
 
 #### Step 7.4: Configuration
+
 - [x] Removed invalid `inlineSSRStyles` experimental option
 - [x] Fixed unused props variable warnings
 - [x] All modules integrated successfully
@@ -389,6 +393,7 @@ The current implementation is crashing during startup because:
 **Deliverable:** ✅ Full module stack with 5 core modules!
 
 **Modules Integrated:**
+
 1. `@nuxt/ui` - UI component library
 2. `@pinia/nuxt` - State management
 3. `@nuxt/eslint` - Enhanced linting
@@ -414,7 +419,7 @@ The current implementation is crashing during startup because:
 
 - [x] Add routeRules to nuxt.config.ts
 - [x] Configure prerendering for static pages (/, /info)
-- [x] Configure CSR for admin routes (/admin/**)
+- [x] Configure CSR for admin routes (/admin/\*\*)
 - [x] **Verified:** Routes work correctly ✅
 
 #### Step 8.3: Full Store Functionality
