@@ -1,6 +1,9 @@
 # Test Suite Documentation
 
-This project uses **functional/behavioral testing** focused on regression testing without being tied to implementation details.
+This project uses **two complementary testing strategies** to ensure quality:
+
+1. **Functional Tests** (Vitest) - Fast component/unit tests
+2. **E2E Tests** (Playwright) - Real browser automation tests
 
 ## Testing Philosophy
 
@@ -13,6 +16,7 @@ We test **what the application does**, not **how it does it**:
 - Public APIs (stores, composables)
 - State changes that affect users
 - Component visual output
+- Real browser interactions (clicks, navigation, forms)
 
 ### ❌ DON'T TEST:
 
@@ -26,19 +30,27 @@ We test **what the application does**, not **how it does it**:
 
 ```
 tests/
-└── functional/
-    ├── navigation.test.ts    # Page content and routing (4 tests)
-    ├── layouts.test.ts        # Layout rendering (2 tests)
-    ├── components.test.ts     # Component output (5 tests)
-    └── stores.test.ts         # Store behavior (8 tests)
+├── functional/              # Fast unit tests (Vitest + happy-dom)
+│   ├── navigation.test.ts   # Page content (4 tests)
+│   ├── layouts.test.ts      # Layout rendering (2 tests)
+│   ├── components.test.ts   # Component output (5 tests)
+│   └── stores.test.ts       # Store behavior (8 tests)
+└── e2e/                     # Browser automation (Playwright + Chromium)
+    ├── navigation.spec.ts   # Real page navigation (10 tests)
+    ├── interactions.spec.ts # User interactions (10 tests)
+    ├── layouts.spec.ts      # Layout switching (11 tests)
+    └── utils/
+        └── helpers.ts       # Common E2E utilities
 ```
 
-**Total: 19 functional tests**
+**Total: 19 functional tests + 31 E2E tests = 50 tests**
 
 ## Running Tests
 
+### Functional Tests (Fast - seconds)
+
 ```bash
-# Run all tests once (CI mode)
+# Run all functional tests once (CI mode)
 pnpm test
 
 # Watch mode for development
@@ -50,6 +62,82 @@ pnpm test:ui
 # With coverage report
 pnpm test:coverage
 ```
+
+### E2E Tests (Browser Automation - minutes)
+
+```bash
+# Run all E2E tests (headless Chromium)
+pnpm e2e
+
+# Interactive UI with time travel debugging
+pnpm e2e:ui
+
+# Run with visible browser window
+pnpm e2e:headed
+
+# Step-by-step debug mode
+pnpm e2e:debug
+```
+
+## Test Types Explained
+
+### Functional Tests (Vitest)
+
+**Purpose:** Fast feedback during development  
+**Speed:** ~8 seconds for all 19 tests  
+**Environment:** Lightweight DOM simulation (happy-dom)  
+**Use For:**
+
+- Component rendering verification
+- Store behavior testing
+- Quick feedback loop during coding
+- CI/CD validation
+
+**Example:**
+
+```typescript
+it("should display home page content", async () => {
+  const component = await mountSuspended(IndexPage);
+  expect(component.html()).toContain("Hello World");
+});
+```
+
+### E2E Tests (Playwright)
+
+**Purpose:** Verify real user workflows  
+**Speed:** ~30-60 seconds for all 31 tests  
+**Environment:** Real Chromium browser  
+**Use For:**
+
+- Full page navigation flows
+- User interaction testing (clicks, typing)
+- Layout switching verification
+- Visual regression testing
+- Cross-browser compatibility
+
+**Example:**
+
+```typescript
+test("should navigate to info page via header link", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("link", { name: "Info" }).click();
+  await expect(page).toHaveURL("/info");
+  await expect(page.getByText("About Our Platform")).toBeVisible();
+});
+```
+
+## When to Use Each Test Type
+
+| Scenario                    | Functional | E2E |
+| --------------------------- | ---------- | --- |
+| Component renders correctly | ✅         | ❌  |
+| Store state changes         | ✅         | ❌  |
+| Quick feedback during dev   | ✅         | ❌  |
+| Full page navigation        | ❌         | ✅  |
+| Button clicks work          | ❌         | ✅  |
+| Layout switching            | ❌         | ✅  |
+| Real browser behavior       | ❌         | ✅  |
+| CI/CD (both run)            | ✅         | ✅  |
 
 ## What We Test
 
@@ -190,14 +278,16 @@ Current coverage:
 
 ## Framework Details
 
-- **Test Runner:** Vitest 3.x
-- **Test Utils:** @nuxt/test-utils
+- **Functional Test Runner:** Vitest 3.x
+- **Functional Test Utils:** @nuxt/test-utils
 - **DOM Environment:** happy-dom
 - **Component Testing:** @vue/test-utils
-- **E2E Capability:** Playwright (available but not currently used)
+- **E2E Test Runner:** Playwright 1.56.x
+- **E2E Browser:** Chromium (Chrome)
 
 ---
 
-**Last Updated:** January 2025  
-**Tests Passing:** 19/19 ✅  
-**Maintainers:** Development Team
+**Last Updated:** October 2025  
+**Functional Tests:** 19/19 ✅  
+**E2E Tests:** 31/31 ✅  
+**Total:** 50 tests
