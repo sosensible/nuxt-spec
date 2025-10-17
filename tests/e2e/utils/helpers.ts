@@ -25,16 +25,18 @@ export async function navigateAndWait(page: Page, path: string) {
 
 /**
  * Check if an element contains specific text
+ * Uses first() to handle cases where text appears multiple times
  */
 export async function expectTextVisible(page: Page, text: string) {
-  await expect(page.getByText(text)).toBeVisible()
+  await expect(page.getByText(text).first()).toBeVisible()
 }
 
 /**
  * Check if a link with specific text exists and is visible
+ * Uses first() to handle cases where multiple links exist
  */
 export async function expectLinkVisible(page: Page, text: string) {
-  await expect(page.getByRole('link', { name: text })).toBeVisible()
+  await expect(page.getByRole('link', { name: text }).first()).toBeVisible()
 }
 
 /**

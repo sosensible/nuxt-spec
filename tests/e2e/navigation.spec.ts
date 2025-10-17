@@ -95,7 +95,7 @@ test.describe('Page Navigation', () => {
     // Verify users page loads
     await expectUrl(page, '/admin/users')
     await expect(page.getByRole('heading', { name: 'Users' })).toBeVisible()
-    await expectTextVisible(page, 'Search users')
+    await expect(page.getByPlaceholder('Search users...')).toBeVisible()
     await expectTextVisible(page, 'John Doe')
   })
 
@@ -108,7 +108,7 @@ test.describe('Page Navigation', () => {
     await page.getByRole('link', { name: 'Users', exact: true }).click()
     await page.waitForLoadState('networkidle')
     await expectUrl(page, '/admin/users')
-    await expectTextVisible(page, 'Search users')
+    await expect(page.getByPlaceholder('Search users...')).toBeVisible()
     
     // Click Dashboard in sidebar (exact match)
     await page.getByRole('link', { name: 'Dashboard', exact: true }).click()

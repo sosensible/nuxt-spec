@@ -52,8 +52,8 @@ test.describe('Layout Rendering', () => {
     // Check admin sidebar
     await expectAdminSidebarVisible(page)
     
-    // Check main content
-    await expectTextVisible(page, 'Dashboard')
+    // Check main content heading
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
   })
 
   test('should switch from frontend to admin layout', async ({ page }) => {
@@ -94,8 +94,8 @@ test.describe('Layout Rendering', () => {
     await expectTextVisible(page, 'Admin Panel')
     await expectAdminSidebarVisible(page)
     
-    // Navigate to users page
-    await page.getByRole('link', { name: 'Users' }).click()
+    // Navigate to users page via sidebar (more specific)
+    await page.locator('aside').getByRole('link', { name: 'Users' }).click()
     await page.waitForLoadState('networkidle')
     
     // Verify admin layout persists
@@ -103,8 +103,8 @@ test.describe('Layout Rendering', () => {
     await expectTextVisible(page, 'Admin Panel')
     await expectAdminSidebarVisible(page)
     
-    // Navigate back to dashboard
-    await page.getByRole('link', { name: 'Dashboard' }).click()
+    // Navigate back to dashboard via sidebar
+    await page.locator('aside').getByRole('link', { name: 'Dashboard' }).click()
     await page.waitForLoadState('networkidle')
     
     // Verify admin layout still present
@@ -120,8 +120,8 @@ test.describe('Layout Rendering', () => {
     await expectHeaderNavigationVisible(page)
     await expectFooterVisible(page)
     
-    // Navigate to info
-    await page.getByRole('link', { name: 'Info' }).click()
+    // Navigate to info via header navigation
+    await page.getByRole('navigation').getByRole('link', { name: 'Info' }).click()
     await page.waitForLoadState('networkidle')
     
     // Verify frontend layout persists
@@ -129,8 +129,8 @@ test.describe('Layout Rendering', () => {
     await expectHeaderNavigationVisible(page)
     await expectFooterVisible(page)
     
-    // Navigate back to home
-    await page.getByRole('link', { name: 'Home' }).click()
+    // Navigate back to home via header navigation
+    await page.getByRole('navigation').getByRole('link', { name: 'Home' }).click()
     await page.waitForLoadState('networkidle')
     
     // Verify frontend layout still present
