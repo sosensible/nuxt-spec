@@ -1,31 +1,40 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+// Phase 2.1: Adding Pinia for state management
+// Phase 7: Adding additional modules
+// Phase 8.2: Adding route rules for optimal performance
 export default defineNuxtConfig({
   modules: [
-    '@nuxt/eslint',
     '@nuxt/ui',
+    '@pinia/nuxt',
+    '@nuxt/eslint',
     '@nuxt/image',
-    '@nuxt/scripts',
-    '@nuxt/test-utils'
+    '@nuxt/scripts'
   ],
 
-  devtools: {
-    enabled: false
+  css: [
+    '~/assets/css/main.css'
+  ],
+
+  devServer: {
+    port: 3000
   },
 
-  css: ['~/assets/css/main.css'],
-
+  // Route rules for performance optimization
   routeRules: {
-    '/': { prerender: true }
+    // Static pages - prerender for fast delivery
+    '/': { prerender: true },
+    '/info': { prerender: true },
+
+    // Admin routes - client-side only for dynamic content
+    '/admin/**': { ssr: false },
+
+    // Admin test page
+    '/admin-test': { ssr: false }
   },
 
   compatibilityDate: '2025-01-15',
 
-  eslint: {
-    config: {
-      stylistic: {
-        commaDangle: 'never',
-        braceStyle: '1tbs'
-      }
-    }
+  devtools: {
+    enabled: true
   }
 })

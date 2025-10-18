@@ -1,0 +1,24 @@
+# nuxt-spec Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2025-10-14
+
+## Active Technologies
+- Nuxt 4.x with Vue 3 Composition API and TypeScript strict mode + @nuxt/ui v4, @nuxt/image, Pinia, Tailwind CSS, @nuxt/scripts (001-layout-based-we)
+
+## Project Structure
+```
+src/
+tests/
+```
+
+## Commands
+npm test; npm run lint
+
+## Code Style
+Nuxt 4.x with Vue 3 Composition API and TypeScript strict mode: Follow standard conventions
+
+## Recent Changes
+- 001-layout-based-we: Added Nuxt 4.x with Vue 3 Composition API and TypeScript strict mode + @nuxt/ui v4, @nuxt/image, Pinia, Tailwind CSS, @nuxt/scripts
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->

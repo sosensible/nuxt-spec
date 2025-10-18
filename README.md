@@ -1,21 +1,27 @@
-# Nuxt Starter Template
+````mdc
+# Nuxt Layout-Based Web Experience
 
 [![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+[![Nuxt 4](https://img.shields.io/badge/Nuxt-4.1.3-00DC82?logo=nuxt)](https://nuxt.com)
 
-Use this template to get started with [Nuxt UI](https://ui.nuxt.com) quickly.
+A professional layout-based web application built with Nuxt 4, Nuxt UI v4, and Pinia state management.
 
-- [Live demo](https://starter-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+## 🎯 Project Overview
 
-<a href="https://starter-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-    <img alt="Nuxt Starter Template" src="https://ui.nuxt.com/assets/templates/nuxt/starter-light.png">
-  </picture>
-</a>
+This project demonstrates a complete implementation of a dual-layout web application with:
+- **Frontend Layout**: Public-facing pages with header, footer, and navigation
+- **Admin Layout**: Administrative interface with collapsible sidebar and dashboard
 
-> The starter template for Vue is on https://github.com/nuxt-ui-templates/starter-vue.
+## ✨ Features
+
+- 🎨 **Nuxt UI v4** - Professional component library with Tailwind CSS v4
+- 🏗️ **Dual Layouts** - Separate frontend and admin layouts
+- 📦 **Pinia State Management** - Reactive stores for layout and navigation
+- 🧩 **Composables** - Clean API layer over stores
+- 🎭 **Component Library** - Reusable components (Header, Footer, Sidebar, Logo)
+- 🎯 **Heroicons** - Professional icon system
+- 📱 **Responsive Design** - Mobile-friendly layouts
+- ⚡ **Hot Module Replacement** - Fast development experience
 
 ## Quick Start
 
@@ -27,7 +33,38 @@ npm create nuxt@latest -- -t github:nuxt-ui-templates/starter
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
 
-## Setup
+## 📁 Project Structure
+
+```
+app/
+├── assets/css/          # Tailwind CSS configuration
+├── components/          # Reusable components
+│   ├── AdminHeader.vue  # Admin page header with toggle
+│   ├── AdminSidebar.vue # Collapsible navigation sidebar
+│   ├── AppFooter.vue    # Frontend footer
+│   ├── AppHeader.vue    # Frontend header with navigation
+│   └── AppLogo.vue      # Brand logo component
+├── composables/         # Composable functions
+│   ├── useLayoutState.ts   # Layout state management
+│   └── useNavigation.ts    # Navigation helpers
+├── layouts/             # Layout templates
+│   ├── admin.vue        # Admin layout with sidebar
+│   └── default.vue      # Frontend layout
+├── pages/               # Application pages
+│   ├── index.vue        # Home page
+│   ├── info.vue         # About page
+│   └── admin/           # Admin pages
+│       ├── index.vue    # Admin dashboard
+│       └── users.vue    # User management
+└── stores/              # Pinia stores
+    ├── layout.ts        # Layout state
+    └── navigation.ts    # Navigation state
+
+specs/                   # Project specifications
+└── 001-layout-based-we/ # Implementation documentation
+```
+
+## 🚀 Setup
 
 Make sure to install the dependencies:
 
@@ -35,15 +72,21 @@ Make sure to install the dependencies:
 pnpm install
 ```
 
-## Development Server
+## 💻 Development Server
 
-Start the development server on `http://localhost:3000`:
+Start the development server on `http://localhost:3001`:
 
 ```bash
 pnpm dev
 ```
 
-## Production
+Visit the following pages:
+- **Home**: http://localhost:3001/
+- **Info**: http://localhost:3001/info
+- **Admin Dashboard**: http://localhost:3001/admin
+- **Admin Users**: http://localhost:3001/admin/users
+
+## 🏗️ Production
 
 Build the application for production:
 
@@ -57,4 +100,56 @@ Locally preview production build:
 pnpm preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+## 🛠️ Tech Stack
+
+- **Framework**: Nuxt 4.1.3
+- **UI Library**: Nuxt UI v4.0.1 (Tailwind CSS v4)
+- **State Management**: Pinia 3.0.3 with @pinia/nuxt 0.11.2
+- **Icons**: Heroicons via @iconify-json/heroicons
+- **TypeScript**: Full type safety
+- **Dev Server Port**: 3001
+
+## 📚 Documentation
+
+Detailed implementation documentation is available in `specs/001-layout-based-we/`:
+- `spec.md` - Feature specification
+- `implementation-phases.md` - Phase-by-phase implementation log
+- `tasks.md` - Task breakdown
+- `quickstart.md` - Quick reference guide
+
+## 🎨 Key Components
+
+### Frontend Layout
+- Responsive header with navigation
+- Three-column footer with brand info
+- Clean, professional design
+
+### Admin Layout
+- Collapsible sidebar (240px → 64px)
+- Dynamic page titles
+- Dashboard with stats cards
+- User management with search and filters
+
+### Nuxt UI Components Used
+- `UButton` - Action buttons with variants
+- `UCard` - Content cards
+- `UIcon` - Heroicons integration
+- `UBadge` - Status and role badges
+- `UInput` - Form inputs with icons
+
+## 🔧 Configuration
+
+The project uses:
+- **Port 3001** to avoid conflicts
+- **Experimental features**: `inlineSSRStyles: false` for better CSS loading
+- **App config**: Custom primary/neutral colors (green/slate)
+
+## 📝 Development Notes
+
+- Minor FOUC (Flash of Unstyled Content) in dev mode is expected
+- Production builds will have proper CSS extraction
+- Components are auto-imported (no manual imports needed)
+- Stores are accessible via composables
+
+Check out the [Nuxt documentation](https://nuxt.com/docs) and [Nuxt UI documentation](https://ui.nuxt.com) for more information.
+````
