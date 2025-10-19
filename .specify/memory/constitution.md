@@ -1,15 +1,14 @@
 <!--
 Sync Impact Report:
-- Version change: Initial → 1.0.0
-- New constitution created for Nuxt Spec project
-- Added 5 core principles tailored for Nuxt 4 modular architecture
-- Added Nuxt Architecture Standards section
-- Added Development Workflow section
+- Version change: 1.1.0 → 1.1.0
+- Created separate Development Standards document (development-standards.md)
+- Added reference to Development Standards in Nuxt Architecture Standards section
+- Updated Governance to include Development Standards as constitutional requirement
 - Templates requiring updates:
-  ✅ Updated - plan-template.md (Constitution Check gates aligned)
-  ✅ Updated - spec-template.md (Nuxt-specific requirements added)
-  ✅ Updated - tasks-template.md (Nuxt component/page/middleware task types)
-- Follow-up TODOs: None
+  ⚠️ Needs update - plan-template.md (Add standards compliance check)
+  ⚠️ Needs update - spec-template.md (Add standards reference)
+  ⚠️ Needs update - tasks-template.md (Add standards checklist)
+- Follow-up TODOs: Create PR review checklist referencing standards document
 -->
 
 # Nuxt Spec Constitution
@@ -34,11 +33,11 @@ Every backend feature starts as a Nuxt server API route; API contracts MUST be d
 
 **Rationale**: Nuxt 4's server engine enables full-stack development within a single codebase while maintaining clear API boundaries and type safety.
 
-### IV. Component-Driven Testing
+### IV. Test-Driven Development (NON-NEGOTIABLE)
 
-Component tests MUST be written using Nuxt Test Utils; Server API routes MUST have contract tests; E2E tests MUST cover critical user journeys using Playwright; Test coverage MUST be >80% for components and server routes.
+**RED-GREEN-REFACTOR CYCLE IS MANDATORY**: Tests MUST be written before implementation code; Every spec item MUST have failing tests written first (RED); Implementation MUST make tests pass (GREEN); Code MUST then be refactored while maintaining green tests; Component tests MUST be written using Nuxt Test Utils; Server API routes MUST have contract tests; E2E tests MUST cover critical user journeys using Playwright; Test coverage MUST be >80% for components and server routes; **NO SPEC IS COMPLETE WITHOUT PASSING TESTS THAT WERE INITIALLY FAILING**.
 
-**Rationale**: Nuxt applications span client and server code requiring comprehensive testing strategies that cover both universal rendering and API functionality.
+**Rationale**: Test-driven development ensures specifications are implemented correctly, facilitates regression testing, provides living documentation, and validates acceptance criteria. The red-green cycle proves that tests actually validate the implementation rather than passing by accident.
 
 ### V. Deployment Versatility
 
@@ -57,16 +56,33 @@ Applications MUST be deployable to multiple targets: static sites, serverless fu
 **Testing Stack**: Nuxt Test Utils, Vitest, Playwright for E2E
 **Performance**: Web Vitals monitoring, bundle analysis, image optimization
 
+**Detailed Standards**: All development MUST comply with the comprehensive standards defined in [development-standards.md](./development-standards.md). These standards are considered constitutional requirements and MUST be verified during spec creation, implementation, and review processes.
+
 ## Development Workflow
 
+**Specification-Driven Development**: All development MUST start from a specification in the contracts document; Each spec item defines clear acceptance criteria and required test types (unit, integration, or E2E).
+
+**Test-Driven Development Cycle** (MANDATORY):
+
+1. **Write Failing Test (RED)**: Before any implementation, write test(s) that validate the spec's acceptance criteria; Tests MUST fail initially, proving they test actual functionality
+2. **Implement Minimum Code (GREEN)**: Write only enough code to make the tests pass; Implementation MUST satisfy spec requirements
+3. **Refactor (MAINTAIN GREEN)**: Improve code quality, performance, and maintainability while keeping all tests passing
+4. **Verify Acceptance**: Spec is complete ONLY when all tests pass and acceptance criteria are met
+
 **File Organization**: Follow Nuxt 4 directory structure - pages/, components/, server/, composables/, middleware/
+
 **Code Style**: ESLint with Nuxt configuration, Prettier for formatting, conventional commits
-**Review Process**: All PRs MUST pass: TypeScript checks, component tests, server API tests, performance budgets
-**Feature Development**: Component → Server API → Integration → E2E test → Performance validation
-**Deployment Gates**: Build succeeds, tests pass, Lighthouse CI scores >90, security scan passes
+
+**Terminal Management**: Development server (`pnpm dev`) MUST run in a dedicated terminal; Additional commands (tests, builds, git operations) MUST be executed in separate terminal instances; NEVER interrupt or share the dev server terminal to prevent process conflicts and hot-reload disruption
+
+**Review Process**: All PRs MUST pass: TypeScript checks, component tests, server API tests, performance budgets; **Reviewers MUST verify TDD cycle was followed** (test commits before implementation commits)
+
+**Feature Development**: Spec → Failing Tests → Component → Server API → Green Tests → Integration → E2E test → Refactor → Performance validation
+
+**Deployment Gates**: Build succeeds, tests pass, Lighthouse CI scores >90, security scan passes; **All spec items MUST have associated passing tests**
 
 ## Governance
 
-Constitution supersedes all other development practices; Amendments require team consensus, version increment, and migration plan for existing code; All PRs/reviews MUST verify compliance with modular architecture and performance standards; Complexity MUST be justified against Nuxt's built-in solutions before custom implementations.
+Constitution supersedes all other development practices; **Development Standards document is considered part of the constitution**; Amendments to Core Principles require team consensus, version increment, and migration plan; Standards document updates require PR approval and changelog entry; All PRs/reviews MUST verify compliance with modular architecture, **TDD methodology**, development standards, and performance standards; Complexity MUST be justified against Nuxt's built-in solutions before custom implementations; **Any implementation without test-first evidence MUST be rejected**.
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-14 | **Last Amended**: 2025-10-14
+**Version**: 1.1.0 | **Ratified**: 2025-10-14 | **Last Amended**: 2025-10-18

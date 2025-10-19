@@ -34,10 +34,52 @@ _GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 - [ ] **Modular Component Architecture**: Feature components are composable, reusable, and follow Vue 3 Composition API
 - [ ] **Universal Rendering**: Pages support SSR/client rendering with explicit route rules
 - [ ] **API-First Development**: Server API routes defined with contracts before implementation
-- [ ] **Component-Driven Testing**: Test strategy covers components, server routes, and E2E journeys
+- [ ] **Test-Driven Development**: RED-GREEN-REFACTOR cycle will be followed (tests written BEFORE implementation)
 - [ ] **Deployment Versatility**: Solution works across static, serverless, and Node.js deployment targets
 - [ ] **Performance Budget**: <3s FCP, <100ms API responses, <500kb initial bundle targets defined
 - [ ] **Type Safety**: TypeScript strict mode with client-server boundary type safety
+
+## Standards Compliance Checklist
+
+_Reference: [Development Standards](../memory/development-standards.md)_
+
+### State Management
+
+- [ ] State management pattern identified (Pinia store via composable / composable only / props & events)
+- [ ] Store access pattern follows composable wrapper requirement (no direct store imports in components)
+- [ ] Justification documented if complexity exceeds component-local state
+
+### Component Design
+
+- [ ] Component communication pattern defined (props/events vs composable vs store)
+- [ ] Component complexity within limits (max 300 lines, max 10 props, max 5 events)
+- [ ] Naming conventions specified (PascalCase components, camelCase composables with `use` prefix)
+
+### Accessibility & UX
+
+- [ ] WCAG 2.1 AA compliance requirements identified
+- [ ] Semantic HTML structure planned
+- [ ] Keyboard navigation requirements defined
+- [ ] Screen reader support requirements specified
+
+### Error Handling
+
+- [ ] Client-side error handling strategy defined (loading/error/success states)
+- [ ] Server-side error handling strategy defined (validation, authorization, error codes)
+- [ ] Error boundaries identified for major sections
+
+### Documentation
+
+- [ ] Component documentation requirements identified (JSDoc with examples)
+- [ ] API route documentation requirements identified
+- [ ] README updates planned for new features
+
+### CSS & Styling
+
+- [ ] Tailwind-first approach confirmed
+- [ ] Custom CSS justified if needed (animations, global utilities, third-party overrides)
+- [ ] Responsive design requirements defined (mobile, tablet, desktop)
+- [ ] Dark mode support confirmed
 
 ## Project Structure
 

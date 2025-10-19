@@ -80,25 +80,81 @@ Examples of foundational tasks for Nuxt applications:
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 1 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 1 (TDD - Write FIRST, Ensure FAIL) ⚠️ MANDATORY
 
-**NOTE: Write these tests FIRST, ensure they FAIL before implementation**
+**CRITICAL: Following [Constitution Principle IV](../memory/constitution.md#iv-test-driven-development-non-negotiable)**
+
+**RED Phase (Tests Written BEFORE Implementation)**:
 
 - [ ] T011 [P] [US1] Component tests for [ComponentName] in tests/components/[component-name].nuxt.spec.ts
+  - Write test, run test, verify FAILS, document failure
 - [ ] T012 [P] [US1] Server API tests for [endpoint] in tests/server/api/[endpoint].spec.ts
+  - Write test, run test, verify FAILS, document failure
 - [ ] T013 [P] [US1] E2E test for [user journey] in tests/e2e/[journey-name].spec.ts
+  - Write test, run test, verify FAILS, document failure
 
-### Implementation for User Story 1
+**Checkpoint: RED Phase Complete** - All tests written and failing (proof of RED phase)
+
+### Implementation for User Story 1 (GREEN Phase)
 
 - [ ] T014 [P] [US1] Create [ComponentName] component in app/components/[ComponentName].vue
+  - Verify T011 component tests now PASS
 - [ ] T015 [P] [US1] Create page component in app/pages/[route-name].vue
-- [ ] T016 [US1] Implement server API route in app/server/api/[endpoint].ts (depends on T014, T015)
+  - Verify related tests now PASS
+- [ ] T016 [US1] Implement server API route in app/server/api/[endpoint].ts
+  - Verify T012 API tests now PASS
 - [ ] T017 [US1] Create composable for business logic in app/composables/use[FeatureName].ts
+  - Verify composable tests now PASS
 - [ ] T018 [US1] Add form validation and error handling with Nuxt UI components
+  - Verify E2E tests (T013) now PASS
 - [ ] T019 [US1] Configure route rules in nuxt.config.ts for optimal rendering
 - [ ] T020 [US1] Add TypeScript types in types/[feature].ts for client-server contracts
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+**Checkpoint: GREEN Phase Complete** - All tests passing
+
+### Refactor for User Story 1 (REFACTOR Phase - Keep Tests GREEN)
+
+- [ ] T021 [US1] Refactor component code for clarity and maintainability
+  - Run tests after each refactor, ensure they stay GREEN
+- [ ] T022 [US1] Optimize performance (code splitting, lazy loading if needed)
+  - Verify tests still GREEN
+- [ ] T023 [US1] Add component documentation (JSDoc with @example)
+  - Tests remain GREEN
+
+**Checkpoint: User Story 1 Complete** - Fully functional, tested, refactored, and documented
+
+### Standards Compliance Verification for User Story 1
+
+**Reference: [Development Standards](../memory/development-standards.md)**
+
+- [ ] T024 [US1] Accessibility verification
+  - Semantic HTML elements used
+  - Keyboard navigation works
+  - ARIA labels on icon buttons
+  - Focus states visible
+  - Passes axe-core automated tests
+- [ ] T025 [US1] Code quality verification
+  - Component < 300 lines
+  - < 10 props per component
+  - < 5 events per component
+  - Naming conventions followed
+- [ ] T026 [US1] Error handling verification
+  - All async operations have try-catch
+  - Loading/error/success states implemented
+  - User-friendly error messages
+  - Server errors properly logged
+- [ ] T027 [US1] CSS & styling verification
+  - Tailwind utilities used
+  - No custom CSS (or justified and documented)
+  - Responsive at mobile/tablet/desktop
+  - Dark mode support included
+- [ ] T028 [US1] Documentation verification
+  - Components have JSDoc
+  - API routes documented
+  - README updated
+  - Types documented
+
+**Final Checkpoint: User Story 1 Ready** - All standards met, fully testable independently
 
 ---
 
@@ -108,19 +164,41 @@ Examples of foundational tasks for Nuxt applications:
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 2 (TDD - Write FIRST, Ensure FAIL) ⚠️ MANDATORY
 
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test\_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test\_[name].py
+**RED Phase**:
 
-### Implementation for User Story 2
+- [ ] T029 [P] [US2] Component tests - Write and verify FAIL
+- [ ] T030 [P] [US2] API contract tests - Write and verify FAIL
+- [ ] T031 [P] [US2] E2E tests - Write and verify FAIL
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+**Checkpoint: RED Phase Complete**
 
-**Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
+### Implementation for User Story 2 (GREEN Phase)
+
+- [ ] T032 [P] [US2] Create components - Verify tests PASS
+- [ ] T033 [US2] Implement API routes - Verify tests PASS
+- [ ] T034 [US2] Create composables - Verify tests PASS
+- [ ] T035 [US2] Integrate with User Story 1 (if needed)
+
+**Checkpoint: GREEN Phase Complete**
+
+### Refactor for User Story 2 (REFACTOR Phase)
+
+- [ ] T036 [US2] Refactor and optimize - Keep tests GREEN
+- [ ] T037 [US2] Add documentation
+
+**Checkpoint: User Story 2 Complete**
+
+### Standards Compliance Verification for User Story 2
+
+- [ ] T038 [US2] Accessibility verification (semantic HTML, keyboard nav, ARIA)
+- [ ] T039 [US2] Code quality verification (complexity limits, naming)
+- [ ] T040 [US2] Error handling verification (try-catch, states, messages)
+- [ ] T041 [US2] CSS verification (Tailwind-first, responsive, dark mode)
+- [ ] T042 [US2] Documentation verification (JSDoc, README)
+
+**Final Checkpoint: User Story 2 Ready**
 
 ---
 
@@ -130,18 +208,40 @@ Examples of foundational tasks for Nuxt applications:
 
 **Independent Test**: [How to verify this story works on its own]
 
-### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
+### Tests for User Story 3 (TDD - Write FIRST, Ensure FAIL) ⚠️ MANDATORY
 
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test\_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test\_[name].py
+**RED Phase**:
 
-### Implementation for User Story 3
+- [ ] T043 [P] [US3] Component tests - Write and verify FAIL
+- [ ] T044 [P] [US3] API contract tests - Write and verify FAIL
+- [ ] T045 [P] [US3] E2E tests - Write and verify FAIL
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+**Checkpoint: RED Phase Complete**
 
-**Checkpoint**: All user stories should now be independently functional
+### Implementation for User Story 3 (GREEN Phase)
+
+- [ ] T046 [P] [US3] Create components - Verify tests PASS
+- [ ] T047 [US3] Implement API routes - Verify tests PASS
+- [ ] T048 [US3] Create composables - Verify tests PASS
+
+**Checkpoint: GREEN Phase Complete**
+
+### Refactor for User Story 3 (REFACTOR Phase)
+
+- [ ] T049 [US3] Refactor and optimize - Keep tests GREEN
+- [ ] T050 [US3] Add documentation
+
+**Checkpoint: User Story 3 Complete**
+
+### Standards Compliance Verification for User Story 3
+
+- [ ] T051 [US3] Accessibility verification
+- [ ] T052 [US3] Code quality verification
+- [ ] T053 [US3] Error handling verification
+- [ ] T054 [US3] CSS verification
+- [ ] T055 [US3] Documentation verification
+
+**Final Checkpoint: User Story 3 Ready - All user stories independently functional**
 
 ---
 
@@ -156,9 +256,37 @@ Examples of foundational tasks for Nuxt applications:
 - [ ] TXXX [P] Documentation updates in docs/
 - [ ] TXXX Code cleanup and refactoring
 - [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
+- [ ] TXXX [P] Additional unit tests (if needed) in tests/unit/
 - [ ] TXXX Security hardening
 - [ ] TXXX Run quickstart.md validation
+
+### Final TDD Verification (MANDATORY)
+
+**Constitutional Requirement Check** - [Principle IV](../memory/constitution.md#iv-test-driven-development-non-negotiable)
+
+- [ ] TXXX Review git commit history to verify test commits BEFORE implementation commits
+- [ ] TXXX Verify test coverage meets >80% threshold for components and server routes
+- [ ] TXXX Confirm all tests initially failed (RED phase documented)
+- [ ] TXXX Confirm all tests now pass (GREEN phase achieved)
+- [ ] TXXX Verify code was refactored while maintaining green tests
+- [ ] TXXX Document any exceptions to TDD process with justification
+
+**NO SPEC IS COMPLETE WITHOUT PASSING TESTS THAT WERE INITIALLY FAILING**
+
+### Final Standards Compliance Review
+
+**Reference: [Development Standards](../memory/development-standards.md)**
+
+- [ ] TXXX All components follow naming conventions
+- [ ] TXXX All components within complexity limits
+- [ ] TXXX All features meet accessibility requirements (WCAG 2.1 AA)
+- [ ] TXXX All error handling patterns implemented
+- [ ] TXXX All CSS follows Tailwind-first approach
+- [ ] TXXX All code properly documented
+- [ ] TXXX README updated with all new features
+- [ ] TXXX No unapproved dependencies added
+- [ ] TXXX Bundle size within limits
+- [ ] TXXX Performance budgets met (<3s FCP, <100ms API, <500kb bundle)
 
 ---
 
