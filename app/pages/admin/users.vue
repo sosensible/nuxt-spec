@@ -3,10 +3,10 @@
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50">
           Users
         </h1>
-        <p class="text-gray-600">
+        <p class="text-gray-600 dark:text-gray-400">
           Manage user accounts and permissions.
         </p>
       </div>
@@ -26,38 +26,43 @@ v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
       <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
+        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
+          <thead class="bg-gray-50 dark:bg-gray-800">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 User
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Role
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Status
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Created
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-gray-50">
+          <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
+            <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-gray-50 dark:hover:bg-gray-800">
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex items-center">
-                  <UIcon name="i-heroicons-user-circle" class="text-3xl text-gray-400 mr-3" />
+                  <UIcon name="i-heroicons-user-circle" class="text-3xl text-gray-400 dark:text-gray-500 mr-3" />
                   <div>
-                    <div class="text-sm font-medium text-gray-900">
+                    <div class="text-sm font-medium text-gray-900 dark:text-gray-50">
                       {{ user.name }}
                     </div>
-                    <div class="text-sm text-gray-500">
+                    <div class="text-sm text-gray-500 dark:text-gray-400">
                       {{ user.email }}
                     </div>
                   </div>
@@ -77,7 +82,7 @@ v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying
                   </UBadge>
                 </div>
               </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                 {{ formatDate(user.createdAt) }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
@@ -97,7 +102,7 @@ v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying
     </div>
 
     <!-- Pagination Info -->
-    <div class="text-sm text-gray-600 text-center">
+    <div class="text-sm text-gray-600 dark:text-gray-400 text-center">
       Showing {{ filteredUsers.length }} of {{ users.length }} users
     </div>
   </div>

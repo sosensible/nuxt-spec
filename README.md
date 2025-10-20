@@ -16,7 +16,8 @@ This project demonstrates a complete implementation of a dual-layout web applica
 
 - 🎨 **Nuxt UI v4** - Professional component library with Tailwind CSS v4
 - 🏗️ **Dual Layouts** - Separate frontend and admin layouts
-- 📦 **Pinia State Management** - Reactive stores for layout and navigation
+- � **Cross-Section Navigation** - Quick links between frontend and admin sections
+- �📦 **Pinia State Management** - Reactive stores for layout and navigation
 - 🧩 **Composables** - Clean API layer over stores
 - 🎭 **Component Library** - Reusable components (Header, Footer, Sidebar, Logo)
 - 🎯 **Heroicons** - Professional icon system
@@ -111,13 +112,20 @@ pnpm preview
 
 ## 📚 Documentation
 
-Detailed implementation documentation is available in `specs/001-layout-based-we/`:
-- `spec.md` - Feature specification
-- `implementation-phases.md` - Phase-by-phase implementation log
-- `tasks.md` - Task breakdown
-- `quickstart.md` - Quick reference guide
+Detailed implementation documentation is available in:
+- **Spec 001** (`specs/001-layout-based-we/`) - Layout system and dark mode
+- **Spec 002** (`specs/002-basic-usability-i/`) - Cross-section navigation
+  - `spec.md` - Feature specification
+  - `tasks.md` - Task breakdown
+  - `quickstart.md` - Quick reference guide
 
 ## 🎨 Key Components
+
+### Cross-Section Navigation
+- **Frontend Header**: Shows "Admin Panel" link to quickly access admin section
+- **Admin Header**: Shows "View Site" link to return to frontend
+- **Smart Detection**: Automatically shows appropriate link based on current section
+- **Seamless UX**: Client-side routing for instant navigation between sections
 
 ### Frontend Layout
 - Responsive header with navigation

@@ -1,19 +1,19 @@
 <template>
   <div class="p-8">
-    <h1 class="text-4xl font-bold">
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-50">
       Hello World
     </h1>
-    <p class="mt-4">
+    <p class="mt-4 text-gray-600 dark:text-gray-400">
       This is a test page.
     </p>
 
     <!-- Phase 3: Testing Composables -->
-    <div class="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-      <h2 class="text-2xl font-semibold mb-4">
+    <div class="mt-8 p-6 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-900">
+      <h2 class="text-2xl font-semibold mb-4 text-gray-900 dark:text-gray-50">
         Composable Test
       </h2>
 
-      <div class="space-y-2">
+      <div class="space-y-2 text-gray-900 dark:text-gray-50">
         <p><strong>Layout Type:</strong> {{ layout.layoutType }}</p>
         <p><strong>Is Frontend:</strong> {{ layout.isFrontend }}</p>
         <p><strong>Page Title:</strong> {{ layout.pageTitle || '(not set)' }}</p>

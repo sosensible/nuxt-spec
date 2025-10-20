@@ -1,11 +1,13 @@
 <template>
-  <aside class="bg-gray-800 text-white transition-all duration-300" :class="isCollapsed ? 'w-16' : 'w-64'">
+  <aside
+class="bg-white dark:bg-gray-950 border-r border-gray-200 dark:border-gray-800 transition-all duration-300"
+    :class="isCollapsed ? 'w-16' : 'w-64'">
     <!-- Sidebar Header -->
-    <div class="p-4 border-b border-gray-700">
+    <div class="p-4 border-b border-gray-200 dark:border-gray-800">
       <div class="flex items-center gap-3">
         <AppLogo />
         <transition name="fade">
-          <span v-if="!isCollapsed" class="font-bold text-lg">
+          <span v-if="!isCollapsed" class="font-bold text-lg text-gray-900 dark:text-gray-50">
             Admin
           </span>
         </transition>

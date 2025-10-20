@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen flex bg-gray-100">
+  <div class="min-h-screen flex bg-gray-100 dark:bg-gray-900">
     <!-- Sidebar Component - Phase 5 -->
     <AdminSidebar />
 
@@ -7,7 +7,7 @@
       <!-- Header Component - Phase 5 -->
       <AdminHeader />
 
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-6 bg-gray-100 dark:bg-gray-900">
         <slot />
       </main>
     </div>

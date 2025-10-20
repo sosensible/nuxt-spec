@@ -3,16 +3,16 @@
     <!-- Page Header -->
     <div class="flex items-center justify-between">
       <div>
-        <h1 class="text-2xl font-bold text-gray-900">
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-50">
           Dashboard
         </h1>
-        <p class="text-gray-600">
+        <p class="text-gray-600 dark:text-gray-400">
           Welcome back! Here's what's happening with your system.
         </p>
       </div>
       <NuxtLink
 to="/admin/users"
-        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors no-underline">
+        class="px-4 py-2 bg-blue-600 dark:bg-blue-500 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors no-underline">
         Manage Users
       </NuxtLink>
     </div>
@@ -43,29 +43,29 @@ to="/admin/users"
     </div>
 
     <!-- Recent Activity -->
-    <div class="bg-white rounded-lg border border-gray-200">
-      <div class="flex items-center justify-between p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">
+    <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
+      <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-50">
           Recent Activity
         </h2>
       </div>
       <div class="p-6">
         <div v-if="activities.length === 0" class="text-center py-8">
-          <p class="text-gray-500">No recent activity</p>
+          <p class="text-gray-500 dark:text-gray-400">No recent activity</p>
         </div>
         <div v-else class="space-y-4">
           <div v-for="activity in activities.slice(0, 5)" :key="activity.id" class="flex items-start space-x-3">
             <div class="flex-shrink-0">
-              <UIcon :name="activity.icon" class="text-2xl text-gray-600" />
+              <UIcon :name="activity.icon" class="text-2xl text-gray-600 dark:text-gray-400" />
             </div>
             <div class="flex-1 min-w-0">
-              <div class="text-sm font-medium text-gray-900">
+              <div class="text-sm font-medium text-gray-900 dark:text-gray-50">
                 {{ activity.title }}
               </div>
-              <div class="text-sm text-gray-600">
+              <div class="text-sm text-gray-600 dark:text-gray-400">
                 {{ activity.description }}
               </div>
-              <div class="text-xs text-gray-500 mt-1">
+              <div class="text-xs text-gray-500 dark:text-gray-500 mt-1">
                 {{ formatTime(activity.timestamp) }}
               </div>
             </div>
@@ -75,24 +75,24 @@ to="/admin/users"
     </div>
 
     <!-- System Status -->
-    <div class="bg-white rounded-lg border border-gray-200">
-      <div class="flex items-center justify-between p-6 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-900">
+    <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800">
+      <div class="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-800">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-50">
           System Status
         </h2>
         <div class="flex items-center space-x-2">
-          <div class="w-2 h-2 rounded-full bg-green-400"/>
-          <span class="text-sm text-gray-600">All systems operational</span>
+          <div class="w-2 h-2 rounded-full bg-green-400" />
+          <span class="text-sm text-gray-600 dark:text-gray-400">All systems operational</span>
         </div>
       </div>
       <div class="p-6">
         <div class="space-y-4">
           <div v-for="service in systemStatus" :key="service.id" class="flex items-center justify-between">
             <div>
-              <div class="text-sm font-medium text-gray-900">
+              <div class="text-sm font-medium text-gray-900 dark:text-gray-50">
                 {{ service.name }}
               </div>
-              <div class="text-sm text-gray-600">
+              <div class="text-sm text-gray-600 dark:text-gray-400">
                 {{ service.description }}
               </div>
             </div>
@@ -102,8 +102,8 @@ class="w-2 h-2 rounded-full" :class="{
                 'bg-green-400': service.status === 'healthy',
                 'bg-yellow-400': service.status === 'warning',
                 'bg-red-400': service.status === 'error'
-              }"/>
-              <span class="text-sm text-gray-600">
+              }" />
+              <span class="text-sm text-gray-600 dark:text-gray-400">
                 {{ service.statusText }}
               </span>
             </div>
