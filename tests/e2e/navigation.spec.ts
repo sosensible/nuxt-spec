@@ -148,3 +148,112 @@ test.describe('Page Navigation', () => {
     await expectTextVisible(page, 'John Doe')
   })
 })
+
+/**
+ * Cross-Section Navigation Tests (Feature 002-basic-usability-i, User Story 2)
+ * 
+ * Tests navigation between frontend and admin sections via header links.
+ * This is where we test actual routing behavior that can't be tested in unit tests.
+ */
+test.describe('Cross-Section Navigation', () => {
+  test('should display Admin Panel link in frontend header', async ({ page }) => {
+    await navigateAndWait(page, '/')
+    
+    // Admin Panel link should be visible in header
+    const adminLink = page.getByRole('link', { name: 'Admin Panel' })
+    await expect(adminLink).toBeVisible()
+  })
+
+  test('should navigate from frontend to admin via header link', async ({ page }) => {
+    await navigateAndWait(page, '/')
+    
+    // Click Admin Panel link
+    await page.getByRole('link', { name: 'Admin Panel' }).click()
+    await page.waitForLoadState('networkidle')
+    
+    // Verify we're now in admin section
+    await expectUrl(page, '/admin')
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+    
+    // Verify admin layout is applied (sidebar should be visible)
+    await expect(page.getByRole('link', { name: 'Dashboard', exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Users', exact: true })).toBeVisible()
+  })
+
+  test('should display View Site link in admin header', async ({ page }) => {
+    await navigateAndWait(page, '/admin')
+    
+    // View Site link should be visible in header
+    const viewSiteLink = page.getByRole('link', { name: 'View Site' })
+    await expect(viewSiteLink).toBeVisible()
+  })
+
+  test('should navigate from admin to frontend via header link', async ({ page }) => {
+    await navigateAndWait(page, '/admin')
+    
+    // Click View Site link
+    await page.getByRole('link', { name: 'View Site' }).click()
+    await page.waitForLoadState('networkidle')
+    
+    // Verify we're now in frontend section
+    await expectUrl(page, '/')
+    await expectTextVisible(page, 'Hello World')
+    
+    // Verify frontend layout is applied (footer should be visible, sidebar should not)
+    await expectFooterVisible(page)
+    await expect(page.getByRole('link', { name: 'Dashboard', exact: true })).not.toBeVisible()
+  })
+
+  test('should show correct link based on current section', async ({ page }) => {
+    // In frontend, should show Admin Panel link
+    await navigateAndWait(page, '/')
+    await expect(page.getByRole('link', { name: 'Admin Panel' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'View Site' })).not.toBeVisible()
+    
+    // In admin, should show View Site link
+    await navigateAndWait(page, '/admin')
+    await expect(page.getByRole('link', { name: 'View Site' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Admin Panel' })).not.toBeVisible()
+  })
+
+  test('should complete cross-section navigation quickly', async ({ page }) => {
+    await navigateAndWait(page, '/')
+    
+    // Measure navigation time from frontend to admin
+    const startTime = Date.now()
+    await page.getByRole('link', { name: 'Admin Panel' }).click()
+    await page.waitForLoadState('networkidle')
+    const navigationTime = Date.now() - startTime
+    
+    // Navigation should complete in under 500ms (reasonable for SPA)
+    expect(navigationTime).toBeLessThan(500)
+    await expectUrl(page, '/admin')
+  })
+
+  test('should navigate from admin subpage to frontend', async ({ page }) => {
+    // Start on admin users page (not dashboard)
+    await navigateAndWait(page, '/admin/users')
+    
+    // Click View Site link
+    await page.getByRole('link', { name: 'View Site' }).click()
+    await page.waitForLoadState('networkidle')
+    
+    // Should navigate to frontend home
+    await expectUrl(page, '/')
+    await expectTextVisible(page, 'Hello World')
+  })
+
+  test('should navigate from frontend subpage to admin', async ({ page }) => {
+    // Start on frontend info page (not home)
+    await navigateAndWait(page, '/info')
+    
+    // Click Admin Panel link
+    await page.getByRole('link', { name: 'Admin Panel' }).click()
+    await page.waitForLoadState('networkidle')
+    
+    // Should navigate to admin dashboard
+    await expectUrl(page, '/admin')
+    await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible()
+  })
+})
+

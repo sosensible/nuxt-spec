@@ -1,13 +1,21 @@
 <template>
-  <header class="bg-white border-b border-gray-200 px-6 py-4">
+  <header class="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-6 py-4">
     <div class="flex items-center justify-between">
       <!-- Page Title -->
-      <h1 class="text-xl font-bold">
+      <h1 class="text-xl font-bold text-gray-900 dark:text-gray-50">
         {{ pageTitle || 'Admin Panel' }}
       </h1>
 
       <!-- Actions -->
       <div class="flex items-center gap-4">
+        <!-- Cross-section navigation to frontend -->
+        <UButton v-if="crossSection.showNav" :to="crossSection.targetPath" variant="ghost" color="neutral" size="sm">
+          {{ crossSection.targetLabel }}
+        </UButton>
+
+        <!-- Theme Toggle -->
+        <ThemeToggle />
+
         <!-- Toggle Button - Using UButton -->
         <UButton
 variant="soft" color="neutral" size="sm"
@@ -23,7 +31,11 @@ variant="soft" color="neutral" size="sm"
 
 <script setup lang="ts">
 // Phase 5.5: Enhanced admin header with Nuxt UI components
+// Phase 4: Cross-section navigation (feature 002-basic-usability-i)
 
 const layout = useLayoutState()
 const { pageTitle } = layout
+
+// Cross-section navigation
+const { crossSection } = useNavigation()
 </script>
