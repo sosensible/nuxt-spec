@@ -47,24 +47,11 @@
           name="password"
           required
         >
-          <UInput
+          <PasswordInput
             v-model="state.password"
-            :type="showPassword ? 'text' : 'password'"
             placeholder="Enter your password"
             autocomplete="current-password"
-            size="lg"
-          >
-            <template #trailing>
-              <UButton
-                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                color="gray"
-                variant="link"
-                :padded="false"
-                aria-label="Toggle password visibility"
-                @click="showPassword = !showPassword"
-              />
-            </template>
-          </UInput>
+          />
         </UFormGroup>
 
         <!-- Forgot Password Link -->
@@ -136,7 +123,6 @@ const state = reactive<LoginForm>({
 
 const loading = ref(false)
 const error = ref('')
-const showPassword = ref(false)
 
 // Methods
 async function onSubmit() {
@@ -154,9 +140,8 @@ async function onSubmit() {
     await router.push(returnUrl)
   }
   catch (err: unknown) {
-    // Handle error
-    const errorMessage = err instanceof Error ? err.message : 'Invalid email or password. Please try again.'
-    error.value = errorMessage
+    // Handle error with user-friendly message
+    error.value = getAuthErrorMessage(err)
     console.error('Login error:', err)
   }
   finally {

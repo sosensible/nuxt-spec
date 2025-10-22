@@ -73,24 +73,11 @@
           required
           :hint="passwordHint"
         >
-          <UInput
+          <PasswordInput
             v-model="state.password"
-            :type="showPassword ? 'text' : 'password'"
             placeholder="Create a strong password"
             autocomplete="new-password"
-            size="lg"
-          >
-            <template #trailing>
-              <UButton
-                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
-                color="gray"
-                variant="link"
-                :padded="false"
-                aria-label="Toggle password visibility"
-                @click="showPassword = !showPassword"
-              />
-            </template>
-          </UInput>
+          />
         </UFormGroup>
 
         <!-- Password Strength Indicator -->
@@ -169,7 +156,6 @@ const state = reactive<RegisterForm>({
 const loading = ref(false)
 const error = ref('')
 const success = ref(false)
-const showPassword = ref(false)
 
 // Password hint
 const passwordHint = 'At least 8 characters with uppercase, lowercase, number, and special character'
@@ -243,9 +229,8 @@ async function onSubmit() {
     }, 1500)
   }
   catch (err: unknown) {
-    // Handle error
-    const errorMessage = err instanceof Error ? err.message : 'Registration failed. Please try again.'
-    error.value = errorMessage
+    // Handle error with user-friendly message
+    error.value = getAuthErrorMessage(err)
     console.error('Registration error:', err)
   }
   finally {
