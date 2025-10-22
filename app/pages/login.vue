@@ -99,7 +99,7 @@ import type { LoginForm } from '~/schemas/auth'
 // Page meta
 definePageMeta({
   layout: 'default',
-  // TODO: Add guest middleware to redirect if already logged in
+  middleware: 'guest'
 })
 
 // SEO
@@ -134,7 +134,7 @@ async function onSubmit() {
     await login(state.email, state.password)
 
     // Get return URL from query params or default to home
-    const returnUrl = (route.query.redirect as string) || '/'
+    const returnUrl = (route.query.returnUrl as string) || (route.query.redirect as string) || '/'
 
     // Redirect to return URL
     await router.push(returnUrl)

@@ -26,10 +26,7 @@ export default defineNuxtConfig({
     '/info': { prerender: true },
 
     // Admin routes - client-side only for dynamic content
-    '/admin/**': { ssr: false },
-
-    // Admin test page
-    '/admin-test': { ssr: false }
+    '/admin/**': { ssr: false }
   },
 
   compatibilityDate: '2025-01-15',

@@ -131,7 +131,7 @@ import type { RegisterForm } from '~/schemas/auth'
 // Page meta
 definePageMeta({
   layout: 'default',
-  // TODO: Add guest middleware to redirect if already logged in
+  middleware: 'guest'
 })
 
 // SEO
