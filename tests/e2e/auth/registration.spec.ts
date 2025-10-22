@@ -101,9 +101,9 @@ test.describe('Registration Page', () => {
 
   test('should have link to login page', async ({ page }) => {
     // Should have an "Already have an account? Log in" link
-    const loginLink = page.getByRole('link', { name: /log in|sign in|already.*account/i })
+    const loginLink = page.getByRole('link', { name: /log in|sign in|already.*account/i }).first()
     await expect(loginLink).toBeVisible()
-    
+
     // Click should navigate to login page
     await loginLink.click()
     await expect(page).toHaveURL('/login')
@@ -128,7 +128,7 @@ test.describe('Registration Page', () => {
   })
 
   test('should allow password visibility toggle', async ({ page }) => {
-    const passwordField = page.getByLabel(/^password/i)
+    const passwordField = page.getByRole('textbox', { name: /^password/i })
     
     // Password should be hidden by default
     await expect(passwordField).toHaveAttribute('type', 'password')
