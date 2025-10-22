@@ -33,5 +33,12 @@ export default defineNuxtConfig({
 
   devtools: {
     enabled: false
+  },
+
+  // Runtime config for password reset emails
+  runtimeConfig: {
+    public: {
+      appUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    }
   }
 })
