@@ -34,7 +34,7 @@ test.describe('GitHub OAuth - Login Page', () => {
 
   test('should have divider separating OAuth from email/password', async ({ page }) => {
     // Should have "or" divider between OAuth and email/password form
-    await expect(page.getByText(/or/i)).toBeVisible()
+    await expect(page.getByText(/or/i).first()).toBeVisible()
   })
 
   test('should redirect to GitHub OAuth when button clicked', async ({ page }) => {
@@ -72,7 +72,10 @@ test.describe('GitHub OAuth - Callback Handling', () => {
     // Should redirect to login with error message
     await expect(page).toHaveURL(/\/login/)
     
-    // Should show error alert
-    await expect(page.getByText(/oauth.*error|authorization.*denied/i)).toBeVisible()
+    // Wait for page to fully load and onMounted to execute
+    await page.waitForLoadState('networkidle')
+    
+    // Should show error alert with authorization error message
+    await expect(page.getByText(/authorization was denied/i)).toBeVisible()
   })
 })

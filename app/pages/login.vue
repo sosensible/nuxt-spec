@@ -24,6 +24,15 @@
         </template>
       </UAlert>
 
+      <!-- GitHub OAuth Button -->
+      <UButton color="neutral" variant="outline" size="lg" block icon="i-simple-icons-github" :loading="oauthLoading"
+        :disabled="oauthLoading" @click="handleGitHubLogin">
+        Continue with GitHub
+      </UButton>
+
+      <!-- Divider -->
+      <USeparator label="or" class="my-6" />
+
       <!-- Login Form -->
       <UForm :schema="loginSchema" :state="state" class="space-y-4" @submit="onSubmit">
         <!-- Email Field -->
@@ -94,8 +103,34 @@ const loading = ref(false)
 const error = ref('')
 const showVerificationAlert = ref(false)
 const resendingVerification = ref(false)
+const oauthLoading = ref(false)
+
+// Check for OAuth error in URL
+onMounted(() => {
+  const oauthError = route.query.error as string | undefined
+  if (oauthError) {
+    error.value = oauthError
+  }
+})
 
 // Methods
+async function handleGitHubLogin() {
+  oauthLoading.value = true
+  error.value = ''
+
+  try {
+    // Get OAuth URL from Appwrite
+    const response = await $fetch<{ url: string }>('/api/auth/oauth/github')
+
+    // Redirect to GitHub OAuth
+    window.location.href = response.url
+  } catch (err: unknown) {
+    oauthLoading.value = false
+    error.value = 'Failed to initiate GitHub login. Please try again.'
+    console.error('GitHub OAuth error:', err)
+  }
+}
+
 async function onSubmit() {
   loading.value = true
   error.value = ''

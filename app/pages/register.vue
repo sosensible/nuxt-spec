@@ -8,103 +8,54 @@
       </template>
 
       <!-- Error Alert -->
-      <UAlert
-        v-if="error"
-        color="red"
-        variant="subtle"
-        title="Registration Failed"
-        :description="error"
-        class="mb-6"
-        :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'link', padded: false }"
-        @close="error = ''"
-      />
+      <UAlert v-if="error" color="error" variant="subtle" title="Registration Failed" :description="error" class="mb-6"
+        :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'link', padded: false }" @close="error = ''" />
 
       <!-- Success Alert -->
-      <UAlert
-        v-if="success"
-        color="green"
-        variant="subtle"
-        title="Account Created"
-        description="Your account has been created successfully."
-        class="mb-6"
-      />
+      <UAlert v-if="success" color="success" variant="subtle" title="Account Created"
+        description="Your account has been created successfully." class="mb-6" />
+
+      <!-- GitHub OAuth Button -->
+      <UButton color="neutral" variant="outline" size="lg" block icon="i-simple-icons-github" :loading="oauthLoading"
+        :disabled="oauthLoading" @click="handleGitHubRegister">
+        Continue with GitHub
+      </UButton>
+
+      <!-- Divider -->
+      <USeparator label="or" class="my-6" />
 
       <!-- Registration Form -->
-      <UForm
-        :schema="registerSchema"
-        :state="state"
-        class="space-y-4"
-        @submit="onSubmit"
-      >
+      <UForm :schema="registerSchema" :state="state" class="space-y-4" @submit="onSubmit">
         <!-- Name Field -->
-        <UFormGroup
-          label="Full Name"
-          name="name"
-          required
-        >
-          <UInput
-            v-model="state.name"
-            type="text"
-            placeholder="John Doe"
-            autocomplete="name"
-            size="lg"
-          />
+        <UFormGroup label="Full Name" name="name" required>
+          <UInput v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg" />
         </UFormGroup>
 
         <!-- Email Field -->
-        <UFormGroup
-          label="Email"
-          name="email"
-          required
-        >
-          <UInput
-            v-model="state.email"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            size="lg"
-          />
+        <UFormGroup label="Email" name="email" required>
+          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
         </UFormGroup>
 
         <!-- Password Field -->
-        <UFormGroup
-          label="Password"
-          name="password"
-          required
-          :hint="passwordHint"
-        >
-          <PasswordInput
-            v-model="state.password"
-            placeholder="Create a strong password"
-            autocomplete="new-password"
-          />
+        <UFormGroup label="Password" name="password" required :hint="passwordHint">
+          <PasswordInput v-model="state.password" placeholder="Create a strong password" autocomplete="new-password" />
         </UFormGroup>
 
         <!-- Password Strength Indicator -->
         <div v-if="state.password" class="space-y-2">
           <div class="flex items-center gap-2">
             <div class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div
-                :class="[
-                  'h-full transition-all duration-300',
-                  passwordStrength.color,
-                ]"
-                :style="{ width: `${passwordStrength.percentage}%` }"
-              />
+              <div :class="[
+                'h-full transition-all duration-300',
+                passwordStrength.color,
+              ]" :style="{ width: `${passwordStrength.percentage}%` }" />
             </div>
             <span class="text-xs font-medium">{{ passwordStrength.label }}</span>
           </div>
         </div>
 
         <!-- Submit Button -->
-        <UButton
-          type="submit"
-          color="primary"
-          size="lg"
-          block
-          :loading="loading"
-          :disabled="loading"
-        >
+        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading">
           Sign Up
         </UButton>
       </UForm>
@@ -112,10 +63,7 @@
       <template #footer>
         <div class="text-center text-sm text-gray-600 dark:text-gray-400">
           Already have an account?
-          <NuxtLink
-            to="/login"
-            class="text-primary hover:underline font-medium"
-          >
+          <NuxtLink to="/login" class="text-primary hover:underline font-medium">
             Log in
           </NuxtLink>
         </div>
@@ -156,6 +104,25 @@ const state = reactive<RegisterForm>({
 const loading = ref(false)
 const error = ref('')
 const success = ref(false)
+const oauthLoading = ref(false)
+
+// Methods
+async function handleGitHubRegister() {
+  oauthLoading.value = true
+  error.value = ''
+
+  try {
+    // Get OAuth URL from Appwrite
+    const response = await $fetch<{ url: string }>('/api/auth/oauth/github')
+
+    // Redirect to GitHub OAuth
+    window.location.href = response.url
+  } catch (err: unknown) {
+    oauthLoading.value = false
+    error.value = 'Failed to initiate GitHub registration. Please try again.'
+    console.error('GitHub OAuth error:', err)
+  }
+}
 
 // Password hint
 const passwordHint = 'At least 8 characters with uppercase, lowercase, number, and special character'
