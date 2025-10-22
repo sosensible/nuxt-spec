@@ -27,19 +27,19 @@
       <!-- Registration Form -->
       <UForm :schema="registerSchema" :state="state" class="space-y-4" @submit="onSubmit">
         <!-- Name Field -->
-        <UFormGroup label="Full Name" name="name" required>
+        <UFormField label="Full Name" name="name" required>
           <UInput v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg" />
-        </UFormGroup>
+        </UFormField>
 
         <!-- Email Field -->
-        <UFormGroup label="Email" name="email" required>
+        <UFormField label="Email" name="email" required>
           <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
-        </UFormGroup>
+        </UFormField>
 
         <!-- Password Field -->
-        <UFormGroup label="Password" name="password" required :hint="passwordHint">
+        <UFormField label="Password" name="password" required :hint="passwordHint">
           <PasswordInput v-model="state.password" placeholder="Create a strong password" autocomplete="new-password" />
-        </UFormGroup>
+        </UFormField>
 
         <!-- Password Strength Indicator -->
         <div v-if="state.password" class="space-y-2">
@@ -200,3 +200,4 @@ async function onSubmit() {
   }
 }
 </script>
+

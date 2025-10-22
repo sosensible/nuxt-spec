@@ -83,4 +83,8 @@ export default defineConfig({
     stdout: 'pipe', // Show server output for debugging
     stderr: 'pipe',
   },
+
+  // Global setup - runs once before all tests
+  // Add a small delay to ensure Vite has finished building
+  globalSetup: './tests/global-setup.ts',
 })

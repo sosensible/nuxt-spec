@@ -36,14 +36,14 @@
       <!-- Login Form -->
       <UForm :schema="loginSchema" :state="state" class="space-y-4" @submit="onSubmit">
         <!-- Email Field -->
-        <UFormGroup label="Email" name="email" required>
+        <UFormField label="Email" name="email" required>
           <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
-        </UFormGroup>
+        </UFormField>
 
         <!-- Password Field -->
-        <UFormGroup label="Password" name="password" required>
+        <UFormField label="Password" name="password" required>
           <PasswordInput v-model="state.password" placeholder="Enter your password" autocomplete="current-password" />
-        </UFormGroup>
+        </UFormField>
 
         <!-- Forgot Password Link -->
         <div class="flex justify-end">
@@ -189,3 +189,4 @@ async function resendVerificationEmail() {
   }
 }
 </script>
+

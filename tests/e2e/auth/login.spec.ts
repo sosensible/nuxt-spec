@@ -19,7 +19,7 @@ test.describe('Login Page', () => {
 
     // Check form fields exist
     await expect(page.getByLabel(/email/i)).toBeVisible()
-    await expect(page.getByLabel(/password/i)).toBeVisible()
+    await expect(page.getByRole('textbox', { name: /password/i })).toBeVisible()
 
     // Check submit button
     await expect(page.getByRole('button', { name: /log in|sign in/i })).toBeVisible()
@@ -36,7 +36,7 @@ test.describe('Login Page', () => {
   test('should show validation error for invalid email format', async ({ page }) => {
     // Fill with invalid email
     await page.getByLabel(/email/i).fill('not-an-email')
-    await page.getByLabel(/password/i).fill('password123')
+    await page.getByRole('textbox', { name: /password/i }).fill('password123')
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
     // Should show email format error
@@ -46,11 +46,11 @@ test.describe('Login Page', () => {
   test('should show error message for invalid credentials', async ({ page }) => {
     // Fill with invalid credentials
     await page.getByLabel(/email/i).fill('wrong@example.com')
-    await page.getByLabel(/password/i).fill('wrongpassword')
+    await page.getByRole('textbox', { name: /password/i }).fill('wrongpassword')
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
     // Should show authentication error
-    await expect(page.getByText(/invalid credentials|incorrect|wrong password/i)).toBeVisible()
+    await expect(page.getByText(/invalid credentials|incorrect email or password/i)).toBeVisible()
   })
 
   test('should successfully login with valid credentials', async ({ page }) => {
@@ -58,7 +58,7 @@ test.describe('Login Page', () => {
     // For now, we'll test the UI flow and expect redirect
     
     await page.getByLabel(/email/i).fill('test@example.com')
-    await page.getByLabel(/password/i).fill('password123')
+    await page.getByRole('textbox', { name: /password/i }).fill('password123')
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
     // Should redirect to home page or show success
@@ -71,7 +71,7 @@ test.describe('Login Page', () => {
 
   test('should show loading state during form submission', async ({ page }) => {
     await page.getByLabel(/email/i).fill('test@example.com')
-    await page.getByLabel(/password/i).fill('password123')
+    await page.getByRole('textbox', { name: /password/i }).fill('password123')
 
     // Submit form
     const submitButton = page.getByRole('button', { name: /log in|sign in/i })
@@ -83,9 +83,9 @@ test.describe('Login Page', () => {
 
   test('should have link to registration page', async ({ page }) => {
     // Should have a "Don't have an account? Sign up" link
-    const registerLink = page.getByRole('link', { name: /sign up|register|create account/i })
+    const registerLink = page.getByRole('link', { name: /sign up|register|create account/i }).first()
     await expect(registerLink).toBeVisible()
-    
+
     // Click should navigate to register page
     await registerLink.click()
     await expect(page).toHaveURL('/register')
@@ -117,7 +117,7 @@ test.describe('Login Page', () => {
   })
 
   test('should allow password visibility toggle', async ({ page }) => {
-    const passwordField = page.getByLabel(/password/i)
+    const passwordField = page.getByRole('textbox', { name: /password/i })
     
     // Password should be hidden by default
     await expect(passwordField).toHaveAttribute('type', 'password')
