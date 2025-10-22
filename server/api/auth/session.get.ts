@@ -1,20 +1,25 @@
 /**
  * GET /api/auth/session
  * 
- * Get the current authenticated user.
- * Returns null if no valid session exists.
+ * Get the current authenticated user from session cookie.
+ * This endpoint never throws errors - it always returns a response
+ * with either the user object or null.
  * 
- * Used by middleware and client-side auth checks.
+ * @route GET /api/auth/session
+ * @returns { user: User | null } - Current user or null if not authenticated
+ * @note Safe for use in middleware - never throws errors
+ * @note Returns null for invalid/expired sessions
+ * @note Logs errors in development for debugging
  */
 
 import { mapAppwriteUser } from '../../../types/auth'
 import { createAppwriteSessionClient, createAccountService } from '../../utils/appwrite'
-import { SESSION_COOKIE_NAME } from '../../utils/auth'
+import { getSessionFromCookie } from '../../utils/auth'
 
 export default defineEventHandler(async (event) => {
   try {
     // Get session from cookie
-    const sessionSecret = getCookie(event, SESSION_COOKIE_NAME)
+    const sessionSecret = getSessionFromCookie(event)
 
     // If no session, return null user
     if (!sessionSecret) {

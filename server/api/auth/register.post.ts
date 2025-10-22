@@ -2,14 +2,22 @@
  * POST /api/auth/register
  * 
  * Register a new user with email and password.
- * Automatically creates a session and sets cookie.
+ * Automatically creates a session and sets an HTTP-only cookie.
+ * 
+ * @route POST /api/auth/register
+ * @body { email: string, password: string, name: string }
+ * @returns { user: User } - User object with session cookie set
+ * @throws 400 - Validation error (invalid email, weak password, etc.)
+ * @throws 409 - User with this email already exists
+ * @throws 429 - Rate limit exceeded
+ * @throws 500 - Internal server error
  */
 
 import { ID } from 'node-appwrite'
 import { registerSchema } from '../../../schemas/auth'
 import { mapAppwriteUser } from '../../../types/auth'
 import { createAppwriteClient, createAccountService } from '../../utils/appwrite'
-import { mapAppwriteError, SESSION_COOKIE_NAME, getSessionCookieOptions } from '../../utils/auth'
+import { mapAppwriteError, handleZodError, setSessionCookie } from '../../utils/auth'
 
 export default defineEventHandler(async (event) => {
   try {
@@ -43,7 +51,7 @@ export default defineEventHandler(async (event) => {
     const user = mapAppwriteUser(appwriteUser)
 
     // Set session cookie
-    setCookie(event, SESSION_COOKIE_NAME, session.secret, getSessionCookieOptions())
+    setSessionCookie(event, session.secret)
 
     // Return user data
     return {
@@ -52,16 +60,7 @@ export default defineEventHandler(async (event) => {
   }
   catch (error: unknown) {
     // Handle Zod validation errors
-    if (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError') {
-      const zodError = error as unknown as { issues: Array<{ path: string[]; message: string }> }
-      throw createError({
-        statusCode: 400,
-        message: 'Validation failed',
-        data: {
-          issues: zodError.issues,
-        },
-      })
-    }
+    handleZodError(error)
 
     // Handle Appwrite errors
     throw mapAppwriteError(error)

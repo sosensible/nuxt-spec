@@ -6,7 +6,7 @@
  */
 
 import { createError } from 'h3'
-import type { H3Error } from 'h3'
+import type { H3Error, H3Event } from 'h3'
 import { AppwriteException } from 'node-appwrite'
 
 /**
@@ -122,4 +122,53 @@ export function getSessionCookieOptions(maxAge: number = SESSION_MAX_AGE) {
     maxAge,
     path: '/',
   }
+}
+
+/**
+ * Check if error is a Zod validation error and throw formatted H3 error
+ * @param error - Unknown error to check
+ * @throws H3Error with 400 status if Zod error
+ * @returns false if not a Zod error
+ */
+export function handleZodError(error: unknown): boolean {
+  if (error && typeof error === 'object' && 'name' in error && error.name === 'ZodError') {
+    const zodError = error as unknown as { issues: Array<{ path: string[]; message: string }> }
+    throw createError({
+      statusCode: 400,
+      message: 'Validation failed',
+      data: {
+        issues: zodError.issues,
+      },
+    })
+  }
+  return false
+}
+
+/**
+ * Get session secret from cookie
+ * @param event - H3 event object
+ * @returns Session secret or undefined if not present
+ */
+export function getSessionFromCookie(event: H3Event): string | undefined {
+  return getCookie(event, SESSION_COOKIE_NAME)
+}
+
+/**
+ * Set session cookie with secure defaults
+ * @param event - H3 event object
+ * @param sessionSecret - Appwrite session secret to store
+ */
+export function setSessionCookie(event: H3Event, sessionSecret: string): void {
+  setCookie(event, SESSION_COOKIE_NAME, sessionSecret, getSessionCookieOptions())
+}
+
+/**
+ * Clear session cookie (for logout)
+ * @param event - H3 event object
+ */
+export function clearSessionCookie(event: H3Event): void {
+  setCookie(event, SESSION_COOKIE_NAME, '', {
+    ...getSessionCookieOptions(),
+    maxAge: 0,
+  })
 }

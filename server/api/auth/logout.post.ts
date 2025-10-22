@@ -1,17 +1,23 @@
 /**
  * POST /api/auth/logout
  * 
- * Log out the current user.
- * Deletes the session and clears cookie.
+ * Log out the current user by deleting their session.
+ * Clears the session cookie. This endpoint is idempotent - calling it
+ * multiple times or when not logged in will still return success.
+ * 
+ * @route POST /api/auth/logout
+ * @returns { success: true } - Always returns success
+ * @note Gracefully handles invalid or expired sessions
+ * @note Cookie is cleared even if session deletion fails
  */
 
 import { createAppwriteSessionClient, createAccountService } from '../../utils/appwrite'
-import { mapAppwriteError, SESSION_COOKIE_NAME, getSessionCookieOptions } from '../../utils/auth'
+import { mapAppwriteError, getSessionFromCookie, clearSessionCookie } from '../../utils/auth'
 
 export default defineEventHandler(async (event) => {
   try {
     // Get session from cookie
-    const sessionSecret = getCookie(event, SESSION_COOKIE_NAME)
+    const sessionSecret = getSessionFromCookie(event)
 
     // If no session, return success (idempotent)
     if (!sessionSecret) {
@@ -26,19 +32,13 @@ export default defineEventHandler(async (event) => {
     await account.deleteSession('current')
 
     // Clear session cookie
-    setCookie(event, SESSION_COOKIE_NAME, '', {
-      ...getSessionCookieOptions(),
-      maxAge: 0,
-    })
+    clearSessionCookie(event)
 
     return { success: true }
   }
   catch (error: unknown) {
     // Even if session deletion fails, clear the cookie
-    setCookie(event, SESSION_COOKIE_NAME, '', {
-      ...getSessionCookieOptions(),
-      maxAge: 0,
-    })
+    clearSessionCookie(event)
 
     // For logout, we can be lenient - if session is invalid, treat as success
     if (error && typeof error === 'object' && 'code' in error && (error.code === 401 || error.code === 404)) {
