@@ -13,21 +13,31 @@
  * - Focus on inputs, outputs, and state changes
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { useAuth } from '~/composables/useAuth'
 import type { User } from '~/types/auth'
+import { flushPromises } from '@vue/test-utils'
 
 // Mock $fetch - this is an external dependency
 const mockFetch = vi.fn()
 vi.stubGlobal('$fetch', mockFetch)
 
-// Mock navigateTo - needed for composable to work, but we won't test calls to it
-vi.stubGlobal('navigateTo', vi.fn())
+// Mock navigateTo - return a resolved promise to prevent router navigation
+const mockNavigateTo = vi.fn(() => Promise.resolve())
+vi.stubGlobal('navigateTo', mockNavigateTo)
 
 describe('useAuth composable', () => {
   beforeEach(() => {
     // Clear all mocks before each test
     vi.clearAllMocks()
+  })
+
+  afterEach(async () => {
+    // Flush all pending promises multiple times to ensure all async chains complete
+    // This prevents router navigation from running after test teardown
+    await flushPromises()
+    await new Promise(resolve => setTimeout(resolve, 0))
+    await flushPromises()
   })
 
   describe('Initial State', () => {

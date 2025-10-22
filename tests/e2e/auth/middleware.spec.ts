@@ -17,16 +17,16 @@ test.describe('Auth Middleware', () => {
     // Try to access a protected page
     await page.goto('/admin-test')
     
-    // Should be redirected to login with returnUrl
-    await expect(page).toHaveURL(/\/login\?returnUrl=%2Fadmin-test/)
+    // Should be redirected to login with returnUrl (not URL-encoded)
+    await expect(page).toHaveURL(/\/login\?returnUrl=\/admin-test/)
   })
 
   test('should preserve return URL when redirecting to login', async ({ page }) => {
     // Try to access a protected page
     await page.goto('/admin-test')
     
-    // Should redirect to login with returnUrl query parameter
-    await expect(page).toHaveURL(/\/login\?returnUrl=%2Fadmin-test/)
+    // Should redirect to login with returnUrl query parameter  
+    await expect(page).toHaveURL(/\/login\?returnUrl=\/admin-test/)
   })
 
   test('should allow access to protected pages when authenticated', async ({ page }) => {
@@ -49,7 +49,7 @@ test.describe('Auth Middleware', () => {
   test('should redirect to returnUrl after successful login', async ({ page }) => {
     // Try to access protected page (will redirect to login)
     await page.goto('/admin-test')
-    await expect(page).toHaveURL(/\/login\?returnUrl=%2Fadmin-test/)
+    await expect(page).toHaveURL(/\/login\?returnUrl=\/admin-test/)
     
     // Now login
     await page.fill('input[type="email"]', 'test@example.com')
@@ -126,9 +126,10 @@ test.describe('Guest Middleware', () => {
     await page.goto('/register')
     await expect(page).toHaveURL('/register')
     
-    // Should see registration form
-    await expect(page.locator('input[name="name"]')).toBeVisible()
-    await expect(page.locator('input[type="email"]')).toBeVisible()
+    // Should see registration form (using placeholder text which is more reliable with UI components)
+    await expect(page.getByPlaceholder('John Doe')).toBeVisible()
+    await expect(page.getByPlaceholder('you@example.com')).toBeVisible()
+    await expect(page.getByPlaceholder('Create a strong password')).toBeVisible()
   })
 
   test('should redirect authenticated users away from login page', async ({ page }) => {

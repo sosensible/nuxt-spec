@@ -1,30 +1,53 @@
 /**
- * Auth middleware - Protects routes that require authentication
+ * Auth Middleware
  * 
- * This middleware checks if the user has an active session.
- * If not authenticated, redirects to /login with returnUrl query parameter.
+ * Protects routes requiring authentication. Redirects unauthenticated users
+ * to the login page with a return URL parameter.
  * 
- * Usage: Add `definePageMeta({ middleware: 'auth' })` to protected pages
+ * @description
+ * This middleware:
+ * - Checks authentication status via useAuth().checkAuth()
+ * - Redirects unauthenticated users to /login
+ * - Preserves the original URL as returnUrl query parameter
+ * - Validates returnUrl to prevent open redirect vulnerabilities
+ * 
+ * @security
+ * - Only allows relative paths for returnUrl (no external redirects)
+ * - Prevents protocol-relative URLs (starting with //)
+ * - Uses safeRedirectUrl utility for validation
+ * 
+ * @example
+ * ```vue
+ * <script setup>
+ * definePageMeta({
+ *   middleware: ['auth']
+ * })
+ * </script>
+ * ```
+ * 
+ * @see {@link ~/composables/useAuth.ts} - Authentication composable
+ * @see {@link ~/middleware/guest.ts} - Opposite middleware for guest-only pages
+ * @see {@link ~/utils/redirect.ts} - Redirect validation utilities
  */
+
 export default defineNuxtRouteMiddleware(async (to) => {
   const { user, checkAuth } = useAuth()
   
   // Check if user has an active session
   await checkAuth()
   
-  // If not authenticated, redirect to login
+  // If not authenticated, redirect to login with return URL
   if (!user.value) {
-    // Build returnUrl - only allow relative paths for security
     const returnUrl = to.fullPath
     
-    // Validate returnUrl is a relative path (starts with /)
-    const isRelativePath = returnUrl.startsWith('/') && !returnUrl.startsWith('//')
+    // Validate returnUrl is a safe relative path (prevent open redirect attacks)
+    const safeReturnUrl = safeRedirectUrl(returnUrl)
     
     return navigateTo({
       path: '/login',
-      query: {
-        returnUrl: isRelativePath ? returnUrl : '/'
-      }
+      query: { returnUrl: safeReturnUrl },
     })
   }
+  
+  // User is authenticated, allow access to protected route
 })
