@@ -21,6 +21,17 @@ export interface AuthResult {
   error?: string
 }
 
+/**
+ * Extract error message from API error response
+ * @param error - Unknown error object from catch block
+ * @param fallback - Default message if no specific error message found
+ * @returns Error message string
+ */
+function extractErrorMessage(error: unknown, fallback: string): string {
+  const err = error as { data?: { message?: string } }
+  return err.data?.message || fallback
+}
+
 export const useAuth = () => {
   // SSR-compatible state
   const user = useState<User | null>('user', () => null)
@@ -44,8 +55,7 @@ export const useAuth = () => {
       return { success: true }
     }
     catch (error: unknown) {
-      const err = error as { data?: { message?: string } }
-      return { success: false, error: err.data?.message || 'Login failed' }
+      return { success: false, error: extractErrorMessage(error, 'Login failed') }
     }
     finally {
       loading.value = false
@@ -71,8 +81,7 @@ export const useAuth = () => {
       return { success: true }
     }
     catch (error: unknown) {
-      const err = error as { data?: { message?: string } }
-      return { success: false, error: err.data?.message || 'Registration failed' }
+      return { success: false, error: extractErrorMessage(error, 'Registration failed') }
     }
     finally {
       loading.value = false
@@ -95,8 +104,7 @@ export const useAuth = () => {
       return { success: true }
     }
     catch (error: unknown) {
-      const err = error as { data?: { message?: string } }
-      return { success: false, error: err.data?.message || 'Logout failed' }
+      return { success: false, error: extractErrorMessage(error, 'Logout failed') }
     }
     finally {
       loading.value = false
