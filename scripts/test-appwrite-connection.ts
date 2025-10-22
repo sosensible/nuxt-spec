@@ -104,7 +104,7 @@ ${colors.reset}`)
       // Expected error - API keys can't access Account service (user-only)
       success('Account service is accessible (API key limitation is expected)')
     })
-  } catch (err) {
+  } catch {
     info('Account service test skipped (requires user session, not API key)')
   }
 
