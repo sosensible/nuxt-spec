@@ -8,71 +8,43 @@
       </template>
 
       <!-- Error Alert -->
-      <UAlert
-        v-if="error"
-        color="red"
-        variant="subtle"
-        title="Login Failed"
-        :description="error"
-        class="mb-6"
-        :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'link', padded: false }"
-        @close="error = ''"
-      />
+      <UAlert v-if="error" color="error" variant="subtle" title="Login Failed" :description="error" class="mb-6"
+        :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'link', padded: false }" @close="error = ''" />
+
+      <!-- Email Verification Alert -->
+      <UAlert v-if="showVerificationAlert" color="warning" variant="subtle" title="Email Verification Required"
+        description="Please verify your email address to continue. Check your inbox for the verification link."
+        class="mb-6" :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'link', padded: false }"
+        @close="showVerificationAlert = false">
+        <template #actions>
+          <UButton color="warning" variant="solid" size="xs" :loading="resendingVerification"
+            :disabled="resendingVerification" @click="resendVerificationEmail">
+            Resend Verification Email
+          </UButton>
+        </template>
+      </UAlert>
 
       <!-- Login Form -->
-      <UForm
-        :schema="loginSchema"
-        :state="state"
-        class="space-y-4"
-        @submit="onSubmit"
-      >
+      <UForm :schema="loginSchema" :state="state" class="space-y-4" @submit="onSubmit">
         <!-- Email Field -->
-        <UFormGroup
-          label="Email"
-          name="email"
-          required
-        >
-          <UInput
-            v-model="state.email"
-            type="email"
-            placeholder="you@example.com"
-            autocomplete="email"
-            size="lg"
-          />
+        <UFormGroup label="Email" name="email" required>
+          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
         </UFormGroup>
 
         <!-- Password Field -->
-        <UFormGroup
-          label="Password"
-          name="password"
-          required
-        >
-          <PasswordInput
-            v-model="state.password"
-            placeholder="Enter your password"
-            autocomplete="current-password"
-          />
+        <UFormGroup label="Password" name="password" required>
+          <PasswordInput v-model="state.password" placeholder="Enter your password" autocomplete="current-password" />
         </UFormGroup>
 
         <!-- Forgot Password Link -->
         <div class="flex justify-end">
-          <NuxtLink
-            to="/password-reset"
-            class="text-sm text-primary hover:underline"
-          >
+          <NuxtLink to="/password-reset" class="text-sm text-primary hover:underline">
             Forgot password?
           </NuxtLink>
         </div>
 
         <!-- Submit Button -->
-        <UButton
-          type="submit"
-          color="primary"
-          size="lg"
-          block
-          :loading="loading"
-          :disabled="loading"
-        >
+        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading">
           Log In
         </UButton>
       </UForm>
@@ -80,10 +52,7 @@
       <template #footer>
         <div class="text-center text-sm text-gray-600 dark:text-gray-400">
           Don't have an account?
-          <NuxtLink
-            to="/register"
-            class="text-primary hover:underline font-medium"
-          >
+          <NuxtLink to="/register" class="text-primary hover:underline font-medium">
             Sign up
           </NuxtLink>
         </div>
@@ -123,11 +92,14 @@ const state = reactive<LoginForm>({
 
 const loading = ref(false)
 const error = ref('')
+const showVerificationAlert = ref(false)
+const resendingVerification = ref(false)
 
 // Methods
 async function onSubmit() {
   loading.value = true
   error.value = ''
+  showVerificationAlert.value = false
 
   try {
     // Call login API
@@ -141,11 +113,49 @@ async function onSubmit() {
   }
   catch (err: unknown) {
     // Handle error with user-friendly message
-    error.value = getAuthErrorMessage(err)
+    const errorMessage = getAuthErrorMessage(err)
+
+    // Check if error is related to email verification
+    if (errorMessage.toLowerCase().includes('verify') || errorMessage.toLowerCase().includes('verification')) {
+      showVerificationAlert.value = true
+      error.value = ''
+    } else {
+      error.value = errorMessage
+    }
+
     console.error('Login error:', err)
   }
   finally {
     loading.value = false
+  }
+}
+
+async function resendVerificationEmail() {
+  resendingVerification.value = true
+
+  try {
+    await $fetch('/api/auth/verify-email/resend', {
+      method: 'POST',
+    })
+
+    // Update alert to show success
+    showVerificationAlert.value = false
+    error.value = ''
+
+    // Show success message
+    alert('Verification email sent! Please check your inbox.')
+  } catch (err: unknown) {
+    console.error('Resend verification error:', err)
+
+    // Show error
+    if (err && typeof err === 'object' && 'data' in err) {
+      const fetchError = err as { data?: { message?: string }; message?: string }
+      error.value = fetchError.data?.message || fetchError.message || 'Failed to resend verification email.'
+    } else {
+      error.value = 'Failed to resend verification email. Please try again.'
+    }
+  } finally {
+    resendingVerification.value = false
   }
 }
 </script>

@@ -15,12 +15,14 @@
  * - Returns 401 if not authenticated
  * 
  * @security Rate Limiting
- * - REFACTOR: Should limit to 1 request per 60 seconds
+ * - Limited to 1 request per 60 seconds per user
+ * - Returns 429 if rate limit exceeded
  * - Prevents email spam and abuse
  * 
  * @route POST /api/auth/verify-email/resend
  * @returns { success: true, message: string } - Success confirmation
  * @throws 401 - Not authenticated
+ * @throws 429 - Rate limit exceeded (too many requests)
  * @throws 500 - Unexpected server error
  * 
  * @example Success Response
@@ -35,6 +37,11 @@
  */
 
 import { createAppwriteSessionClient, createAccountService } from '../../../utils/appwrite'
+
+// In-memory rate limiting (per user)
+// Maps userId to timestamp of last resend request
+const rateLimitMap = new Map<string, number>()
+const RATE_LIMIT_MS = 60 * 1000 // 60 seconds
 
 export default defineEventHandler(async (event) => {
   try {
@@ -56,6 +63,18 @@ export default defineEventHandler(async (event) => {
       // Get current user to check verification status
       const user = await account.get()
       
+      // Check rate limiting
+      const now = Date.now()
+      const lastRequest = rateLimitMap.get(user.$id)
+      
+      if (lastRequest && (now - lastRequest) < RATE_LIMIT_MS) {
+        const remainingSeconds = Math.ceil((RATE_LIMIT_MS - (now - lastRequest)) / 1000)
+        throw createError({
+          statusCode: 429,
+          message: `Please wait ${remainingSeconds} seconds before requesting another verification email.`,
+        })
+      }
+      
       // Check if already verified
       if (user.emailVerification) {
         return {
@@ -71,6 +90,9 @@ export default defineEventHandler(async (event) => {
 
       // Send new verification email
       await account.createVerification(verificationUrl)
+
+      // Update rate limit timestamp
+      rateLimitMap.set(user.$id, now)
 
       return {
         success: true,
