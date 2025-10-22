@@ -25,7 +25,8 @@
       <USeparator label="or" class="my-6" />
 
       <!-- Registration Form -->
-      <UForm :schema="registerSchema" :state="state" class="space-y-4" @submit="onSubmit">
+      <UForm :schema="registerSchema" :state="state" :validate-on="['input', 'blur', 'submit']" class="space-y-4"
+        @submit="onSubmit">
         <!-- Name Field -->
         <UFormField label="Full Name" name="name" required>
           <UInput v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg" />
@@ -200,4 +201,3 @@ async function onSubmit() {
   }
 }
 </script>
-

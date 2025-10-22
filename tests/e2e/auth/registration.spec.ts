@@ -31,8 +31,8 @@ test.describe('Registration Page', () => {
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
     // Should show validation errors for required fields
-    await expect(page.getByText(/name is required|required/i).first()).toBeVisible()
-    await expect(page.getByText(/email is required|required/i).first()).toBeVisible()
+    await expect(page.getByText(/Name is required/i).first()).toBeVisible()
+    await expect(page.getByText(/Email is required/i).first()).toBeVisible()
   })
 
   test('should show validation error for invalid email format', async ({ page }) => {
@@ -43,7 +43,7 @@ test.describe('Registration Page', () => {
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
     // Should show email format error
-    await expect(page.getByText(/invalid email|valid email/i)).toBeVisible()
+    await expect(page.getByText(/Invalid email address/i)).toBeVisible()
   })
 
   test('should show validation error for weak password', async ({ page }) => {
@@ -53,8 +53,8 @@ test.describe('Registration Page', () => {
     await page.getByLabel(/^password/i).fill('123') // Too short
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
-    // Should show password strength error
-    await expect(page.getByText(/password.*at least|too short|weak password/i)).toBeVisible()
+    // Should show password strength error (from Zod schema)
+    await expect(page.getByText(/Password must be at least 8 characters/i)).toBeVisible()
   })
 
   test('should show error when registering with existing email', async ({ page }) => {

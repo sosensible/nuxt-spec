@@ -30,7 +30,7 @@ test.describe('Login Page', () => {
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
     // Should show validation errors
-    await expect(page.getByText(/email is required|required/i)).toBeVisible()
+    await expect(page.getByText(/Email is required/i)).toBeVisible()
   })
 
   test('should show validation error for invalid email format', async ({ page }) => {
@@ -40,7 +40,7 @@ test.describe('Login Page', () => {
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
     // Should show email format error
-    await expect(page.getByText(/invalid email|valid email/i)).toBeVisible()
+    await expect(page.getByText(/Invalid email address/i)).toBeVisible()
   })
 
   test('should show error message for invalid credentials', async ({ page }) => {

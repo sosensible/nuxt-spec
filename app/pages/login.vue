@@ -34,7 +34,7 @@
       <USeparator label="or" class="my-6" />
 
       <!-- Login Form -->
-      <UForm :schema="loginSchema" :state="state" class="space-y-4" @submit="onSubmit">
+      <UForm :schema="loginSchema" :state="state" validate-on="submit" class="space-y-4" @submit="onSubmit">
         <!-- Email Field -->
         <UFormField label="Email" name="email" required>
           <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
@@ -189,4 +189,3 @@ async function resendVerificationEmail() {
   }
 }
 </script>
-

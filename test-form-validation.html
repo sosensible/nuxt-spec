@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test UForm Validation</title>
+</head>
+<body>
+  <h1>Manual Test: Visit http://localhost:3000/login</h1>
+  <ol>
+    <li>Go to http://localhost:3000/login</li>
+    <li>Click "Log In" button without filling anything</li>
+    <li>Check if "Email is required" error appears</li>
+    <li>If not, open DevTools and check console for errors</li>
+  </ol>
+  
+  <h2>Expected Behavior:</h2>
+  <p>Validation error "Email is required" should appear below the email field when clicking submit with an empty form.</p>
+  
+  <h2>Actual Behavior:</h2>
+  <p>Based on Playwright test results, no validation error appears.</p>
+  
+  <h2>Possible Issues:</h2>
+  <ul>
+    <li>UForm doesn't validate on submit for untouched fields (added validateOn="['input', 'blur', 'submit']")</li>
+    <li>Validation errors not rendering in DOM</li>
+    <li>UFormField not displaying error property</li>
+  </ul>
+</body>
+</html>
