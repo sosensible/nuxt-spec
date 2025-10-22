@@ -104,23 +104,18 @@ const state = reactive<RegisterForm>({
 const loading = ref(false)
 const error = ref('')
 const success = ref(false)
-const oauthLoading = ref(false)
+
+// OAuth composable
+const { loading: oauthLoading, loginWithGitHub } = useOAuth()
 
 // Methods
 async function handleGitHubRegister() {
-  oauthLoading.value = true
   error.value = ''
 
   try {
-    // Get OAuth URL from Appwrite
-    const response = await $fetch<{ url: string }>('/api/auth/oauth/github')
-
-    // Redirect to GitHub OAuth
-    window.location.href = response.url
-  } catch (err: unknown) {
-    oauthLoading.value = false
+    await loginWithGitHub()
+  } catch {
     error.value = 'Failed to initiate GitHub registration. Please try again.'
-    console.error('GitHub OAuth error:', err)
   }
 }
 

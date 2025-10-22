@@ -19,8 +19,11 @@ export default defineEventHandler(async (event) => {
     const errorMessage = String(query.error)
     console.error('GitHub OAuth error:', errorMessage)
     
-    // Redirect to login with error message
-    return sendRedirect(event, `/login?error=${encodeURIComponent('GitHub authorization was denied or failed. Please try again.')}`)
+    // Map OAuth error to user-friendly error code
+    const errorCode = errorMessage === 'access_denied' ? 'access_denied' : 'oauth_failed'
+    
+    // Redirect to login with error code
+    return sendRedirect(event, `/login?error=${errorCode}`)
   }
 
   const userId = query.userId as string | undefined
@@ -29,7 +32,7 @@ export default defineEventHandler(async (event) => {
   // Validate required parameters
   if (!userId || !secret) {
     console.error('Missing OAuth parameters:', { userId: !!userId, secret: !!secret })
-    return sendRedirect(event, `/login?error=${encodeURIComponent('Invalid OAuth callback. Please try again.')}`)
+    return sendRedirect(event, '/login?error=invalid_callback')
   }
 
   try {
@@ -56,7 +59,7 @@ export default defineEventHandler(async (event) => {
   } catch (error: unknown) {
     console.error('OAuth session creation error:', error)
     
-    // Redirect to login with error
-    return sendRedirect(event, `/login?error=${encodeURIComponent('Failed to complete GitHub login. Please try again.')}`)
+    // Redirect to login with error code
+    return sendRedirect(event, '/login?error=session_failed')
   }
 })
