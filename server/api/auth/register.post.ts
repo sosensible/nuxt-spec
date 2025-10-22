@@ -14,7 +14,7 @@
  */
 
 import { ID } from 'node-appwrite'
-import { registerSchema } from '../../../schemas/auth'
+import { registerSchema } from '../../../app/schemas/auth'
 import { mapAppwriteUser } from '../../../types/auth'
 import { createAppwriteClient, createAccountService } from '../../utils/appwrite'
 import { mapAppwriteError, handleZodError, setSessionCookie } from '../../utils/auth'

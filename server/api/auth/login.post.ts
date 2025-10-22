@@ -13,7 +13,7 @@
  * @throws 500 - Internal server error
  */
 
-import { loginSchema } from '../../../schemas/auth'
+import { loginSchema } from '../../../app/schemas/auth'
 import { mapAppwriteUser } from '../../../types/auth'
 import { createAppwriteClient, createAccountService } from '../../utils/appwrite'
 import { mapAppwriteError, handleZodError, setSessionCookie } from '../../utils/auth'
