@@ -1,4 +1,3 @@
-````mdc
 # Nuxt Layout-Based Web Experience
 
 [![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
@@ -9,6 +8,7 @@ A professional layout-based web application built with Nuxt 4, Nuxt UI v4, and P
 ## 🎯 Project Overview
 
 This project demonstrates a complete implementation of a dual-layout web application with:
+
 - **Frontend Layout**: Public-facing pages with header, footer, and navigation
 - **Admin Layout**: Administrative interface with collapsible sidebar and dashboard
 
@@ -78,6 +78,7 @@ pnpm install
 ### 2. Configure Appwrite (Required for Authentication)
 
 1. Copy the environment variables template:
+
    ```bash
    cp .env.example .env
    ```
@@ -102,6 +103,7 @@ pnpm dev
 ```
 
 Visit the following pages:
+
 - **Home**: http://localhost:3001/
 - **Info**: http://localhost:3001/info
 - **Login**: http://localhost:3001/login
@@ -157,6 +159,7 @@ For E2E testing status and instructions, see [`tests/e2e/auth/E2E-STATUS.md`](./
 ## 📚 Documentation
 
 ### Implementation Documentation
+
 - **Spec 001** (`specs/001-layout-based-we/`) - Layout system and dark mode
 - **Spec 002** (`specs/002-basic-usability-i/`) - Cross-section navigation
 - **Spec 003** (`specs/003-login-auth-we/`) - Authentication system
@@ -164,6 +167,7 @@ For E2E testing status and instructions, see [`tests/e2e/auth/E2E-STATUS.md`](./
   - [`IMPLEMENTATION-COMPLETE.md`](./specs/003-login-auth-we/IMPLEMENTATION-COMPLETE.md) - Implementation status
 
 ### Setup Guides
+
 - **[APPWRITE-SETUP.md](./APPWRITE-SETUP.md)** - Complete Appwrite backend setup
 - **[.env.example](./.env.example)** - Environment variables reference
 
@@ -172,6 +176,7 @@ For E2E testing status and instructions, see [`tests/e2e/auth/E2E-STATUS.md`](./
 The application includes a complete authentication system powered by [Appwrite](https://appwrite.io):
 
 ### Features
+
 - ✅ Email/Password registration and login
 - ✅ GitHub OAuth authentication
 - ✅ Email verification
@@ -181,12 +186,14 @@ The application includes a complete authentication system powered by [Appwrite](
 - ✅ User-friendly error handling
 
 ### Authentication Pages
+
 - `/login` - Login with email/password or GitHub
 - `/register` - Create new account
 - `/password-reset` - Request password reset
 - `/verify-email` - Email verification confirmation
 
 ### API Endpoints
+
 - `POST /api/auth/register` - Register new user
 - `POST /api/auth/login` - Login with credentials
 - `POST /api/auth/logout` - End session
@@ -202,16 +209,16 @@ The application includes a complete authentication system powered by [Appwrite](
 
 ```vue
 <script setup lang="ts">
-const { user, login, logout } = useAuth()
+const { user, login, logout } = useAuth();
 
 // Login
-await login('user@example.com', 'password')
+await login("user@example.com", "password");
 
 // Access user info
-console.log(user.value?.name)
+console.log(user.value?.name);
 
 // Logout
-await logout()
+await logout();
 </script>
 ```
 
@@ -222,8 +229,8 @@ Use middleware to protect routes:
 ```vue
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth' // Requires authentication
-})
+  middleware: "auth", // Requires authentication
+});
 </script>
 ```
 
@@ -232,23 +239,27 @@ For complete setup instructions, see [APPWRITE-SETUP.md](./APPWRITE-SETUP.md)
 ## 🎨 Key Components
 
 ### Cross-Section Navigation
+
 - **Frontend Header**: Shows "Admin Panel" link to quickly access admin section
 - **Admin Header**: Shows "View Site" link to return to frontend
 - **Smart Detection**: Automatically shows appropriate link based on current section
 - **Seamless UX**: Client-side routing for instant navigation between sections
 
 ### Frontend Layout
+
 - Responsive header with navigation
 - Three-column footer with brand info
 - Clean, professional design
 
 ### Admin Layout
+
 - Collapsible sidebar (240px → 64px)
 - Dynamic page titles
 - Dashboard with stats cards
 - User management with search and filters
 
 ### Nuxt UI Components Used
+
 - `UButton` - Action buttons with variants
 - `UCard` - Content cards
 - `UIcon` - Heroicons integration
@@ -258,6 +269,7 @@ For complete setup instructions, see [APPWRITE-SETUP.md](./APPWRITE-SETUP.md)
 ## 🔧 Configuration
 
 The project uses:
+
 - **Port 3001** to avoid conflicts
 - **Experimental features**: `inlineSSRStyles: false` for better CSS loading
 - **App config**: Custom primary/neutral colors (green/slate)
@@ -270,4 +282,3 @@ The project uses:
 - Stores are accessible via composables
 
 Check out the [Nuxt documentation](https://nuxt.com/docs) and [Nuxt UI documentation](https://ui.nuxt.com) for more information.
-````
