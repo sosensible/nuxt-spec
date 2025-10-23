@@ -14,7 +14,7 @@
  * }
  */
 
-import type { User, AuthResponse } from '~/types/auth'
+import type { User, AuthResponse } from '../../types/auth'
 
 export interface AuthResult {
   success: boolean
