@@ -33,6 +33,33 @@ This guide walks you through setting up and using the authentication system in y
 
 ---
 
+## Environment variables (example)
+
+The authentication feature requires a few environment variables. A scoped example is included at `specs/003-login-auth-we/.env.example`.
+
+Copy the example into a local `.env` file and fill in your project-specific values. On Windows PowerShell (pwsh) you can run:
+
+```powershell
+# Copy the example into .env in the same folder as your repo root
+Copy-Item -Path .\specs\003-login-auth-we\.env.example -Destination .\.env -Force
+
+# Alternatively, open and edit the file in-place
+code .\specs\003-login-auth-we\.env.example
+```
+
+Then open `.env` and replace the placeholder values:
+
+- `APPWRITE_PROJECT_ID`
+- `APPWRITE_API_KEY`
+- `APPWRITE_ENDPOINT`
+- `GITHUB_CLIENT_ID`
+- `GITHUB_CLIENT_SECRET`
+- (Optional) `NUXT_PUBLIC_APP_URL`
+
+Important: Do NOT commit your `.env` file to version control. Add `.env` to `.gitignore` if it's not already ignored.
+
+If you prefer to keep an env file scoped to the spec, you can copy the example into the spec folder and use it directly by running Nuxt with the `--dotenv` flag or your environment loader of choice.
+
 ## 2. Installation
 
 ### Install Dependencies

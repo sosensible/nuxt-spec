@@ -36,13 +36,25 @@ export const useOAuth = () => {
     error.value = ''
 
     try {
-      const response = await $fetch<{ url: string }>('/api/auth/oauth/github')
+      // Include the current route path as returnTo so the server can forward the user back to it after OAuth
+      const route = useRoute()
+      const returnTo = route.fullPath || undefined
+      const response = await $fetch<{ url: string }>('/api/auth/oauth/github', {
+        params: returnTo ? { returnTo } : undefined,
+      })
       
       // Redirect to GitHub OAuth
       window.location.href = response.url
-    } catch (err) {
+    } catch (err: unknown) {
       loading.value = false
-      error.value = 'Failed to initiate GitHub login. Please try again.'
+      // Prefer server-provided message when available (h3/createError -> message)
+      let serverMessage: string | undefined
+      if (err && typeof err === 'object') {
+        const e = err as Record<string, unknown>
+        const data = e.data as Record<string, unknown> | undefined
+        serverMessage = (data && data.message) as string | undefined || (e.message as string | undefined)
+      }
+      error.value = serverMessage ? String(serverMessage) : 'Failed to initiate GitHub login. Please try again.'
       console.error('GitHub OAuth error:', err)
       throw err
     }

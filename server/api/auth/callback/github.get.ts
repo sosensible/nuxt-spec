@@ -45,17 +45,25 @@ export default defineEventHandler(async (event) => {
     // Create session from OAuth
     const session = await account.createSession(userId, secret)
 
-    // Set session cookie
-    setCookie(event, 'session', session.secret, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 days
-      path: '/',
-    })
+    // Ensure session secret exists
+  const sessionObj = session as { secret?: string; $id?: string } | undefined
+  const sessionSecret = (sessionObj && (sessionObj.secret || sessionObj.$id)) || undefined
+    if (!sessionSecret) {
+      console.error('No session secret returned from Appwrite:', session)
+      return sendRedirect(event, '/login?error=session_failed')
+    }
 
-    // Redirect to home page
-    return sendRedirect(event, '/')
+    // Use shared helper to set session cookie with consistent options
+    const { setSessionCookie } = await import('../../../utils/auth')
+    setSessionCookie(event, sessionSecret as string)
+
+  // Build an absolute redirect back to the frontend. If a validated returnTo was provided to the initiation step,
+  // the initiation step included it on the Appwrite success URL and Appwrite has returned it to us; forward it after creating session.
+  const config = useRuntimeConfig()
+  const baseUrl = config.public.appUrl || 'http://localhost:3000'
+  const incomingReturnTo = query.returnTo as string | undefined
+  const safeReturnTo = (incomingReturnTo && incomingReturnTo.startsWith('/') && !incomingReturnTo.startsWith('//')) ? incomingReturnTo : '/'
+  return sendRedirect(event, `${baseUrl}${safeReturnTo}`)
   } catch (error: unknown) {
     console.error('OAuth session creation error:', error)
     

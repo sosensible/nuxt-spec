@@ -32,6 +32,10 @@ This project demonstrates a complete implementation of a dual-layout web applica
 npm create nuxt@latest -- -t github:nuxt-ui-templates/starter
 ```
 
+For feature-specific setup (authentication, OAuth, Appwrite), see the Authentication quickstart in the specs folder:
+
+- `specs/003-login-auth-we/quickstart.md` — contains step-by-step setup, env instructions, and testing notes for the authentication feature.
+
 ## Deploy your own
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=starter&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Fstarter&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Fstarter-dark.png&demo-url=https%3A%2F%2Fstarter-template.nuxt.dev%2F&demo-title=Nuxt%20Starter%20Template&demo-description=A%20minimal%20template%20to%20get%20started%20with%20Nuxt%20UI.)
@@ -96,7 +100,7 @@ pnpm install
 
 ## 💻 Development Server
 
-Start the development server on `http://localhost:3001`:
+Start the development server on `http://localhost:3000`:
 
 ```bash
 pnpm dev
@@ -104,12 +108,12 @@ pnpm dev
 
 Visit the following pages:
 
-- **Home**: http://localhost:3001/
-- **Info**: http://localhost:3001/info
-- **Login**: http://localhost:3001/login
-- **Register**: http://localhost:3001/register
-- **Admin Dashboard**: http://localhost:3001/admin (requires authentication)
-- **Admin Users**: http://localhost:3001/admin/users
+- **Home**: http://localhost:3000/
+- **Info**: http://localhost:3000/info
+- **Login**: http://localhost:3000/login
+- **Register**: http://localhost:3000/register
+- **Admin Dashboard**: http://localhost:3000/admin (requires authentication)
+- **Admin Users**: http://localhost:3000/admin/users
 
 ## 🏗️ Production
 
@@ -132,7 +136,7 @@ pnpm preview
 - **State Management**: Pinia 3.0.3 with @pinia/nuxt 0.11.2
 - **Icons**: Heroicons via @iconify-json/heroicons
 - **TypeScript**: Full type safety
-- **Dev Server Port**: 3001
+- **Dev Server Port**: 3000
 
 ## 🧪 Testing
 
@@ -270,7 +274,7 @@ For complete setup instructions, see [APPWRITE-SETUP.md](./APPWRITE-SETUP.md)
 
 The project uses:
 
-- **Port 3001** to avoid conflicts
+- **Port 3000** to avoid conflicts
 - **Experimental features**: `inlineSSRStyles: false` for better CSS loading
 - **App config**: Custom primary/neutral colors (green/slate)
 
