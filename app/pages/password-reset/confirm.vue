@@ -10,7 +10,7 @@
         </div>
       </template>
 
-  <UAlert v-if="errorMessage" color="error" variant="soft" title="Error" :description="errorMessage" class="mb-4" />
+      <UAlert v-if="errorMessage" color="error" variant="soft" title="Error" :description="errorMessage" class="mb-4" />
 
       <UForm v-if="!successMessage" :state="formState" :schema="passwordResetConfirmFormSchema" @submit="handleSubmit">
         <UFormField name="password" label="New Password">

@@ -10,16 +10,14 @@
         </div>
       </template>
 
-  <UAlert
-v-if="successMessage" color="success" variant="soft" title="Check Your Email" :description="successMessage"
-    class="mb-4" />
+      <UAlert v-if="successMessage" color="success" variant="soft" title="Check Your Email"
+        :description="successMessage" class="mb-4" />
 
-  <UAlert v-if="errorMessage" color="error" variant="soft" title="Error" :description="errorMessage" class="mb-4" />
+      <UAlert v-if="errorMessage" color="error" variant="soft" title="Error" :description="errorMessage" class="mb-4" />
 
       <UForm :state="formState" :schema="passwordResetRequestSchema" @submit="handleSubmit">
         <UFormField name="email" label="Email">
-          <UInput
-v-model="formState.email" type="email" placeholder="you@example.com" :disabled="loading"
+          <UInput v-model="formState.email" type="email" placeholder="you@example.com" :disabled="loading"
             autocomplete="email" />
         </UFormField>
 
