@@ -34,15 +34,18 @@
       <USeparator label="or" class="my-6" />
 
       <!-- Login Form -->
-      <UForm :schema="loginSchema" :state="state" validate-on="submit" class="space-y-4" @submit="onSubmit">
+      <UForm ref="form" :schema="loginSchema" :state="state" class="space-y-4" data-testid="login-form"
+        @submit="onSubmit">
         <!-- Email Field -->
-        <UFormField label="Email" name="email" required>
-          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
+        <UFormField label="Email" name="email" required data-testid="email-field">
+          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg"
+            data-testid="email-input" />
         </UFormField>
 
         <!-- Password Field -->
-        <UFormField label="Password" name="password" required>
-          <PasswordInput v-model="state.password" placeholder="Enter your password" autocomplete="current-password" />
+        <UFormField label="Password" name="password" required data-testid="password-field">
+          <PasswordInput v-model="state.password" placeholder="Enter your password" autocomplete="current-password"
+            data-testid="password-input" />
         </UFormField>
 
         <!-- Forgot Password Link -->
@@ -53,7 +56,8 @@
         </div>
 
         <!-- Submit Button -->
-        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading">
+        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading"
+          data-testid="login-submit">
           Log In
         </UButton>
       </UForm>
@@ -73,6 +77,7 @@
 <script setup lang="ts">
 import { loginSchema } from '~/schemas/auth'
 import type { LoginForm } from '~/schemas/auth'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
 // Page meta
 definePageMeta({
@@ -94,6 +99,7 @@ const router = useRouter()
 const route = useRoute()
 
 // State
+const form = ref()
 const state = reactive<LoginForm>({
   email: '',
   password: '',
@@ -126,14 +132,15 @@ async function handleGitHubLogin() {
   }
 }
 
-async function onSubmit() {
+async function onSubmit(event: FormSubmitEvent<LoginForm>) {
+  console.log('[Login] onSubmit called with data:', event.data)
   loading.value = true
   error.value = ''
   showVerificationAlert.value = false
 
   try {
-    // Call login API
-    await login(state.email, state.password)
+    // Call login API using validated data
+    await login(event.data.email, event.data.password)
 
     // Get return URL from query params or default to home
     const returnUrl = (route.query.returnUrl as string) || (route.query.redirect as string) || '/'

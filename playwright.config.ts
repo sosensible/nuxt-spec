@@ -80,8 +80,8 @@ export default defineConfig({
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 180 * 1000, // Increased to 3 minutes for CI
-    stdout: 'pipe', // Show server output for debugging
-    stderr: 'pipe',
+    stdout: 'ignore', // Suppress Nuxt server output (reduces "Premature close" noise)
+    stderr: 'ignore', // Suppress Nuxt server errors
   },
 
   // Global setup - runs once before all tests

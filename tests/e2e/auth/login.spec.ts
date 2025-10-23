@@ -1,16 +1,24 @@
 import { test, expect } from '@playwright/test'
+import { setupAppwriteMocks } from '../../fixtures/appwrite-mocks'
+import { waitForHydration } from '../../helpers/hydration'
 
 /**
- * E2E Login Page Tests (RED Phase - Phase 2.3)
+ * E2E Login Page Tests
  * 
  * Tests for the login page user interface and authentication flow.
- * These tests will fail until the login page is implemented.
+ * Uses mocked Appwrite API responses for reliable testing.
  */
 
 test.describe('Login Page', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup API mocks before each test
+    await setupAppwriteMocks(page, { authenticated: false })
+    
     // Navigate to login page before each test
     await page.goto('/login')
+    
+    // Wait for hydration to complete
+    await waitForHydration(page)
   })
 
   test('should display login form with email and password fields', async ({ page }) => {
@@ -26,21 +34,28 @@ test.describe('Login Page', () => {
   })
 
   test('should show validation errors for empty form submission', async ({ page }) => {
-    // Click submit without filling form
-    await page.getByRole('button', { name: /log in|sign in/i }).click()
+    // Click submit without filling form using data-testid
+    await page.getByTestId('login-submit').click()
 
-    // Should show validation errors
-    await expect(page.getByText(/Email is required/i)).toBeVisible()
+    // Wait for validation to complete and errors to render
+    await page.waitForTimeout(500)
+
+    // Should show validation errors for required fields
+    await expect(page.getByText(/Email is required/i)).toBeVisible({ timeout: 3000 })
+    await expect(page.getByText(/Password is required/i)).toBeVisible({ timeout: 3000 })
   })
 
   test('should show validation error for invalid email format', async ({ page }) => {
-    // Fill with invalid email
-    await page.getByLabel(/email/i).fill('not-an-email')
+    // Fill with invalid email (no @ symbol to trigger Zod validation)
+    await page.getByLabel(/email/i).fill('invalidemail')
     await page.getByRole('textbox', { name: /password/i }).fill('password123')
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
+    // Wait for validation to complete
+    await page.waitForTimeout(500)
+
     // Should show email format error
-    await expect(page.getByText(/Invalid email address/i)).toBeVisible()
+    await expect(page.getByText(/Invalid email address/i)).toBeVisible({ timeout: 3000 })
   })
 
   test('should show error message for invalid credentials', async ({ page }) => {
@@ -54,19 +69,13 @@ test.describe('Login Page', () => {
   })
 
   test('should successfully login with valid credentials', async ({ page }) => {
-    // Note: This test requires a test user to exist in Appwrite
-    // For now, we'll test the UI flow and expect redirect
-    
+    // Mock will return success for test@example.com / password123
     await page.getByLabel(/email/i).fill('test@example.com')
     await page.getByRole('textbox', { name: /password/i }).fill('password123')
     await page.getByRole('button', { name: /log in|sign in/i }).click()
 
-    // Should redirect to home page or show success
-    // This will depend on actual implementation
-    await page.waitForURL('/', { timeout: 5000 }).catch(() => {
-      // If redirect doesn't happen, check for success message
-      expect(page.getByText(/success|logged in/i)).toBeVisible()
-    })
+    // Should redirect to home page after successful login
+    await expect(page).toHaveURL('/', { timeout: 5000 })
   })
 
   test('should show loading state during form submission', async ({ page }) => {
@@ -138,8 +147,8 @@ test.describe('Login Page', () => {
 
 test.describe('Logout Functionality', () => {
   test.beforeEach(async ({ page }) => {
-    // For these tests, we assume user is logged in
-    // In real scenario, we'd need to login first or mock session
+    // Setup authenticated session
+    await setupAppwriteMocks(page, { authenticated: true })
     await page.goto('/')
   })
 

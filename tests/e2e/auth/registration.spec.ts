@@ -1,16 +1,24 @@
 import { test, expect } from '@playwright/test'
+import { setupAppwriteMocks } from '../../fixtures/appwrite-mocks'
+import { waitForHydration } from '../../helpers/hydration'
 
 /**
- * E2E Registration Page Tests (RED Phase - Phase 2.3)
+ * E2E Registration Page Tests
  * 
  * Tests for the registration page user interface and user creation flow.
- * These tests will fail until the registration page is implemented.
+ * Uses mocked Appwrite API responses for reliable testing.
  */
 
 test.describe('Registration Page', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup API mocks before each test
+    await setupAppwriteMocks(page, { authenticated: false })
+    
     // Navigate to registration page before each test
     await page.goto('/register')
+    
+    // Wait for hydration to complete
+    await waitForHydration(page)
   })
 
   test('should display registration form with all required fields', async ({ page }) => {
@@ -30,20 +38,26 @@ test.describe('Registration Page', () => {
     // Click submit without filling form
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
+    // Wait for validation to complete
+    await page.waitForTimeout(500)
+
     // Should show validation errors for required fields
-    await expect(page.getByText(/Name is required/i).first()).toBeVisible()
-    await expect(page.getByText(/Email is required/i).first()).toBeVisible()
+    await expect(page.getByText(/Name is required/i).first()).toBeVisible({ timeout: 3000 })
+    await expect(page.getByText(/Email is required/i).first()).toBeVisible({ timeout: 3000 })
   })
 
   test('should show validation error for invalid email format', async ({ page }) => {
-    // Fill with invalid email
+    // Fill with invalid email (no @ symbol to trigger Zod validation)
     await page.getByLabel(/name|full name/i).fill('Test User')
-    await page.getByLabel(/email/i).fill('not-an-email')
+    await page.getByLabel(/email/i).fill('invalidemail')
     await page.getByLabel(/^password/i).fill('SecurePass123!')
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
+    // Wait for validation to complete
+    await page.waitForTimeout(500)
+
     // Should show email format error
-    await expect(page.getByText(/Invalid email address/i)).toBeVisible()
+    await expect(page.getByText(/Invalid email address/i)).toBeVisible({ timeout: 3000 })
   })
 
   test('should show validation error for weak password', async ({ page }) => {
@@ -53,8 +67,11 @@ test.describe('Registration Page', () => {
     await page.getByLabel(/^password/i).fill('123') // Too short
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
+    // Wait for validation to complete
+    await page.waitForTimeout(500)
+
     // Should show password strength error (from Zod schema)
-    await expect(page.getByText(/Password must be at least 8 characters/i)).toBeVisible()
+    await expect(page.getByText(/Password must be at least 8 characters/i)).toBeVisible({ timeout: 3000 })
   })
 
   test('should show error when registering with existing email', async ({ page }) => {
@@ -79,11 +96,8 @@ test.describe('Registration Page', () => {
     await page.getByLabel(/^password/i).fill('SecurePass123!')
     await page.getByRole('button', { name: /sign up|register|create account/i }).click()
 
-    // Should redirect to home page or show success message
-    await page.waitForURL('/', { timeout: 5000 }).catch(() => {
-      // If redirect doesn't happen, check for success message
-      expect(page.getByText(/success|account created|registered/i)).toBeVisible()
-    })
+    // Mock will auto-login after registration, should redirect to home page
+    await expect(page).toHaveURL('/', { timeout: 5000 })
   })
 
   test('should show loading state during form submission', async ({ page }) => {

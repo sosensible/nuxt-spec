@@ -17,10 +17,15 @@
  */
 
 import { test, expect } from '@playwright/test'
+import { setupAppwriteMocks } from '../../fixtures/appwrite-mocks'
+import { waitForHydration } from '../../helpers/hydration'
 
 test.describe('GitHub OAuth - Login Page', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup API mocks
+    await setupAppwriteMocks(page, { authenticated: false })
     await page.goto('/login')
+    await waitForHydration(page)
   })
 
   test('should display GitHub OAuth button', async ({ page }) => {
@@ -51,7 +56,10 @@ test.describe('GitHub OAuth - Login Page', () => {
 
 test.describe('GitHub OAuth - Register Page', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup API mocks
+    await setupAppwriteMocks(page, { authenticated: false })
     await page.goto('/register')
+    await waitForHydration(page)
   })
 
   test('should display GitHub OAuth button', async ({ page }) => {
@@ -65,6 +73,11 @@ test.describe('GitHub OAuth - Register Page', () => {
 })
 
 test.describe('GitHub OAuth - Callback Handling', () => {
+  test.beforeEach(async ({ page }) => {
+    // Setup API mocks
+    await setupAppwriteMocks(page, { authenticated: false })
+  })
+  
   test('should handle OAuth error in callback', async ({ page }) => {
     // Simulate OAuth error callback
     await page.goto('/api/auth/callback/github?error=access_denied')

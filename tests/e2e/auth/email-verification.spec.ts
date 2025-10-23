@@ -14,9 +14,14 @@
  */
 
 import { test, expect } from '@playwright/test'
+import { setupAppwriteMocks } from '../../fixtures/appwrite-mocks'
+import { waitForHydration } from '../../helpers/hydration'
 
 test.describe('Email Verification Flow', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup API mocks
+    await setupAppwriteMocks(page, { authenticated: false })
+    
     // Start at home page
     await page.goto('/')
   })
@@ -48,6 +53,7 @@ test.describe('Email Verification Flow', () => {
     // 2. User receives verification email (check email - requires backend)
     // 3. User clicks verification link with userId and secret
     await page.goto('/verify-email?userId=test123&secret=test-token')
+    await waitForHydration(page)
 
     // Should show verification page
     await expect(page.getByText(/verifying/i)).toBeVisible()
@@ -62,6 +68,7 @@ test.describe('Email Verification Flow', () => {
 
   test('should handle invalid verification token', async ({ page }) => {
     await page.goto('/verify-email?userId=test123&secret=invalid-token')
+    await waitForHydration(page)
 
     // Should show error message
     await expect(page.getByText(/invalid.*expired/i)).toBeVisible({ timeout: 10000 })
@@ -72,6 +79,7 @@ test.describe('Email Verification Flow', () => {
 
   test('should handle missing verification parameters', async ({ page }) => {
     await page.goto('/verify-email')
+    await waitForHydration(page)
 
     // Should show error for missing parameters
     await expect(page.getByText(/invalid.*link/i)).toBeVisible()
@@ -80,6 +88,7 @@ test.describe('Email Verification Flow', () => {
   test('should allow resending verification email', async ({ page }) => {
     // Navigate to verification page with expired token
     await page.goto('/verify-email?userId=test123&secret=expired-token')
+    await waitForHydration(page)
 
     // Wait for error to appear
     await expect(page.getByText(/invalid.*expired/i)).toBeVisible({ timeout: 10000 })
@@ -98,6 +107,7 @@ test.describe('Email Verification Flow', () => {
   test('should show already verified message for verified emails', async ({ page }) => {
     // Assume user is already verified
     await page.goto('/verify-email?userId=verified-user&secret=used-token')
+    await waitForHydration(page)
 
     // Should show "already verified" message
     await expect(
@@ -110,6 +120,7 @@ test.describe('Email Verification Flow', () => {
   test('should require login to resend verification (when not auto-verified)', async ({ page }) => {
     // Go to verify-email page without auth
     await page.goto('/verify-email')
+    await waitForHydration(page)
 
     // Try to resend (if button is visible without token)
     const resendButton = page.getByRole('button', { name: /resend/i })
@@ -136,6 +147,7 @@ test.describe('Email Verification Flow', () => {
   test('should disable resend button with countdown timer', async ({ page }) => {
     // REFACTOR phase: Add countdown timer
     await page.goto('/verify-email?userId=test123&secret=expired-token')
+    await waitForHydration(page)
 
     // Wait for error
     await expect(page.getByText(/invalid.*expired/i)).toBeVisible({ timeout: 10000 })
@@ -151,6 +163,7 @@ test.describe('Email Verification Flow', () => {
 
   test('should auto-verify on page load with valid token', async ({ page }) => {
     await page.goto('/verify-email?userId=valid-user&secret=valid-token')
+    await waitForHydration(page)
 
     // Should automatically verify without user clicking anything
     // Just show loading then success

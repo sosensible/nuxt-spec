@@ -14,9 +14,14 @@
  */
 
 import { test, expect } from '@playwright/test'
+import { setupAppwriteMocks } from '../../fixtures/appwrite-mocks'
+import { waitForHydration } from '../../helpers/hydration'
 
 test.describe('Password Reset Flow', () => {
   test.beforeEach(async ({ page }) => {
+    // Setup API mocks
+    await setupAppwriteMocks(page, { authenticated: false })
+    
     // Start at home page
     await page.goto('/')
   })
@@ -29,6 +34,7 @@ test.describe('Password Reset Flow', () => {
     // Click "Forgot password?" link
     await page.getByRole('link', { name: /forgot password/i }).click()
     await expect(page).toHaveURL('/password-reset')
+    await waitForHydration(page)
 
     // Fill in email and submit
     await page.getByPlaceholder(/email/i).fill('test@example.com')
@@ -40,6 +46,7 @@ test.describe('Password Reset Flow', () => {
     // Note: In real flow, user would click email link
     // For testing, we'll navigate directly to confirm page with mock token
     await page.goto('/password-reset/confirm?userId=test123&secret=test-token')
+    await waitForHydration(page)
 
     // Should see password reset confirmation form
     await expect(page.getByText(/reset your password/i)).toBeVisible()
@@ -65,6 +72,7 @@ test.describe('Password Reset Flow', () => {
 
   test('should show success for non-existent email (security)', async ({ page }) => {
     await page.goto('/password-reset')
+    await waitForHydration(page)
 
     // Fill in non-existent email
     await page.getByPlaceholder(/email/i).fill('nonexistent@example.com')
@@ -79,6 +87,7 @@ test.describe('Password Reset Flow', () => {
 
   test('should validate email format on password reset request', async ({ page }) => {
     await page.goto('/password-reset')
+    await waitForHydration(page)
 
     // Fill in invalid email
     await page.getByPlaceholder(/email/i).fill('invalid-email')
@@ -91,6 +100,7 @@ test.describe('Password Reset Flow', () => {
   test('should handle expired reset token', async ({ page }) => {
     // Navigate directly to confirm page with expired token
     await page.goto('/password-reset/confirm?userId=test123&secret=expired-token')
+    await waitForHydration(page)
 
     // Fill in new password
     await page.getByPlaceholder(/new password/i).fill('NewPassword123!')
@@ -104,6 +114,7 @@ test.describe('Password Reset Flow', () => {
   test('should handle invalid reset token', async ({ page }) => {
     // Navigate directly to confirm page with invalid token
     await page.goto('/password-reset/confirm?userId=test123&secret=invalid-token')
+    await waitForHydration(page)
 
     // Fill in new password
     await page.getByPlaceholder(/new password/i).fill('NewPassword123!')
@@ -116,6 +127,7 @@ test.describe('Password Reset Flow', () => {
 
   test('should validate password confirmation match', async ({ page }) => {
     await page.goto('/password-reset/confirm?userId=test123&secret=valid-token')
+    await waitForHydration(page)
 
     // Fill in passwords that don't match
     await page.getByPlaceholder(/new password/i).fill('NewPassword123!')
@@ -128,6 +140,7 @@ test.describe('Password Reset Flow', () => {
 
   test('should validate password strength', async ({ page }) => {
     await page.goto('/password-reset/confirm?userId=test123&secret=valid-token')
+    await waitForHydration(page)
 
     // Fill in weak password
     await page.getByPlaceholder(/new password/i).fill('weak')

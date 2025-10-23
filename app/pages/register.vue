@@ -25,21 +25,24 @@
       <USeparator label="or" class="my-6" />
 
       <!-- Registration Form -->
-      <UForm :schema="registerSchema" :state="state" :validate-on="['input', 'blur', 'submit']" class="space-y-4"
+      <UForm ref="form" :schema="registerSchema" :state="state" class="space-y-4" data-testid="register-form"
         @submit="onSubmit">
         <!-- Name Field -->
-        <UFormField label="Full Name" name="name" required>
-          <UInput v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg" />
+        <UFormField label="Full Name" name="name" required data-testid="name-field">
+          <UInput v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg"
+            data-testid="name-input" />
         </UFormField>
 
         <!-- Email Field -->
-        <UFormField label="Email" name="email" required>
-          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg" />
+        <UFormField label="Email" name="email" required data-testid="email-field">
+          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg"
+            data-testid="email-input" />
         </UFormField>
 
         <!-- Password Field -->
-        <UFormField label="Password" name="password" required :hint="passwordHint">
-          <PasswordInput v-model="state.password" placeholder="Create a strong password" autocomplete="new-password" />
+        <UFormField label="Password" name="password" required :hint="passwordHint" data-testid="password-field">
+          <PasswordInput v-model="state.password" placeholder="Create a strong password" autocomplete="new-password"
+            data-testid="password-input" />
         </UFormField>
 
         <!-- Password Strength Indicator -->
@@ -56,7 +59,8 @@
         </div>
 
         <!-- Submit Button -->
-        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading">
+        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading"
+          data-testid="register-submit">
           Sign Up
         </UButton>
       </UForm>
@@ -76,6 +80,7 @@
 <script setup lang="ts">
 import { registerSchema } from '~/schemas/auth'
 import type { RegisterForm } from '~/schemas/auth'
+import type { FormSubmitEvent } from '@nuxt/ui'
 
 // Page meta
 definePageMeta({
@@ -96,6 +101,7 @@ const { register } = useAuth()
 const router = useRouter()
 
 // State
+const form = ref()
 const state = reactive<RegisterForm>({
   name: '',
   email: '',
@@ -174,14 +180,14 @@ const passwordStrength = computed(() => {
 })
 
 // Methods
-async function onSubmit() {
+async function onSubmit(event: FormSubmitEvent<RegisterForm>) {
   loading.value = true
   error.value = ''
   success.value = false
 
   try {
-    // Call register API
-    await register(state.name, state.email, state.password)
+    // Call register API using validated data
+    await register(event.data.name, event.data.email, event.data.password)
 
     // Show success message
     success.value = true
