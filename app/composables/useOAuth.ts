@@ -1,8 +1,26 @@
 /**
  * OAuth Composable
- * 
+ *
  * Provides OAuth authentication functionality for GitHub and other providers.
  * Handles OAuth flow initiation, error handling, and loading states.
+ *
+ * @example
+ * const { loading, loginWithGitHub, getOAuthErrorMessage } = useOAuth()
+ *
+ * // Initiate GitHub login
+ * await loginWithGitHub()
+ *
+ * // Handle OAuth error from URL
+ * const errorCode = route.query.error
+ * if (errorCode) {
+ *   const message = getOAuthErrorMessage(errorCode)
+ * }
+ *
+ * @returns {Object} OAuth utilities
+ * @returns {Readonly<Ref<boolean>>} loading - Loading state during OAuth flow
+ * @returns {Readonly<Ref<string>>} error - Error message if OAuth fails
+ * @returns {Function} loginWithGitHub - Initiates GitHub OAuth flow
+ * @returns {Function} getOAuthErrorMessage - Maps error codes to user-friendly messages
  */
 
 export const useOAuth = () => {

@@ -28,7 +28,8 @@
       <div v-else-if="errorMessage" class="space-y-4">
         <UAlert color="error" variant="soft" title="Verification Failed" :description="errorMessage" />
 
-        <UButton v-if="canResend" block :loading="resending" :disabled="resending || countdown > 0"
+        <UButton
+v-if="canResend" block :loading="resending" :disabled="resending || countdown > 0"
           @click="handleResend">
           <span v-if="countdown > 0">Resend in {{ countdown }}s</span>
           <span v-else>Resend Verification Email</span>
@@ -41,7 +42,8 @@
 
       <!-- No Token State -->
       <div v-else class="space-y-4">
-        <UAlert color="warning" variant="soft" title="Invalid Link"
+        <UAlert
+color="warning" variant="soft" title="Invalid Link"
           description="This verification link is invalid or incomplete. Please check your email for the correct link." />
 
         <UButton to="/login" variant="outline" block>

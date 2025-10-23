@@ -8,15 +8,18 @@
       </template>
 
       <!-- Error Alert -->
-      <UAlert v-if="error" color="error" variant="subtle" title="Registration Failed" :description="error" class="mb-6"
+      <UAlert
+v-if="error" color="error" variant="subtle" title="Registration Failed" :description="error" class="mb-6"
         :close-button="{ icon: 'i-lucide-x', color: 'gray', variant: 'link', padded: false }" @close="error = ''" />
 
       <!-- Success Alert -->
-      <UAlert v-if="success" color="success" variant="subtle" title="Account Created"
+      <UAlert
+v-if="success" color="success" variant="subtle" title="Account Created"
         description="Your account has been created successfully." class="mb-6" />
 
       <!-- GitHub OAuth Button -->
-      <UButton color="neutral" variant="outline" size="lg" block icon="i-simple-icons-github" :loading="oauthLoading"
+      <UButton
+color="neutral" variant="outline" size="lg" block icon="i-simple-icons-github" :loading="oauthLoading"
         :disabled="oauthLoading" @click="handleGitHubRegister">
         Continue with GitHub
       </UButton>
@@ -25,23 +28,27 @@
       <USeparator label="or" class="my-6" />
 
       <!-- Registration Form -->
-      <UForm ref="form" :schema="registerSchema" :state="state" class="space-y-4" data-testid="register-form"
+      <UForm
+ref="form" :schema="registerSchema" :state="state" class="space-y-4" data-testid="register-form"
         @submit="onSubmit">
         <!-- Name Field -->
         <UFormField label="Full Name" name="name" required data-testid="name-field">
-          <UInput v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg"
+          <UInput
+v-model="state.name" type="text" placeholder="John Doe" autocomplete="name" size="lg"
             data-testid="name-input" />
         </UFormField>
 
         <!-- Email Field -->
         <UFormField label="Email" name="email" required data-testid="email-field">
-          <UInput v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg"
+          <UInput
+v-model="state.email" type="email" placeholder="you@example.com" autocomplete="email" size="lg"
             data-testid="email-input" />
         </UFormField>
 
         <!-- Password Field -->
         <UFormField label="Password" name="password" required :hint="passwordHint" data-testid="password-field">
-          <PasswordInput v-model="state.password" placeholder="Create a strong password" autocomplete="new-password"
+          <PasswordInput
+v-model="state.password" placeholder="Create a strong password" autocomplete="new-password"
             data-testid="password-input" />
         </UFormField>
 
@@ -49,7 +56,8 @@
         <div v-if="state.password" class="space-y-2">
           <div class="flex items-center gap-2">
             <div class="flex-1 h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-              <div :class="[
+              <div
+:class="[
                 'h-full transition-all duration-300',
                 passwordStrength.color,
               ]" :style="{ width: `${passwordStrength.percentage}%` }" />
@@ -59,7 +67,8 @@
         </div>
 
         <!-- Submit Button -->
-        <UButton type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading"
+        <UButton
+type="submit" color="primary" size="lg" block :loading="loading" :disabled="loading"
           data-testid="register-submit">
           Sign Up
         </UButton>
