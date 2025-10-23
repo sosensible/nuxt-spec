@@ -1,4 +1,3 @@
-````mdc
 # Nuxt Layout-Based Web Experience
 
 [![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
@@ -9,6 +8,7 @@ A professional layout-based web application built with Nuxt 4, Nuxt UI v4, and P
 ## 🎯 Project Overview
 
 This project demonstrates a complete implementation of a dual-layout web application with:
+
 - **Frontend Layout**: Public-facing pages with header, footer, and navigation
 - **Admin Layout**: Administrative interface with collapsible sidebar and dashboard
 
@@ -16,19 +16,25 @@ This project demonstrates a complete implementation of a dual-layout web applica
 
 - 🎨 **Nuxt UI v4** - Professional component library with Tailwind CSS v4
 - 🏗️ **Dual Layouts** - Separate frontend and admin layouts
-- � **Cross-Section Navigation** - Quick links between frontend and admin sections
-- �📦 **Pinia State Management** - Reactive stores for layout and navigation
+- 🔗 **Cross-Section Navigation** - Quick links between frontend and admin sections
+- 🔐 **Authentication System** - Email/password and GitHub OAuth with Appwrite
+- 📦 **Pinia State Management** - Reactive stores for layout and navigation
 - 🧩 **Composables** - Clean API layer over stores
 - 🎭 **Component Library** - Reusable components (Header, Footer, Sidebar, Logo)
 - 🎯 **Heroicons** - Professional icon system
 - 📱 **Responsive Design** - Mobile-friendly layouts
 - ⚡ **Hot Module Replacement** - Fast development experience
+- 🧪 **Comprehensive Testing** - 113 unit and API tests passing
 
 ## Quick Start
 
 ```bash [Terminal]
 npm create nuxt@latest -- -t github:nuxt-ui-templates/starter
 ```
+
+For feature-specific setup (authentication, OAuth, Appwrite), see the Authentication quickstart in the specs folder:
+
+- `specs/003-login-auth-we/quickstart.md` — contains step-by-step setup, env instructions, and testing notes for the authentication feature.
 
 ## Deploy your own
 
@@ -67,25 +73,47 @@ specs/                   # Project specifications
 
 ## 🚀 Setup
 
-Make sure to install the dependencies:
+### 1. Install Dependencies
 
 ```bash
 pnpm install
 ```
 
+### 2. Configure Appwrite (Required for Authentication)
+
+1. Copy the environment variables template:
+
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Follow the [Appwrite Setup Guide](./APPWRITE-SETUP.md) to configure your backend
+
+3. Update `.env` with your Appwrite credentials:
+   ```bash
+   APPWRITE_PROJECT_ID=your-project-id
+   APPWRITE_API_KEY=your-api-key
+   APPWRITE_ENDPOINT=https://fra.cloud.appwrite.io/v1
+   GITHUB_CLIENT_ID=your-github-client-id
+   GITHUB_CLIENT_SECRET=your-github-client-secret
+   ```
+
 ## 💻 Development Server
 
-Start the development server on `http://localhost:3001`:
+Start the development server on `http://localhost:3000`:
 
 ```bash
 pnpm dev
 ```
 
 Visit the following pages:
-- **Home**: http://localhost:3001/
-- **Info**: http://localhost:3001/info
-- **Admin Dashboard**: http://localhost:3001/admin
-- **Admin Users**: http://localhost:3001/admin/users
+
+- **Home**: http://localhost:3000/
+- **Info**: http://localhost:3000/info
+- **Login**: http://localhost:3000/login
+- **Register**: http://localhost:3000/register
+- **Admin Dashboard**: http://localhost:3000/admin (requires authentication)
+- **Admin Users**: http://localhost:3000/admin/users
 
 ## 🏗️ Production
 
@@ -108,37 +136,134 @@ pnpm preview
 - **State Management**: Pinia 3.0.3 with @pinia/nuxt 0.11.2
 - **Icons**: Heroicons via @iconify-json/heroicons
 - **TypeScript**: Full type safety
-- **Dev Server Port**: 3001
+- **Dev Server Port**: 3000
+
+## 🧪 Testing
+
+Run the test suite:
+
+```bash
+# Unit and API tests
+pnpm test
+
+# Watch mode
+pnpm test:watch
+
+# With coverage
+pnpm test:coverage
+
+# E2E tests (requires dev server running)
+pnpm e2e
+```
+
+**Test Coverage**: 113/113 unit and API tests passing ✅
+
+For E2E testing status and instructions, see [`tests/e2e/auth/E2E-STATUS.md`](./tests/e2e/auth/E2E-STATUS.md)
 
 ## 📚 Documentation
 
-Detailed implementation documentation is available in:
+### Implementation Documentation
+
 - **Spec 001** (`specs/001-layout-based-we/`) - Layout system and dark mode
 - **Spec 002** (`specs/002-basic-usability-i/`) - Cross-section navigation
-  - `spec.md` - Feature specification
-  - `tasks.md` - Task breakdown
-  - `quickstart.md` - Quick reference guide
+- **Spec 003** (`specs/003-login-auth-we/`) - Authentication system
+  - [`spec.md`](./specs/003-login-auth-we/spec.md) - Feature specification
+  - [`IMPLEMENTATION-COMPLETE.md`](./specs/003-login-auth-we/IMPLEMENTATION-COMPLETE.md) - Implementation status
+
+### Setup Guides
+
+- **[APPWRITE-SETUP.md](./APPWRITE-SETUP.md)** - Complete Appwrite backend setup
+- **[.env.example](./.env.example)** - Environment variables reference
+
+## 🔐 Authentication
+
+The application includes a complete authentication system powered by [Appwrite](https://appwrite.io):
+
+### Features
+
+- ✅ Email/Password registration and login
+- ✅ GitHub OAuth authentication
+- ✅ Email verification
+- ✅ Password reset flow
+- ✅ Protected routes with middleware
+- ✅ Session management
+- ✅ User-friendly error handling
+
+### Authentication Pages
+
+- `/login` - Login with email/password or GitHub
+- `/register` - Create new account
+- `/password-reset` - Request password reset
+- `/verify-email` - Email verification confirmation
+
+### API Endpoints
+
+- `POST /api/auth/register` - Register new user
+- `POST /api/auth/login` - Login with credentials
+- `POST /api/auth/logout` - End session
+- `GET /api/auth/session` - Check current session
+- `GET /api/auth/oauth/github` - Initiate GitHub OAuth
+- `GET /api/auth/callback/github` - Handle OAuth callback
+- `POST /api/auth/verify-email` - Verify email
+- `POST /api/auth/verify-email/resend` - Resend verification
+- `POST /api/auth/password-reset` - Request password reset
+- `POST /api/auth/password-reset/confirm` - Confirm password reset
+
+### Usage in Components
+
+```vue
+<script setup lang="ts">
+const { user, login, logout } = useAuth();
+
+// Login
+await login("user@example.com", "password");
+
+// Access user info
+console.log(user.value?.name);
+
+// Logout
+await logout();
+</script>
+```
+
+### Protected Routes
+
+Use middleware to protect routes:
+
+```vue
+<script setup lang="ts">
+definePageMeta({
+  middleware: "auth", // Requires authentication
+});
+</script>
+```
+
+For complete setup instructions, see [APPWRITE-SETUP.md](./APPWRITE-SETUP.md)
 
 ## 🎨 Key Components
 
 ### Cross-Section Navigation
+
 - **Frontend Header**: Shows "Admin Panel" link to quickly access admin section
 - **Admin Header**: Shows "View Site" link to return to frontend
 - **Smart Detection**: Automatically shows appropriate link based on current section
 - **Seamless UX**: Client-side routing for instant navigation between sections
 
 ### Frontend Layout
+
 - Responsive header with navigation
 - Three-column footer with brand info
 - Clean, professional design
 
 ### Admin Layout
+
 - Collapsible sidebar (240px → 64px)
 - Dynamic page titles
 - Dashboard with stats cards
 - User management with search and filters
 
 ### Nuxt UI Components Used
+
 - `UButton` - Action buttons with variants
 - `UCard` - Content cards
 - `UIcon` - Heroicons integration
@@ -148,7 +273,8 @@ Detailed implementation documentation is available in:
 ## 🔧 Configuration
 
 The project uses:
-- **Port 3001** to avoid conflicts
+
+- **Port 3000** to avoid conflicts
 - **Experimental features**: `inlineSSRStyles: false` for better CSS loading
 - **App config**: Custom primary/neutral colors (green/slate)
 
@@ -160,4 +286,3 @@ The project uses:
 - Stores are accessible via composables
 
 Check out the [Nuxt documentation](https://nuxt.com/docs) and [Nuxt UI documentation](https://ui.nuxt.com) for more information.
-````

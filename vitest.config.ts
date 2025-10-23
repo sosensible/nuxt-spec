@@ -8,8 +8,10 @@ export default defineVitestConfig({
         domEnvironment: 'happy-dom'
       }
     },
-    // Only include functional tests, exclude E2E tests
-    include: ['tests/functional/**/*.test.ts'],
+    // Setup file to initialize global mocks
+    setupFiles: ['./tests/setup.ts'],
+    // Include functional and API tests, exclude E2E tests
+    include: ['tests/functional/**/*.test.ts', 'tests/api/**/*.test.ts'],
     exclude: ['tests/e2e/**/*', 'node_modules/**']
   }
 })

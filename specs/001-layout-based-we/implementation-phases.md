@@ -504,7 +504,7 @@ If any step fails:
 
 1. ✅ Start server without interruption
 2. ⏳ Wait 90 seconds for full build (IN PROGRESS)
-3. Check browser at http://localhost:3001
+3. Check browser at http://localhost:3000
 4. Verify page renders correctly
 
 ---

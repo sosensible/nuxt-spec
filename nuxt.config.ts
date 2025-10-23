@@ -26,15 +26,19 @@ export default defineNuxtConfig({
     '/info': { prerender: true },
 
     // Admin routes - client-side only for dynamic content
-    '/admin/**': { ssr: false },
-
-    // Admin test page
-    '/admin-test': { ssr: false }
+    '/admin/**': { ssr: false }
   },
 
   compatibilityDate: '2025-01-15',
 
   devtools: {
-    enabled: true
+    enabled: false
+  },
+
+  // Runtime config for password reset emails
+  runtimeConfig: {
+    public: {
+      appUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    }
   }
 })

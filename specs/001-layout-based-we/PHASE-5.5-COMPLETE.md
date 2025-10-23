@@ -108,7 +108,7 @@ export default defineNuxtConfig({
   experimental: {
     inlineSSRStyles: false,
   },
-  devServer: { port: 3001 },
+  devServer: { port: 3000 },
 });
 ```
 
