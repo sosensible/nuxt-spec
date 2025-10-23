@@ -1,0 +1,14 @@
+name: e2e (temporarily disabled)
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  # This workflow was intentionally disabled by renaming to .disabled.yml
+  # Use this file as a template to re-enable E2E tests later by restoring
+  # the original filename `.github/workflows/e2e.yml` or by updating CI.
+  disabled:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow disabled
+        run: echo "E2E workflow is temporarily disabled."
