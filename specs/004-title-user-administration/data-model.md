@@ -3,6 +3,7 @@
 ## Entities
 
 ### User
+
 - id: string (Appwrite $id)
 - email: string (validated, lowercased)
 - name: string (display name)
@@ -14,11 +15,13 @@
 - updatedAt?: string (ISO timestamp)
 
 Validation rules:
+
 - email must match standard email regex and be stored lowercase
 - name is optional but when present max length 100
 - avatar must be a valid URL if present
 
 ### Session
+
 - id: string
 - userId: string
 - createdAt: string
@@ -27,6 +30,7 @@ Validation rules:
 - clientInfo?: string
 
 ### AuditRecord
+
 - id: string
 - actorId: string (admin id)
 - action: string (e.g., "delete_user", "disable_user")

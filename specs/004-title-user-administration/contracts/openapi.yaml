@@ -25,7 +25,7 @@ paths:
             type: string
             description: Search query (email or name)
       responses:
-        '200':
+        "200":
           description: Paginated users
           content:
             application/json:
@@ -35,7 +35,7 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/User'
+                      $ref: "#/components/schemas/User"
                   page:
                     type: integer
                   perPage:
@@ -52,12 +52,12 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: User object
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     patch:
       summary: Update user profile
       parameters:
@@ -80,12 +80,12 @@ paths:
                 emailVerified:
                   type: boolean
       responses:
-        '200':
+        "200":
           description: Updated user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
+                $ref: "#/components/schemas/User"
     delete:
       summary: Delete user (admin)
       parameters:
@@ -95,7 +95,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Deleted
   /users/{id}/sessions:
     get:
@@ -107,14 +107,14 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Sessions list
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Session'
+                  $ref: "#/components/schemas/Session"
   /users/{id}/revoke-session:
     post:
       summary: Revoke a session for a user
@@ -134,7 +134,7 @@ paths:
                 sessionId:
                   type: string
       responses:
-        '200':
+        "200":
           description: Revoked
   /users/{id}/resend-verification:
     post:
@@ -146,7 +146,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Sent
   /users/{id}/trigger-password-reset:
     post:
@@ -158,7 +158,7 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Sent
 components:
   schemas:

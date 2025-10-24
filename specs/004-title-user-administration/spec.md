@@ -1,9 +1,9 @@
 ```mdc
 # Feature Specification: User Administration - Manage Appwrite Users
 
-**Feature Branch**: `004-title-user-administration`  
-**Created**: 2025-10-24  
-**Status**: Draft  
+**Feature Branch**: `004-title-user-administration`
+**Created**: 2025-10-24
+**Status**: Draft
 **Input**: User description: "User administration tool to edit users and manage Appwrite-authenticated users (manage users and, if API permits, teams). Focus on user management now; team permissions later."
 
 ## User Scenarios & Testing _(mandatory)_
@@ -169,6 +169,7 @@ Follow the RED-GREEN-REFACTOR cycle described in Development Standards (see temp
 **Specification Status**: Draft — ready for checklist validation.
 
 ```
+
 # Feature Specification: [FEATURE NAME]
 
 **Feature Branch**: `[###-feature-name]`  

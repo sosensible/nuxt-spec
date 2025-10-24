@@ -9,7 +9,7 @@ Prerequisites
 - Environment variables (add to `.env`):
   - APPWRITE_ENDPOINT
   - APPWRITE_PROJECT_ID
-  - APPWRITE_API_KEY  # server-side admin key (keep secret)
+  - APPWRITE_API_KEY # server-side admin key (keep secret)
 
 Run locally
 
