@@ -1,0 +1,194 @@
+openapi: 3.0.3
+info:
+  title: User Administration API
+  version: 0.1.0
+servers:
+  - url: /api/admin
+paths:
+  /users:
+    get:
+      summary: List users (paginated)
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 1
+        - in: query
+          name: perPage
+          schema:
+            type: integer
+            default: 25
+        - in: query
+          name: q
+          schema:
+            type: string
+            description: Search query (email or name)
+      responses:
+        '200':
+          description: Paginated users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+                  page:
+                    type: integer
+                  perPage:
+                    type: integer
+                  total:
+                    type: integer
+  /users/{id}:
+    get:
+      summary: Get user by id
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    patch:
+      summary: Update user profile
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                avatar:
+                  type: string
+                emailVerified:
+                  type: boolean
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Delete user (admin)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted
+  /users/{id}/sessions:
+    get:
+      summary: List active sessions for a user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sessions list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Session'
+  /users/{id}/revoke-session:
+    post:
+      summary: Revoke a session for a user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                sessionId:
+                  type: string
+      responses:
+        '200':
+          description: Revoked
+  /users/{id}/resend-verification:
+    post:
+      summary: Resend verification email
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sent
+  /users/{id}/trigger-password-reset:
+    post:
+      summary: Trigger password reset for user
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Sent
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        emailVerified:
+          type: boolean
+        avatar:
+          type: string
+        provider:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+    Session:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        createdAt:
+          type: string
+        lastUsedAt:
+          type: string
