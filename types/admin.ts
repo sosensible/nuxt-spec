@@ -16,6 +16,20 @@ export interface UserRecord {
   roles?: string[]
 }
 
+export interface TeamRecord {
+  id: string
+  name?: string
+  description?: string
+  // roles the user has in this team (if available)
+  roles?: string[]
+}
+
+export interface UserDetailResponse {
+  item: UserRecord
+  teams: TeamRecord[]
+  raw?: Record<string, unknown>
+}
+
 export interface PagedResponse<T> {
   items: T[]
   cursor?: string | null // cursor token for next/prev

@@ -5,7 +5,7 @@
  * Uses environment variables for configuration.
  */
 
-import { Client, Account, Users } from 'node-appwrite'
+import { Client, Account, Users, Teams } from 'node-appwrite'
 
 /**
  * Create Appwrite client with admin privileges
@@ -70,4 +70,13 @@ export function createAccountService(client: Client): Account {
  */
 export function createUsersService(client: Client): Users {
   return new Users(client)
+}
+
+/**
+ * Create Teams service instance
+ *
+ * @param client - Appwrite client (with API key)
+ */
+export function createTeamsService(client: Client): Teams {
+  return new Teams(client)
 }
