@@ -1,0 +1,50 @@
+appwrite auth - we want to connect to appwrite to pull users for this page. http://localhost:3000/admin/users , we want the appwrite data to be the source of truth, not the current columns on the page. We do want to add edit and delete fuctionality, preferably with a popup editor for the user. Here is some context for appwrite, but use the MCP also.
+
+Yes—Appwrite has a well-defined **user role concept** that supports both **role-based access control (RBAC)** and **team-scoped permissions**, giving you granular control over who can do what across your app and backend.
+
+---
+
+### 🧑‍💼 Appwrite Role Concepts
+
+#### **1. Platform Roles (Console-Level)**
+These are used within the Appwrite Console to manage access for organization members:
+- **Owner** – Full control, including billing and team management
+- **Developer** – Full access to development resources, but no billing/team writes
+- **Editor** – Can modify content but not infrastructure
+- **Analyst** – Read-only access
+- **Billing** – Access only to billing scopes
+- **Custom Roles** – Coming soon for Scale and Enterprise plans
+
+These roles govern what collaborators can do inside the Appwrite Console—not your app users.
+
+---
+
+#### **2. Auth Roles (App-Level)**
+These are used in your app’s permission system:
+- ole:guest – Unauthenticated users
+- ole:member – Any authenticated user
+- ole:user:<USER_ID> – Specific user
+- ole:team:<TEAM_ID> – All team members
+- ole:team:<TEAM_ID>/<ROLE> – Specific role within a team
+
+You use these in permission arrays for documents, buckets, functions, etc.
+
+---
+
+#### **3. Custom Roles via Teams**
+You can define custom roles within a team and assign permissions to them:
+`js
+sdk.teams.createRole('teamId', 'admin');
+sdk.teams.updateRolePermissions('teamId', 'roleId', ['read( documents)', 'write(documents)']);
+`
+Then assign users to those roles for scoped access control.
+
+---
+
+### 🧩 Summary
+Appwrite’s role system is modular:
+- Console roles = admin panel access
+- Auth roles = app-level permissions
+- Team roles = scoped collaboration
+
+If you're codifying this into SpecKit or onboarding flows, I can help scaffold role templates, permission maps, and runtime injection strategies for secure, maintainable access control. Just say the word.
