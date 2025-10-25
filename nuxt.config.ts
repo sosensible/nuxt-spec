@@ -31,8 +31,10 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2025-01-15',
 
+  // Enable Nuxt DevTools during development to inspect components, state and overlays
+  // Set to `true` for local development. For CI / production builds this should be false.
   devtools: {
-    enabled: false
+    enabled: true
   },
 
   // Runtime config for password reset emails

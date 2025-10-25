@@ -7,7 +7,7 @@
           Users
         </h1>
         <p class="text-gray-600 dark:text-gray-400">
-          Manage user accounts and permissions.
+          Manage user accounts from Appwrite.
         </p>
       </div>
       <UButton to="/admin" variant="soft" color="neutral" icon="i-heroicons-arrow-left">
@@ -15,172 +15,93 @@
       </UButton>
     </div>
 
-    <!-- Search and Actions -->
+    <!-- Search Bar -->
     <div class="flex flex-col sm:flex-row gap-4">
-      <UInput
-v-model="searchQuery" placeholder="Search users..." icon="i-heroicons-magnifying-glass" size="lg"
-        class="flex-1" />
-      <UButton variant="solid" color="primary" icon="i-heroicons-plus">
-        Add User
-      </UButton>
+      <UInput v-model="searchQuery" placeholder="Search by email or name..." icon="i-heroicons-magnifying-glass"
+        size="lg" class="flex-1" />
     </div>
 
-    <!-- Users Table -->
-    <div class="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden">
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
-          <thead class="bg-gray-50 dark:bg-gray-800">
-            <tr>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                User
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Role
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Status
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Created
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-800">
-            <tr v-for="user in filteredUsers" :key="user.id" class="hover:bg-gray-50 dark:hover:bg-gray-800">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <UIcon name="i-heroicons-user-circle" class="text-3xl text-gray-400 dark:text-gray-500 mr-3" />
-                  <div>
-                    <div class="text-sm font-medium text-gray-900 dark:text-gray-50">
-                      {{ user.name }}
-                    </div>
-                    <div class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ user.email }}
-                    </div>
-                  </div>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <UBadge
-:color="user.role === 'Admin' ? 'error' : user.role === 'Editor' ? 'warning' : 'neutral'"
-                  variant="subtle">
-                  {{ user.role }}
-                </UBadge>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                  <UBadge :color="user.isActive ? 'success' : 'neutral'" variant="subtle">
-                    {{ user.isActive ? 'Active' : 'Inactive' }}
-                  </UBadge>
-                </div>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                {{ formatDate(user.createdAt) }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div class="flex gap-2">
-                  <UButton variant="ghost" color="primary" size="xs" icon="i-heroicons-pencil">
-                    Edit
-                  </UButton>
-                  <UButton variant="ghost" color="error" size="xs" icon="i-heroicons-trash">
-                    Delete
-                  </UButton>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <!-- Users List Component -->
+    <AdminUsersList :search-query="searchQuery" @edit="handleEdit" @delete="handleDelete" />
+
+    <!-- Success Toast -->
+    <div v-if="successMessage"
+      class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+      <div class="flex items-center">
+        <UIcon name="i-heroicons-check-circle" class="text-green-600 dark:text-green-400 text-xl mr-3" />
+        <p class="text-sm text-green-800 dark:text-green-200">
+          {{ successMessage }}
+        </p>
       </div>
     </div>
 
-    <!-- Pagination Info -->
-    <div class="text-sm text-gray-600 dark:text-gray-400 text-center">
-      Showing {{ filteredUsers.length }} of {{ users.length }} users
-    </div>
+    <!-- Edit User Popup -->
+    <EditUserPopup v-model="showEditPopup" :user="selectedUser" @save="handleSaveEdit" />
+
+    <!-- Delete User Modal -->
+    <DeleteUserModal v-model="showDeleteModal" :user="selectedUser" @delete="handleConfirmDelete" />
   </div>
 </template>
 
 <script setup lang="ts">
-// Phase 1.3: Simplified users page without composables/stores
+import type { UserRecord, UpdateUserPayload } from '~/types/admin'
 
 // Define layout
 definePageMeta({
   layout: 'admin'
 })
 
+// Use the Pinia store
+const store = useAdminUsersStore()
+
 // State
 const searchQuery = ref('')
+const showEditPopup = ref(false)
+const showDeleteModal = ref(false)
+const selectedUser = ref<UserRecord | null>(null)
+const successMessage = ref('')
 
-// Mock users data
-const users = ref([
-  {
-    id: '1',
-    name: 'John Doe',
-    email: 'john@example.com',
-    role: 'Admin',
-    isActive: true,
-    createdAt: new Date('2024-01-15')
-  },
-  {
-    id: '2',
-    name: 'Jane Smith',
-    email: 'jane@example.com',
-    role: 'User',
-    isActive: true,
-    createdAt: new Date('2024-01-10')
-  },
-  {
-    id: '3',
-    name: 'Bob Johnson',
-    email: 'bob@example.com',
-    role: 'Manager',
-    isActive: false,
-    createdAt: new Date('2024-01-05')
-  },
-  {
-    id: '4',
-    name: 'Alice Brown',
-    email: 'alice@example.com',
-    role: 'User',
-    isActive: true,
-    createdAt: new Date('2024-01-12')
-  },
-  {
-    id: '5',
-    name: 'Charlie Wilson',
-    email: 'charlie@example.com',
-    role: 'User',
-    isActive: true,
-    createdAt: new Date('2024-01-08')
+// Handlers
+function handleEdit(user: UserRecord) {
+  selectedUser.value = user
+  showEditPopup.value = true
+}
+
+async function handleSaveEdit(payload: UpdateUserPayload) {
+  if (!selectedUser.value) return
+
+  const success = await store.updateUser(selectedUser.value.id, payload)
+
+  if (success) {
+    successMessage.value = 'User updated successfully'
+    showEditPopup.value = false
+
+    // Clear success message after 3 seconds
+    setTimeout(() => {
+      successMessage.value = ''
+    }, 3000)
   }
-])
+}
 
-// Computed
-const filteredUsers = computed(() => {
-  if (!searchQuery.value) return users.value
+function handleDelete(user: UserRecord) {
+  selectedUser.value = user
+  showDeleteModal.value = true
+}
 
-  const query = searchQuery.value.toLowerCase()
-  return users.value.filter(user =>
-    user.name.toLowerCase().includes(query) ||
-    user.email.toLowerCase().includes(query)
-  )
-})
+async function handleConfirmDelete() {
+  if (!selectedUser.value) return
 
-// Methods
-const formatDate = (date: Date) => {
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  })
+  const success = await store.deleteUser(selectedUser.value.id)
+
+  if (success) {
+    successMessage.value = 'User deleted successfully'
+    showDeleteModal.value = false
+
+    // Clear success message after 3 seconds
+    setTimeout(() => {
+      successMessage.value = ''
+    }, 3000)
+  }
 }
 
 // SEO
