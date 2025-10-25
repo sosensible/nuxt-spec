@@ -415,7 +415,7 @@ html {
 
 **Assumption #10 from spec**: "Existing Tailwind configuration includes or will be updated to include appropriate color schemes that meet WCAG 2.1 AA contrast requirements"
 
-**Validation Needed**: Audit current color usage for contrast compliance
+**Validation Needed**: Review current color usage for contrast compliance
 
 **Risk**: Low - Tailwind's default palette generally meets contrast requirements
 

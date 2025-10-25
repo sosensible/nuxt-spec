@@ -1282,6 +1282,7 @@ New dependencies MUST be approved if they:
 - Add > 100KB to bundle size
 - Duplicate existing functionality
 - Have known security vulnerabilities (check `npm audit`)
+ - Have known security vulnerabilities (perform a vulnerability scan)
 - Lack TypeScript definitions
 - Haven't been updated in 2+ years
 - Have < 10k weekly downloads (indicates low adoption)
@@ -1312,19 +1313,16 @@ New dependencies MUST be approved if they:
 - **Minor updates**: Monthly review, test in staging
 - **Major updates**: Quarterly review, require migration plan
 
-### Audit Process
+### Vulnerability scanning process
 
 ```bash
-# Run weekly
-pnpm audit
-
+# Run weekly vulnerability scans (run a vulnerability scanner such as `pnpm audit`)
 # Address vulnerabilities by severity:
 # CRITICAL/HIGH: Fix within 24 hours
 # MODERATE: Fix within 1 week
 # LOW: Fix within 1 month
 
-# If no fix available, document risk
-# in SECURITY.md and add to exceptions
+# If no fix available, document risk in SECURITY.md and add to exceptions
 ```
 
 ### Pre-Installation Checklist

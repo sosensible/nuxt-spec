@@ -1,0 +1,15 @@
+node_modules/
+.output/
+.nuxt/
+.nitro/
+dist/
+build/
+coverage/
+*.log
+*.min.js
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store

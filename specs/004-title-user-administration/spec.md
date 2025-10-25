@@ -71,13 +71,13 @@ As an admin, I want to trigger a password reset email or resend verification to 
 
 As an admin, I want to permanently remove a user account so that obsolete or fraudulent accounts can be removed.
 
-**Why this priority**: Destructive action — allowed but lower priority and gated behind confirmation and audit logging.
+**Why this priority**: Destructive action — allowed but lower priority and gated behind confirmation and retention policy.
 
-**Independent Test**: Delete a user and confirm the account is no longer returned by the list API and audit log contains an entry.
+**Independent Test**: Delete a user and confirm the account is no longer returned by the list API and deletion metadata (deletedAt/retentionExpiresAt) is set for cleanup.
 
 **Acceptance Scenarios**:
 
-1. **Given** a user account, **When** the admin selects delete and confirms with typed email, **Then** the account is removed and an audit record is created.
+1. **Given** a user account, **When** the admin selects delete and confirms with typed email, **Then** the account is removed and deletion metadata is recorded for retention/cleanup.
 
 ---
 
@@ -99,23 +99,21 @@ As an admin, I want to permanently remove a user account so that obsolete or fra
 - **FR-005**: The system MUST allow admins to enable/disable user accounts; disabled accounts must fail authentication attempts.
 - **FR-006**: The system MUST allow admins to view and revoke active sessions for a user.
 - **FR-007**: The system MUST allow admins to trigger password reset and resend verification email actions for a user (API calls only; email delivery is out-of-scope for tests).
-- **FR-008**: The system MUST allow admins to delete a user after a guarded confirmation flow and write an audit entry for the action.
+- **FR-008**: The system MUST allow admins to delete a user after a guarded confirmation flow and set deletion metadata (deletedAt/retentionExpiresAt) for cleanup.
 - **FR-009**: If Appwrite exposes team management APIs and the admin UI chooses to surface them, the system MUST allow listing teams for a user and adding/removing membership (this is optional for initial delivery and may be deferred to a follow-up).
-
+- **FR-010**: The system MUST enforce access control changes (disable/block) by using Appwrite server-side controls (roles, teams or custom claims) and revoking sessions via the Appwrite Admin SDK. App-side metadata (e.g., `status` or `isDeleted`) MAY be used for UI/retention purposes but MUST NOT be the sole enforcement mechanism.
 ### Nuxt-Specific Requirements
 
 - **NFR-001**: Users page and user details MUST be implemented as server-rendered routes that hydrate on the client (universal routes) to allow SEO for admin docs.
-- **NFR-002**: Admin-only routes MUST use server middleware to confirm the requester has admin privileges.
+- **NFR-002**: Admin-only routes MUST use server middleware to confirm the requester has admin privileges by verifying Appwrite server-side roles or custom claims (preferred). If Appwrite roles/claims are unavailable in a deployment, a documented fallback (for example an `ADMIN_ALLOWLIST` env var or app-side admin flag stored in user metadata) MAY be used but must be justified in the implementation plan.
 - **NFR-003**: API routes under `/server/api/admin/users` MUST expose JSON endpoints for list, get, update, disable, sessions, revoke-session, resend-verification, trigger-password-reset, and delete.
 - **NFR-004**: Components MUST be reusable composables for user data fetching (e.g., `useAdminUsers`, `useAdminUser`) and have unit tests.
 - **NFR-005**: All API interactions MUST handle and surface Appwrite SDK errors consistently with a user-friendly mapping.
+- **NFR-006**: List endpoints MUST use cursor-based pagination by default (returning a `nextCursor` token). The API SHOULD accept a `limit` and an opaque `cursor` token; clients may request `pageSize` up to a documented maximum (e.g., 100). Offset-based pagination is discouraged for large datasets; support for offset may be added later only if strictly necessary.
 
 ### Key Entities _(include if feature involves data)_
 
-- **User**: { id, email, name, emailVerified, avatar, provider, status (active|disabled), createdAt }
-- **Session**: { id, userId, createdAt, lastUsedAt, ip, clientInfo }
-- **AuditRecord**: { id, actorId, action, targetId, timestamp, metadata }
-- **Team** (optional): { id, name, members[] }
+<!-- AuditRecord entity removed from scope (no app-level logging implemented) -->
 
 ## Success Criteria _(mandatory)_
 
@@ -124,7 +122,7 @@ As an admin, I want to permanently remove a user account so that obsolete or fra
 - **SC-001**: Admins can load the Users page with first page of results in under 2 seconds for typical test dataset (1000 users).
 - **SC-002**: Search queries return filtered results within 2 seconds.
 - **SC-003**: 100% of CRUD operations (update, disable, revoke session, delete) return success or meaningful error messages; tests cover happy and error paths.
-- **SC-004**: Admin destructive actions (delete) require explicit confirmation and are recorded in audit logs; 100% of deletion operations generate an audit entry in tests.
+- **SC-004**: Admin destructive actions (delete) require explicit confirmation and must set deletion metadata; tests must assert deletion and retention metadata are present.
 - **SC-005**: At least 80% unit test coverage for composables and components added for the feature; API contract tests validate endpoints.
 
 ## Test-Driven Development Requirements _(mandatory)_
@@ -149,7 +147,7 @@ Follow the RED-GREEN-REFACTOR cycle described in Development Standards (see temp
 
 ## Assumptions
 
-- Admin authentication and authorization mechanism exists; this spec assumes server middleware can identify admins.
+- Admin authentication and authorization mechanism exists; this spec mandates server middleware verify Appwrite server-side roles or custom claims to identify admins (preferred). If Appwrite role/claim support is not available in an environment, any fallback (allowlist or app-side admin flag) must be explicitly documented and justified in the plan.
 - Appwrite project has appropriate API keys and permissions to manage users and sessions.
 - Email delivery for verification/reset is handled by Appwrite or external provider and is out-of-scope for testing (tests validate only that the API call was made).
 - Team management is optional for initial delivery and will be scoped in a follow-up spec.
@@ -157,12 +155,20 @@ Follow the RED-GREEN-REFACTOR cycle described in Development Standards (see temp
 ## Risks & Mitigations
 
 - Risk: Appwrite API rate limits or unavailable endpoints — Mitigation: implement retries with exponential backoff and clear admin error pages.
-- Risk: Deleting users could remove important linked data — Mitigation: soft-delete option and audit logs; require typed confirmation.
+- Risk: Deleting users could remove important linked data — Mitigation: soft-delete option and retention metadata; require typed confirmation.
 
 ## Implementation Notes (non-normative)
 
 - Use a server-side, trusted admin client to perform user management operations so secrets are not exposed to the browser.
 - Create server-side admin endpoints that validate the caller's admin privileges, normalize inputs, and return consistent JSON responses.
+
+## Clarifications
+
+### Session 2025-10-24
+
+- Q: Which authorization approach should server middleware use to identify admins? → A: Use Appwrite server-side roles/claims (verify admin role/claim).
+
+- Q: Which pagination style should the Users list API use? → A: Cursor-based pagination (return `nextCursor` tokens; accept `limit` and `cursor`).
 
 ---
 

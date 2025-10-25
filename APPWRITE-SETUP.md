@@ -142,7 +142,33 @@ Appwrite Cloud includes a built-in email service for development. No additional 
    NUXT_PUBLIC_APP_URL=http://localhost:3000
    ```
 
-3. **Important**: Never commit `.env` to git! It's already in `.gitignore`.
+### Scheduled purges (optional, QA)
+
+This project supports an optional scheduled purge job that will hard-delete users who were previously soft-deleted and whose retention window has expired. Use this carefully — deleted users cannot be recovered.
+
+Environment variables:
+
+- `ENABLE_SCHEDULED_PURGES=true` — enable the scheduler.
+- `SCHEDULED_PURGES_ALLOW_NON_PROD=true` — allow the scheduler to run in non-production environments (useful for QA/staging).
+- `SCHEDULED_PURGE_INTERVAL_MS` — interval in milliseconds between runs (default: 86400000 = 24h).
+
+Recommended QA usage:
+
+1. In a staging or QA environment set:
+
+```powershell
+$env:ENABLE_SCHEDULED_PURGES = 'true'
+$env:SCHEDULED_PURGES_ALLOW_NON_PROD = 'true'
+$env:SCHEDULED_PURGE_INTERVAL_MS = '60000' # run every minute for testing
+```
+
+2. Verify the scheduler is active by inspecting your application logs for `[purge-scheduler] starting purge job` messages.
+
+3. After testing, disable the scheduler or remove `SCHEDULED_PURGES_ALLOW_NON_PROD` to avoid accidental data loss.
+
+See the full operational runbook for the purge worker in `docs/ops.md` for more details and safety recommendations.
+
+4. **Important**: Never commit `.env` to git! It's already in `.gitignore`.
 
 ## 8. Test the Setup
 

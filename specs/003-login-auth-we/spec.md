@@ -112,7 +112,7 @@ Users who register with email/password must verify their email address to ensure
 - **FR-015**: Users can resend verification email (rate limited: 1 per 60 seconds)
 - **FR-016**: System prevents registration with duplicate emails (case-insensitive)
 - **FR-017**: All authentication errors show user-friendly messages without exposing security details
-- **FR-018**: System logs authentication events (login, logout, failed attempts) for audit
+- **FR-018**: System logs authentication events (login, logout, failed attempts) for security monitoring
 - **FR-019**: Unverified users can log in but see verification prompt
 - **FR-020**: System invalidates all user sessions on password change
 

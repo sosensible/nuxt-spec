@@ -1,0 +1,16 @@
+node_modules/
+.output/
+.nuxt/
+.nitro/
+dist/
+build/
+coverage/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+.DS_Store

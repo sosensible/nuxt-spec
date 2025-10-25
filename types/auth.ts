@@ -5,43 +5,7 @@
  * These types are used across composables, API routes, and pages.
  */
 
-/**
- * User account information
- */
-export interface User {
-  /** Unique user identifier (Appwrite $id) */
-  id: string
-  /** User's email address (unique, lowercase) */
-  email: string
-  /** User's display name */
-  name: string
-  /** Whether email has been verified */
-  emailVerified: boolean
-  /** Avatar URL (from GitHub OAuth or custom) */
-  avatar?: string
-  /** Registration provider */
-  provider: 'email' | 'github'
-  /** Account creation timestamp */
-  createdAt: Date
-}
-
-/**
- * Authentication session
- */
-export interface Session {
-  /** Unique session identifier (Appwrite $id) */
-  id: string
-  /** User ID this session belongs to */
-  userId: string
-  /** Authentication provider used for this session */
-  provider: 'email' | 'github'
-  /** Session expiration timestamp */
-  expiresAt: Date
-  /** Whether this is the current active session */
-  current: boolean
-  /** Session creation timestamp */
-  createdAt: Date
-}
+// `User` and `Session` are provided via `types/shared.d.ts` (global declarations).
 
 /**
  * Authentication response from API
@@ -117,56 +81,7 @@ export interface ErrorResponse {
   message: string
 }
 
-/**
- * Appwrite User Model (from SDK)
- * Read-only interface for data received from Appwrite
- */
-export interface AppwriteUser {
-  $id: string
-  $createdAt: string
-  $updatedAt: string
-  email: string
-  name: string
-  emailVerification: boolean
-  phone: string
-  phoneVerification: boolean
-  prefs: Record<string, unknown>
-  labels: string[]
-  status: boolean
-  registration: string
-}
-
-/**
- * Appwrite Session Model (from SDK)
- * Read-only interface for data received from Appwrite
- */
-export interface AppwriteSession {
-  $id: string
-  $createdAt: string
-  userId: string
-  expire: string
-  provider: string
-  providerUid: string
-  providerAccessToken: string
-  providerAccessTokenExpiry: string
-  providerRefreshToken: string
-  ip: string
-  osCode: string
-  osName: string
-  osVersion: string
-  clientType: string
-  clientCode: string
-  clientName: string
-  clientVersion: string
-  clientEngine: string
-  clientEngineVersion: string
-  deviceName: string
-  deviceBrand: string
-  deviceModel: string
-  countryCode: string
-  countryName: string
-  current: boolean
-}
+// `AppwriteUser` and `AppwriteSession` are declared in `types/shared.d.ts` for global usage.
 
 /**
  * Map Appwrite User to Application User
@@ -177,18 +92,29 @@ export interface AppwriteSession {
  * @example
  * const user = mapAppwriteUser(await account.get())
  */
-export function mapAppwriteUser(appwriteUser: AppwriteUser): User {
-  const avatar = typeof appwriteUser.prefs?.avatar === 'string' ? appwriteUser.prefs.avatar : undefined
-  
-  return {
-    id: appwriteUser.$id,
-    email: appwriteUser.email,
-    name: appwriteUser.name,
-    emailVerified: appwriteUser.emailVerification,
-    avatar,
-    provider: appwriteUser.labels?.includes('oauth:github') ? 'github' : 'email',
-    createdAt: new Date(appwriteUser.$createdAt),
+export function mapAppwriteUser(appwriteUser: unknown): User {
+  interface RawAppwriteUser {
+    $id: string
+    $createdAt: string
+    email?: string
+    name?: string
+    emailVerification?: boolean
+    prefs?: Record<string, unknown>
+    labels?: string[]
   }
+  const au = appwriteUser as RawAppwriteUser
+  const avatar = typeof au.prefs?.avatar === 'string' ? au.prefs.avatar : undefined
+
+  return {
+    id: au.$id,
+    email: au.email,
+    name: au.name,
+    emailVerified: !!au.emailVerification,
+    avatar,
+    provider: au.labels?.includes('oauth:github') ? 'github' : 'email',
+    // store ISO string to match application store expectations
+    createdAt: new Date(au.$createdAt).toISOString(),
+  } as User
 }
 
 /**
@@ -200,13 +126,22 @@ export function mapAppwriteUser(appwriteUser: AppwriteUser): User {
  * @example
  * const session = mapAppwriteSession(await account.getSession('current'))
  */
-export function mapAppwriteSession(appwriteSession: AppwriteSession): Session {
-  return {
-    id: appwriteSession.$id,
-    userId: appwriteSession.userId,
-    provider: appwriteSession.provider as 'email' | 'github',
-    expiresAt: new Date(appwriteSession.expire),
-    current: appwriteSession.current,
-    createdAt: new Date(appwriteSession.$createdAt),
+export function mapAppwriteSession(appwriteSession: unknown): Session {
+  interface RawAppwriteSession {
+    $id: string
+    $createdAt: string
+    userId: string
+    expire: string
+    provider: string
+    current: boolean
   }
+  const asess = appwriteSession as RawAppwriteSession
+  return {
+    id: asess.$id,
+    userId: asess.userId,
+    provider: asess.provider as 'email' | 'github',
+    expiresAt: new Date(asess.expire).toISOString(),
+    current: asess.current,
+    createdAt: new Date(asess.$createdAt).toISOString(),
+  } as Session
 }

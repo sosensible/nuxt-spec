@@ -37,7 +37,7 @@ All checklist items were reviewed on 2025-10-24.
 
 - The spec includes prioritized user stories with independent acceptance scenarios (P1–P3) and clearly testable functional requirements (FR-001 through FR-009).
 
-- Success criteria are measurable (timing, coverage targets, audit coverage) and written without implementation details.
+- Success criteria are measurable (timing, coverage targets, observability coverage) and written without implementation details.
 
 ## Result
 

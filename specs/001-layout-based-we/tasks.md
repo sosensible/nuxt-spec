@@ -131,7 +131,7 @@
 - [ ] T048 Performance optimization for layout rendering and sidebar animations (<200ms animation duration)
 - [ ] T049 [P] Add SEO optimization for frontend pages with proper meta tags and structured data
 - [ ] T050 [P] Create layout documentation in `docs/layouts.md` for future development and maintenance
-- [ ] T051 [P] Add Lighthouse performance auditing integration for frontend layout pages (>90 score target)
+- [ ] T051 [P] Add Lighthouse performance checks integration for frontend layout pages (>90 score target)
 - [ ] T052 Code cleanup and refactoring across all layout components for maintainability
 - [ ] T053 Run comprehensive validation using quickstart.md scenarios and acceptance criteria
 

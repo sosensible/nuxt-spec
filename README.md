@@ -286,3 +286,24 @@ The project uses:
 - Stores are accessible via composables
 
 Check out the [Nuxt documentation](https://nuxt.com/docs) and [Nuxt UI documentation](https://ui.nuxt.com) for more information.
+
+## ⚙️ Operational notes — Scheduled purges
+
+This project includes an optional scheduled purge job that will hard-delete users who were previously soft-deleted and whose retention window has expired. This is disabled by default; enable it only when you understand the consequences (deletions are irreversible).
+
+Environment variables:
+
+- `ENABLE_SCHEDULED_PURGES=true` — enable the scheduler.
+- `SCHEDULED_PURGES_ALLOW_NON_PROD=true` — allow the scheduler to run in non-production environments (useful for QA/staging).
+- `SCHEDULED_PURGE_INTERVAL_MS` — interval in milliseconds between runs (default: 86400000 = 24h).
+
+Quick QA recipe (PowerShell):
+
+```powershell
+$env:ENABLE_SCHEDULED_PURGES = 'true'
+$env:SCHEDULED_PURGES_ALLOW_NON_PROD = 'true'
+$env:SCHEDULED_PURGE_INTERVAL_MS = '60000' # run every minute for testing
+pnpm dev
+```
+
+Check logs for `[purge-scheduler] starting purge job` to confirm the job ran. Disable these vars after testing to avoid accidental data loss.

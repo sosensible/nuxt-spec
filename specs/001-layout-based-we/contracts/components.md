@@ -299,7 +299,7 @@ interface UseNavigationReturn {
 - Must navigate between homepage and info page
 - Must maintain layout consistency across pages
 - Must be responsive across device sizes
-- Must pass Lighthouse performance audits
+- Must pass Lighthouse performance checks
 
 **Admin Layout E2E**:
 

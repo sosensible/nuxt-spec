@@ -252,7 +252,7 @@ Phase 8 completes the core development. Potential future enhancements:
 3. **Error Boundaries:** Custom error pages beyond 404/500
 4. **Analytics:** Add tracking for user behavior
 5. **Performance Monitoring:** Real user monitoring (RUM)
-6. **Accessibility Audit:** WCAG compliance verification
+6. **Accessibility review:** WCAG compliance verification
 7. **Deployment:** Configure for hosting platform (Vercel, Netlify, etc.)
 
 ## Production Readiness Checklist
