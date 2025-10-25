@@ -1,0 +1,5 @@
+name: Dependency detection (disabled)
+
+# Detection workflow disabled per project guidance. Rely on pnpm tooling (pnpm outdated) if needed.
+on:
+  workflow_dispatch: {}

@@ -3,6 +3,9 @@ import { defineVitestConfig } from '@nuxt/test-utils/config'
 export default defineVitestConfig({
   test: {
     environment: 'nuxt',
+    // Vitest 4 deprecated `transformMode` and introduced `viteEnvironment`.
+    // Add `viteEnvironment` to avoid the deprecation warning when using the Nuxt test environment.
+    viteEnvironment: 'nuxt',
     environmentOptions: {
       nuxt: {
         domEnvironment: 'happy-dom'
