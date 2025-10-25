@@ -44,7 +44,8 @@
           </div>
           <div>
             <dt class="text-gray-500">Roles</dt>
-            <dd class="font-medium text-gray-800 dark:text-gray-200">{{ (detail.item.roles || []).join(', ') || '—' }}</dd>
+            <dd class="font-medium text-gray-800 dark:text-gray-200">{{ (detail.item.roles || []).join(', ') || '—' }}
+            </dd>
           </div>
         </dl>
 

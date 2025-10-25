@@ -84,9 +84,12 @@
               </td>
               <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
                 <div class="flex gap-2">
-                  <UButton variant="ghost" color="neutral" size="xs" icon="i-heroicons-eye" @click="$emit('view', user)">View</UButton>
-                  <UButton variant="ghost" color="primary" size="xs" icon="i-heroicons-pencil" @click="$emit('edit', user)">Edit</UButton>
-                  <UButton variant="ghost" color="error" size="xs" icon="i-heroicons-trash" @click="$emit('delete', user)">Delete</UButton>
+                  <UButton variant="ghost" color="neutral" size="xs" icon="i-heroicons-eye"
+                    @click="$emit('view', user)">View</UButton>
+                  <UButton variant="ghost" color="primary" size="xs" icon="i-heroicons-pencil"
+                    @click="$emit('edit', user)">Edit</UButton>
+                  <UButton variant="ghost" color="error" size="xs" icon="i-heroicons-trash"
+                    @click="$emit('delete', user)">Delete</UButton>
                 </div>
               </td>
             </tr>

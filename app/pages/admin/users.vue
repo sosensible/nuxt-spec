@@ -21,8 +21,8 @@
         size="lg" class="flex-1" />
     </div>
 
-  <!-- Users List Component -->
-  <AdminUsersList :search-query="searchQuery" @edit="handleEdit" @delete="handleDelete" @view="handleView" />
+    <!-- Users List Component -->
+    <AdminUsersList :search-query="searchQuery" @edit="handleEdit" @delete="handleDelete" @view="handleView" />
 
     <!-- Success Toast -->
     <div v-if="successMessage"
@@ -41,8 +41,9 @@
     <!-- Delete User Modal -->
     <DeleteUserModal v-model="showDeleteModal" :user="selectedUser" @delete="handleConfirmDelete" />
 
-  <!-- User Detail Modal -->
-  <UserDetailModal v-model="showViewModal" :user-id="selectedUserId" @edit="handleEditFromModal" @delete="handleDeleteFromModal" />
+    <!-- User Detail Modal -->
+    <UserDetailModal v-model="showViewModal" :user-id="selectedUserId" @edit="handleEditFromModal"
+      @delete="handleDeleteFromModal" />
   </div>
 </template>
 
