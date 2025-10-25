@@ -28,3 +28,8 @@ test-results/
 playwright-report/
 playwright/.cache/
 app/coverage/*
+
+# Editor and build artifacts
+build/
+.parcel-cache/
+coverage/
