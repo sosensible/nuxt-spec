@@ -13,7 +13,8 @@ import { requireAdminRole } from '../../../utils/adminAuth'
 import { logAdminAction, logError, createLogContext } from '../../../utils/logger'
 import type { ApiError } from '~/types/admin'
 
-export default defineEventHandler(async (event): Promise<void | ApiError> => {
+// Keep the handler un-annotated so we avoid unioning `void` with other types
+export default defineEventHandler(async (event) => {
   try {
     // Authenticate and authorize
     const operatorId = await requireAdminRole(event)
