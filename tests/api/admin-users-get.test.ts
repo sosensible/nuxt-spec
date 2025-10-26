@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, vi } from 'vitest'
-import type { PagedResponse, UserRecord } from '../../types/admin'
+import type { PagedResponse, UserRecord } from '~/types/admin'
 
 // Mock the Appwrite utilities
 vi.mock('~/server/utils/appwrite', () => ({

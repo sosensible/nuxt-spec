@@ -8,7 +8,8 @@
 
       <div class="flex items-center gap-2">
         <UButton to="/admin/users" variant="soft" color="neutral" icon="i-heroicons-arrow-left">Back</UButton>
-        <UButton variant="outline" color="neutral" icon="i-heroicons-arrow-path" @click="refresh">Refresh</UButton>
+        <UButton variant="outline" color="neutral" icon="i-heroicons-arrow-path" @click="() => refresh()">Refresh
+        </UButton>
       </div>
     </div>
 
@@ -17,9 +18,9 @@
       <div class="h-40 bg-gray-200 dark:bg-gray-800 rounded" />
     </div>
 
-    <UAlert v-else-if="error" color="red" title="Failed to load user" :description="error.message || String(error)">
+    <UAlert v-else-if="error" color="error" title="Failed to load user" :description="error.message || String(error)">
       <template #actions>
-        <UButton label="Retry" @click="refresh" />
+        <UButton label="Retry" @click="() => refresh()" />
       </template>
     </UAlert>
 
@@ -27,26 +28,27 @@
       <UCard class="col-span-2 p-6">
         <div class="flex items-start gap-4">
           <div class="flex-1">
-            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-50">{{ data.item.name || '—' }}</h2>
-            <p class="text-sm text-gray-600 dark:text-gray-400">{{ data.item.email || '—' }}</p>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-50">{{ data?.item?.name || '—' }}</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400">{{ data?.item?.email || '—' }}</p>
 
             <dl class="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div>
                 <dt class="text-gray-500">Status</dt>
-                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ data.item.status }}</dd>
+                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ data?.item?.status }}</dd>
               </div>
               <div>
                 <dt class="text-gray-500">Email verified</dt>
-                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ data.item.emailVerified ? 'Yes' : 'No' }}
+                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ data?.item?.emailVerified ? 'Yes' : 'No' }}
                 </dd>
               </div>
               <div>
                 <dt class="text-gray-500">Created</dt>
-                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ data.item.createdAt || '—' }}</dd>
+                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ data?.item?.createdAt || '—' }}</dd>
               </div>
               <div>
                 <dt class="text-gray-500">Roles</dt>
-                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ (data.item.roles || []).join(', ') || '—' }}
+                <dd class="font-medium text-gray-800 dark:text-gray-200">{{ (data?.item?.roles || []).join(', ') || '—'
+                  }}
                 </dd>
               </div>
             </dl>
@@ -63,10 +65,10 @@
       <div class="space-y-4">
         <UCard class="p-4">
           <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Teams</h3>
-          <div v-if="(data.teams || []).length === 0" class="text-sm text-gray-600 dark:text-gray-400">No teams found
+          <div v-if="(data?.teams || []).length === 0" class="text-sm text-gray-600 dark:text-gray-400">No teams found
           </div>
           <ul v-else class="space-y-2">
-            <li v-for="t in data.teams" :key="t.id" class="flex items-center justify-between">
+            <li v-for="t in data?.teams" :key="t.id" class="flex items-center justify-between">
               <div>
                 <div class="text-sm font-medium">{{ t.name || t.id }}</div>
                 <div class="text-xs text-gray-500">{{ t.description || '' }}</div>

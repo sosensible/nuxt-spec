@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import type { UserRecord, UpdateUserPayload, ApiError } from '../../types/admin'
+import type { UserRecord, UpdateUserPayload, ApiError } from '~/types/admin'
 
 describe('PATCH /api/admin/users/:id', () => {
   it('should accept valid update payload', () => {

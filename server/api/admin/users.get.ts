@@ -72,9 +72,10 @@ export default defineEventHandler(async (event): Promise<PagedResponse<UserRecor
     }))
 
     // Build response
+  const lastId = result.users?.at(-1)?.$id ?? null
     const response: PagedResponse<UserRecord> = {
       items,
-      cursor: result.users.length === pageSize ? result.users[result.users.length - 1].$id : null,
+      cursor: result.users && result.users.length === pageSize ? lastId : null,
       totalCount: result.total,
     }
 

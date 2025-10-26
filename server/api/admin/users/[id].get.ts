@@ -73,7 +73,9 @@ export default defineEventHandler(async (event): Promise<UserDetailResponse | Ap
               id: t.$id,
               name: t.name,
               description: t.description,
-              roles: membership.roles ?? membership.role ?? undefined,
+              roles: Array.isArray(membership.roles)
+                ? (membership.roles as string[])
+                : (typeof membership.role === 'string' ? [membership.role] : undefined),
             })
           }
         } catch {

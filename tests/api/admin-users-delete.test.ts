@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import type { ApiError } from '../../types/admin'
+import type { ApiError } from '~/types/admin'
 
 describe('DELETE /api/admin/users/:id', () => {
   it('should require user ID in URL', () => {

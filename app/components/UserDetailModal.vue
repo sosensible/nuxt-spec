@@ -21,7 +21,7 @@
         </div>
       </div>
 
-      <UAlert v-else-if="error" color="red" :description="errorMessage" />
+      <UAlert v-else-if="error" color="error" :description="errorMessage" />
 
       <div v-else class="space-y-4">
         <div>
