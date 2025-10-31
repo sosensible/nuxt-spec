@@ -33,3 +33,4 @@ app/coverage/*
 build/
 .parcel-cache/
 coverage/
+todo.md
