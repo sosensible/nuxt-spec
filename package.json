@@ -18,7 +18,8 @@
     "e2e:headed": "playwright test --headed",
     "e2e:debug": "playwright test --debug",
     "env:auth": "node -e \"const fs=require('fs');fs.copyFileSync('.env.example','.env');console.log('.env.example -> .env');\"",
-    "env:auth:ps": "powershell -NoProfile -Command \"Copy-Item -Path .\\.env.example -Destination .\\.env -Force; Write-Host '.env.example -> .env'\""
+    "env:auth:ps": "powershell -NoProfile -Command \"Copy-Item -Path .\\.env.example -Destination .\\.env -Force; Write-Host '.env.example -> .env'\"",
+    "check:devtools": "node ./scripts/check-devtools.js"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.71",
@@ -44,6 +45,7 @@
     "eslint": "^9.38.0",
     "happy-dom": "^20.0.8",
     "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.3",
     "vue-tsc": "^3.1.2"
   },

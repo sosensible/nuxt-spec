@@ -34,7 +34,8 @@ export default defineNuxtConfig({
   // Enable Nuxt DevTools during development to inspect components, state and overlays
   // Set to `true` for local development. For CI / production builds this should be false.
   devtools: {
-    enabled: true
+    // Only enable devtools in development environment
+    enabled: process.env.NODE_ENV === 'development'
   },
 
   // Runtime config for password reset emails

@@ -13,7 +13,7 @@
 
 import type { H3Event } from 'h3'
 import { createError } from 'h3'
-import { createAppwriteSessionClient, createAccountService } from '../utils/appwrite'
+import { createAppwriteSessionClient, createAccountService, createAppwriteClient, createTeamsService } from '../utils/appwrite'
 import { getSessionFromCookie } from '../utils/auth'
 
 /**
@@ -57,15 +57,54 @@ export async function requireAdminRole(event: H3Event): Promise<string> {
       })
     }
 
-    // MVP: All authenticated users are considered admins
-    // In production, check user.labels, teams, or custom attributes here
-    // Example future implementation:
-    // if (!user.labels?.includes('admin')) {
-    //   throw createError({
-    //     statusCode: 403,
-    //     message: 'Insufficient permissions. Admin role required.',
-    //   })
-    // }
+    // Prefer Teams-based admin check when APPWRITE_ADMIN_TEAM_ID is configured.
+    // This uses the server API key to check team memberships (authoritative).
+    const adminTeamId = process.env.APPWRITE_ADMIN_TEAM_ID
+
+    if (adminTeamId) {
+      try {
+        // Use server client (API key) to inspect team memberships
+        const adminClient = createAppwriteClient()
+        const teamsService = createTeamsService(adminClient)
+
+        // List memberships for the configured admin team and check for the user
+        // Note: listMemberships returns memberships; we check for matching userId
+        // If this call fails (permissions) we fall back to label-checking below.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const rawMemberships: any = await teamsService.listMemberships(adminTeamId)
+        const memberships = rawMemberships?.memberships ?? rawMemberships?.items ?? rawMemberships ?? []
+
+        const isMember = (memberships as Array<Record<string, unknown>>).some(m => {
+          const userIdField = (m as Record<string, unknown>)["userId"] as string | undefined
+          const userIdUnderscore = (m as Record<string, unknown>)["user_id"] as string | undefined
+          const userField = (m as Record<string, unknown>)["user"] as string | undefined
+          const idField = (m as Record<string, unknown>)["$id"] as string | undefined
+          return userIdField === user.$id || userIdUnderscore === user.$id || userField === user.$id || idField === user.$id
+        })
+
+        if (!isMember) {
+          throw createError({ statusCode: 403, message: 'Insufficient permissions. Admin team membership required.' })
+        }
+
+        // User is a member of the admin team
+        return user.$id
+      } catch (err: unknown) {
+        // If the teams check fails due to permission or API errors, fall through
+        // to the label-based check as a safe fallback. Log in development.
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('Admin team membership check failed, falling back to label check:', err)
+        }
+      }
+    }
+
+    // Fallback: require explicit admin label in user.labels
+    const labels = (user as { labels?: string[] }).labels
+    if (!Array.isArray(labels) || !labels.includes('admin')) {
+      throw createError({
+        statusCode: 403,
+        message: 'Insufficient permissions. Admin role required.',
+      })
+    }
 
     // Return user ID for logging and audit purposes
     return user.$id

@@ -15,7 +15,7 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { useAuth } from '~/composables/useAuth'
-import type { User } from '../../types/auth'
+import type { User } from '~/types/auth'
 import { flushPromises } from '@vue/test-utils'
 
 // Mock $fetch - this is an external dependency
