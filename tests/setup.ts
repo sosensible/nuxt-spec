@@ -62,5 +62,25 @@ console.warn = (message: string, ...args: unknown[]) => {
   ) {
     return
   }
+  // Filter out occasional Vue test warnings about non-function slot values
+  if (typeof message === 'string' && message.includes('Non-function value encountered for slot')) {
+    return
+  }
+  // Filter out unresolved test-only UI components that are intentionally not registered
+  if (typeof message === 'string' && message.includes('Failed to resolve component: UFormGroup')) {
+    return
+  }
   originalConsoleWarn(message, ...args)
 }
+
+// Additionally, register lightweight global stubs for a few UI components commonly
+// referenced in unit/functional tests but not loaded in the test environment.
+void import('@vue/test-utils')
+  .then(({ config: vtConfig }) => {
+    vtConfig.global = vtConfig.global || {}
+    vtConfig.global.components = vtConfig.global.components || {}
+    // Simple stubs: render a container so slots still work
+    vtConfig.global.components.UFormGroup = { template: '<div><slot/></div>' }
+  })
+  // ignore failures e.g. when test-utils isn't present at setup time
+  .catch(() => undefined)

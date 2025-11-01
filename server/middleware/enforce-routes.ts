@@ -92,7 +92,6 @@ export default defineEventHandler(async (event: H3Event) => {
     // In case of unexpected error, do not leak internal details. In development
     // it's helpful to log the error so issues can be diagnosed.
     if (process.env.NODE_ENV === 'development') {
-      // eslint-disable-next-line no-console
       console.error('[enforce-routes] middleware error:', err)
     }
     // Allow request to continue on unexpected failures rather than block all traffic.

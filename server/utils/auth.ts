@@ -27,10 +27,11 @@ const appwriteClient = new Client()
  */
 function maybeSetClientHeader(name: string, value: string) {
   try {
-    const setter = (appwriteClient as unknown as Record<string, unknown>).setHeader
+    const setter = (appwriteClient as unknown as { setHeader?: (name: string, value: string) => void }).setHeader
     if (typeof setter === 'function') {
       try {
-        ;(setter as Function).call(appwriteClient, name, value)
+        // call with the client as `this` in case SDK expects it
+        setter.call(appwriteClient, name, value)
       }
       catch (err) {
         if (process.env.NODE_ENV === 'development') console.debug('[server/utils/auth] appwriteClient.setHeader threw', { name, err })
@@ -214,26 +215,29 @@ export function clearSessionCookie(event: H3Event): void {
 // Server-side user helper
 // -------------------------
 
-async function normalizeUserRecord(userRecord: any) {
+async function normalizeUserRecord(userRecord: Record<string, unknown> | null) {
   if (!userRecord) return null
-  const id = userRecord.$id || userRecord.id
-  const email = userRecord.email || userRecord.$email || null
-  const prefs = userRecord.prefs || userRecord.preferences || userRecord.metadata || {}
+  const id = (userRecord['$id'] || userRecord['id']) as string | undefined
+  const email = (userRecord['email'] || userRecord['$email']) as string | null | undefined
+  const prefs = (userRecord['prefs'] || userRecord['preferences'] || userRecord['metadata'] || {}) as Record<string, unknown>
   let labels: string[] = []
-  if (Array.isArray(prefs.labels)) labels = prefs.labels.map(String)
-  else if (Array.isArray(userRecord.labels)) labels = userRecord.labels.map(String)
-  return { id, email, labels }
+  if (Array.isArray((prefs as Record<string, unknown>)['labels'])) labels = ((prefs as Record<string, unknown>)['labels'] as unknown[]).map(String)
+  else if (Array.isArray(userRecord['labels'])) labels = (userRecord['labels'] as unknown[]).map(String)
+  return { id, email: email || null, labels }
 }
 
 export async function fetchTeamDerivedLabels(userId: string): Promise<string[]> {
   try {
-    if (typeof (appwriteTeams as any).listMemberships === 'function') {
-      const memberships = await (appwriteTeams as any).listMemberships(userId)
+    const teamsLike = appwriteTeams as unknown as { listMemberships?: (userId: string) => Promise<unknown> }
+    if (typeof teamsLike.listMemberships === 'function') {
+      const memberships = await teamsLike.listMemberships!(userId)
       const out: string[] = []
-      for (const m of (memberships?.memberships || memberships?.documents || memberships || [])) {
-        const teamName = (m.teamName || m.teamId || m.team || m.$id || '').toString().toLowerCase()
-        const roles = m.roles || m.role || []
-        const roleList = Array.isArray(roles) ? roles : [roles]
+      const docs = (memberships as Record<string, unknown>)?.['memberships'] || (memberships as Record<string, unknown>)?.['documents'] || memberships || []
+      for (const m of docs as unknown[]) {
+        const rec = m as Record<string, unknown>
+        const teamName = String(rec['teamName'] || rec['teamId'] || rec['team'] || rec['$id'] || '').toLowerCase()
+        const roles = rec['roles'] || rec['role'] || []
+        const roleList = Array.isArray(roles) ? roles as unknown[] : [roles]
         for (const r of roleList) {
           if (teamName) out.push(`${teamName}:${String(r)}`)
         }
@@ -266,19 +270,23 @@ export async function getServerUser(event: H3Event) {
   try {
     const authHeader = String(event.node.req.headers.authorization || '')
     const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
-    if (bearer) {
-          if (bearer.startsWith('user:')) {
+      if (bearer) {
+        if (bearer.startsWith('user:')) {
         const userId = bearer.split(':', 2)[1]
         if (userId) {
           const cached = userCache.get(userId)
           if (cached && cached.expiresAt > Date.now()) return { id: userId, labels: cached.labels }
-              const authMod = await import('./auth')
-              const base = await (authMod as any).fetchUserById(userId)
-              if (!base) return null
-              const teamLabels = await (authMod as any).fetchTeamDerivedLabels(userId)
-          const labels = Array.from(new Set([...(base.labels || []), ...teamLabels]))
-          userCache.set(userId, { labels, expiresAt: Date.now() + CACHE_TTL_MS })
-          return { id: userId, email: base.email, labels }
+                const authMod = (await import('./auth')) as {
+                  fetchUserById?: (id: string) => Promise<Record<string, unknown> | null>
+                  fetchTeamDerivedLabels?: (id: string) => Promise<string[]>
+                }
+                const baseRec = authMod.fetchUserById ? await authMod.fetchUserById(userId) : null
+                if (!baseRec) return null
+                const teamLabels = authMod.fetchTeamDerivedLabels ? await authMod.fetchTeamDerivedLabels(userId) : []
+            const base = (await normalizeUserRecord(baseRec as Record<string, unknown>))
+            const labels = Array.from(new Set([...(base?.labels || []), ...teamLabels]))
+            userCache.set(userId, { labels, expiresAt: Date.now() + CACHE_TTL_MS })
+            return { id: userId, email: base?.email, labels }
         }
       }
       // Production JWT verification: support HS256 (shared secret) and RS256 (public key)
@@ -329,13 +337,17 @@ export async function getServerUser(event: H3Event) {
             if (userId) {
               const cached = userCache.get(String(userId))
               if (cached && cached.expiresAt > Date.now()) return { id: String(userId), labels: cached.labels }
-              const authMod = await import('./auth')
-              const base = await (authMod as any).fetchUserById(String(userId))
-              if (!base) return null
-              const teamLabels = await (authMod as any).fetchTeamDerivedLabels(String(userId))
-              const labels = Array.from(new Set([...(base.labels || []), ...teamLabels]))
+              const authMod = (await import('./auth')) as {
+                fetchUserById?: (id: string) => Promise<Record<string, unknown> | null>
+                fetchTeamDerivedLabels?: (id: string) => Promise<string[]>
+              }
+              const baseRec = authMod.fetchUserById ? await authMod.fetchUserById(String(userId)) : null
+              if (!baseRec) return null
+              const teamLabels = authMod.fetchTeamDerivedLabels ? await authMod.fetchTeamDerivedLabels(String(userId)) : []
+              const base = (await normalizeUserRecord(baseRec as Record<string, unknown>))
+              const labels = Array.from(new Set([...(base?.labels || []), ...teamLabels]))
               userCache.set(String(userId), { labels, expiresAt: Date.now() + CACHE_TTL_MS })
-              return { id: String(userId), email: base.email, labels }
+              return { id: String(userId), email: base?.email, labels }
             }
           }
         }
@@ -357,14 +369,18 @@ export async function getServerUser(event: H3Event) {
             maybeSetClientHeader('cookie', '')
             return { id: userId, labels: cached.labels }
           }
-          const authMod = await import('./auth')
-          const base = await (authMod as any).fetchUserById(userId)
-          if (!base) return null
-          const teamLabels = await (authMod as any).fetchTeamDerivedLabels(userId)
-          const labels = Array.from(new Set([...(base.labels || []), ...teamLabels]))
+          const authMod = (await import('./auth')) as {
+            fetchUserById?: (id: string) => Promise<Record<string, unknown> | null>
+            fetchTeamDerivedLabels?: (id: string) => Promise<string[]>
+          }
+          const baseRec = authMod.fetchUserById ? await authMod.fetchUserById(userId) : null
+          if (!baseRec) return null
+          const teamLabels = authMod.fetchTeamDerivedLabels ? await authMod.fetchTeamDerivedLabels(userId) : []
+          const base = await normalizeUserRecord(baseRec as Record<string, unknown>)
+          const labels = Array.from(new Set([...(base?.labels || []), ...teamLabels]))
           userCache.set(userId, { labels, expiresAt: Date.now() + CACHE_TTL_MS })
           maybeSetClientHeader('cookie', '')
-          return { id: userId, email: base.email, labels }
+          return { id: userId, email: base?.email, labels }
         }
       }
       catch (err) {

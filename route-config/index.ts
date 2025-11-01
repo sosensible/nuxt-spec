@@ -72,7 +72,7 @@ export async function loadRules(): Promise<RouteRule[]> {
   try {
     // Load any files in the same folder (preferred). Grab the module keys so
     // we can filter out this index file and deduplicate rules by pattern.
-    const modulesA = import.meta.glob('./*.{ts,js,json}', { eager: true }) as Record<string, unknown>
+  const modulesA = (import.meta as any).glob('./*.{ts,js,json}', { eager: true }) as Record<string, unknown>
     const entries = Object.entries(modulesA || {})
     const patternMap = new Map<string, RouteRule>()
     for (const [key, mod] of entries) {
