@@ -48,89 +48,31 @@ else {
     // Determine required labels for this route by loading route-config
     const route = useRoute()
 
-    function globToRegExp(glob: string): RegExp {
-      // Robust glob -> RegExp converter: '**' => '.*', '*' => '[^/]*', escape other meta chars.
-      // If the glob ends with '/**', make the trailing '/**' optional so '/admin/**' matches both '/admin' and '/admin/...'
-      if (glob.endsWith('/**')) {
-        const prefix = glob.slice(0, -3)
-        let pre = ''
-        for (let i = 0; i < prefix.length; i++) {
-          const ch = prefix[i]
-          if (ch === '*') {
-            if (i + 1 < prefix.length && prefix[i + 1] === '*') {
-              pre += '.*'
-              i++
-            }
-            else {
-              pre += '[^/]*'
-            }
-          }
-          else {
-            const meta = '\\.+?^${}()|[]'
-            if (ch && meta.includes(ch)) pre += '\\' + ch
-            else pre += ch || ''
-          }
-        }
-        return new RegExp('^' + pre + '(?:/.*)?' + '$')
-      }
 
-      let res = ''
-      for (let i = 0; i < glob.length; i++) {
-        const ch = glob[i]
-        if (ch === '*') {
-          if (i + 1 < glob.length && glob[i + 1] === '*') {
-            res += '.*'
-            i++
-          }
-          else {
-            res += '[^/]*'
-          }
-        }
-        else {
-          const meta = '\\.+?^${}()|[]'
-          if (ch && meta.includes(ch)) res += '\\' + ch
-          else res += ch || ''
-        }
-      }
-      return new RegExp('^' + res + '$')
-    }
 
     let requiredLabels: string[] | undefined
     let labelsMode: 'any' | 'all' = 'any'
     try {
-      // Use a static import so the route-config module is included in the
-      // bundle and loadRules is available at runtime. Dynamic imports were
-      // causing intermittent "failed to load" behavior in some dev/SSR
-      // environments.
+      // Use the centralized helper to check access for the current path.
+      // We import the module so bundlers include it in the client bundle.
       const rc = await import('../../route-config/index')
-      const rules = await rc.loadRules()
+      const res = await rc.checkAccessForPath(route.path, user.value || null)
       if (process.env.NODE_ENV === 'development') {
-        try {
-          console.debug('[admin-layout] rules (raw):', JSON.parse(JSON.stringify(rules)))
-        }
-        catch {
-          console.debug('[admin-layout] rules (raw):', rules)
-        }
-      }
-      if (process.env.NODE_ENV === 'development') {
-        // Print each rule's pattern, generated regex and whether it matches the current path
-        try {
-          console.debug('[admin-layout] route.path =', route.path)
-          for (const r of rules) {
-            const regex = globToRegExp(r.pattern)
-            console.debug('[admin-layout] rule pattern:', r.pattern, '-> regex:', regex, 'matches?', regex.test(route.path))
-          }
-        }
-        catch {
-          // ignore
-        }
+        console.debug('[admin-layout] checkAccessForPath result:', JSON.parse(JSON.stringify(res)))
       }
 
-      const match = rules.find((r: { pattern: string; labels?: string[]; labelsMode?: 'any' | 'all' }) => globToRegExp(r.pattern).test(route.path))
-      console.debug('[admin-match] matched rule:', match)
-      if (match) {
-        requiredLabels = match.labels
-        labelsMode = match.labelsMode || 'any'
+      if (res.reason === 'not_authenticated') {
+        // If the rule indicates authentication is required but there's no user,
+        // redirect to login. (Normally checkAuth above already handled this,
+        // but keep this for defense-in-depth.)
+        navigateTo('/login')
+      }
+      else if (res.reason === 'missing_labels') {
+        navigateTo('/unauthorized')
+      }
+      else {
+        requiredLabels = res.rule?.labels
+        labelsMode = (res.rule?.labelsMode as 'any' | 'all') || 'any'
       }
     }
     catch (err) {

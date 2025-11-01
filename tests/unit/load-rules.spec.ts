@@ -9,7 +9,8 @@ describe('route-config loader', () => {
     const adminRule = rules.find(r => r.pattern === '/admin/**')
     expect(adminRule).toBeDefined()
     expect(adminRule?.labels).toBeDefined()
-    expect(adminRule?.labels).toContain('adminx')
+    // protected.json currently declares 'admin' as the label for /admin/**
+    expect(adminRule?.labels).toContain('admin')
   })
 
   it('matchRule finds the admin rule for /admin and /admin/anything', async () => {

@@ -11,7 +11,11 @@ export default defineVitestConfig({
       }
     },
     setupFiles: ['./tests/setup.ts'],
-    include: ['tests/functional/**/*.test.ts', 'tests/api/**/*.test.ts'],
+    include: [
+      'tests/functional/**/*.test.ts',
+      'tests/api/**/*.test.ts',
+      'tests/unit/**/*.spec.ts'
+    ],
     exclude: ['tests/e2e/**/*', 'node_modules/**']
   },
   // Use tsconfig paths so `~`/`@` from tsconfig are available to Vitest

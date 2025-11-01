@@ -141,14 +141,48 @@ export async function loadRules(): Promise<RouteRule[]> {
 }
 
 export function matchRule(path: string, rules: RouteRule[]): RouteRule | undefined {
-  return rules.find(r => globToRegExp(r.pattern).test(path))
+  // Prefer the most specific rule when multiple patterns match the same path.
+  // Specificity heuristic: number of non-wildcard characters (higher = more specific),
+  // then longer pattern length as a tie-breaker.
+  const sorted = rules.slice().sort((a, b) => {
+    const aScore = (a.pattern || '').replace(/\*/g, '').length
+    const bScore = (b.pattern || '').replace(/\*/g, '').length
+    if (bScore !== aScore) return bScore - aScore
+    return (b.pattern || '').length - (a.pattern || '').length
+  })
+  return sorted.find(r => globToRegExp(r.pattern).test(path))
 }
 
-export function evaluateLabels(rule: RouteRule | undefined, userLabels: string[] = []): boolean {
+export function evaluateLabels(rule: RouteRule | undefined, userLabels: readonly string[] = []): boolean {
   if (!rule || !rule.labels || rule.labels.length === 0) return true
   const mode = rule.labelsMode || 'any'
   if (mode === 'all') return rule.labels!.every(lbl => userLabels.includes(lbl))
   return rule.labels!.some(lbl => userLabels.includes(lbl))
+}
+
+/**
+ * Check access for a given path and user context.
+ * This is a reusable helper that can be called from middleware, plugins
+ * or layouts. It loads rules (if needed), finds the matching rule, and
+ * evaluates authentication and label requirements.
+ */
+export async function checkAccessForPath(path: string, user: { labels?: readonly string[] } | null) {
+  const rules = await loadRules()
+  const match = matchRule(path, rules)
+
+  // If the rule requires login but user is not present, deny
+  if (match?.requireLogin && !user) {
+    return { allowed: false, reason: 'not_authenticated' as const, rule: match }
+  }
+
+  // Evaluate labels
+  const userLabels = user?.labels || []
+  const labelsOk = evaluateLabels(match, userLabels)
+  if (!labelsOk) {
+    return { allowed: false, reason: 'missing_labels' as const, rule: match }
+  }
+
+  return { allowed: true, reason: 'ok' as const, rule: match }
 }
 
 export default {

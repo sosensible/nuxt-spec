@@ -3,7 +3,7 @@
     "pattern": "/admin/**",
     "requireLogin": true,
     "labels": [
-      "adminx"
+      "admin"
     ]
   },
   {

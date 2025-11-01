@@ -2,7 +2,8 @@ import { describe, it, expect } from 'vitest'
 import { loadRules } from '../../route-config/index'
 
 function globToRegExp(glob: string): RegExp {
-  const escaped = glob.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')
+  // Escape regex metacharacters safely (fixed character class)
+  const escaped = glob.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
   const withSlashStarStarOptional = escaped.replace(/\/\\\*\\\*/g, '(?:/.*)?')
   const withStarStar = withSlashStarStarOptional.replace(/\\\*\\\*/g, '.*')
   const withStar = withStarStar.replace(/\\\*/g, '[^/]*')

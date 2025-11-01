@@ -39,8 +39,12 @@ describe('route-guard plugin', () => {
     // capture navigateTo calls
   ;(globalThis as unknown as { navigateTo: (url: string) => { redirected: string } }).navigateTo = (url: string) => ({ redirected: url })
 
-    // Import the plugin fresh so it runs with the above globals
-    await import('../../plugins/route-guard.client.ts')
+  // Import the plugin fresh so it runs with the above globals
+  await import('../../plugins/route-guard.client.ts')
+
+  // Some test environments rely on an explicit registration hook. If the plugin
+  // exported a test hook, call it to ensure the guard is registered.
+  if ((globalThis as any).__registerRouteGuard) (globalThis as any).__registerRouteGuard()
 
     // retrieve the registered guard
     registeredGuard = router.__getGuard()
