@@ -31,6 +31,13 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2025-01-15',
 
+  // Avoid native sharp dependency in CI / Windows environments by using the
+  // JS-based squoosh provider. This removes the need for platform-specific
+  // prebuilt sharp binaries and the related build warnings.
+  image: {
+    provider: 'squoosh'
+  },
+
   // Enable Nuxt DevTools during development to inspect components, state and overlays
   // Set to `true` for local development. For CI / production builds this should be false.
   devtools: {
