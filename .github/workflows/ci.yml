@@ -25,6 +25,9 @@ jobs:
         with:
           # Pin to Node 22.x for CI consistency
           node-version: '22.x'
+          # Prevent setup-node from attempting to run package-manager cache
+          # restore before pnpm is installed (causes 'pnpm not found').
+          package-manager-cache: false
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
