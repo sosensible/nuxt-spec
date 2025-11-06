@@ -22,7 +22,10 @@ jobs:
           cache: 'pnpm'
 
       - name: Install pnpm
-        run: npm i -g pnpm@10
+        # Use the official action to reliably install pnpm and put it on PATH
+        uses: pnpm/action-setup@v4
+        with:
+          version: '10.18.2'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
