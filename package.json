@@ -18,12 +18,13 @@
     "e2e:headed": "playwright test --headed",
     "e2e:debug": "playwright test --debug",
     "env:auth": "node -e \"const fs=require('fs');fs.copyFileSync('.env.example','.env');console.log('.env.example -> .env');\"",
-    "env:auth:ps": "powershell -NoProfile -Command \"Copy-Item -Path .\\.env.example -Destination .\\.env -Force; Write-Host '.env.example -> .env'\""
+    "env:auth:ps": "powershell -NoProfile -Command \"Copy-Item -Path .\\.env.example -Destination .\\.env -Force; Write-Host '.env.example -> .env'\"",
+    "check:devtools": "node ./scripts/check-devtools.js"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.71",
     "@iconify-json/simple-icons": "^1.2.55",
-    "@nuxt/image": "1.11.0",
+    "@nuxt/image": "2.0.0",
     "@nuxt/scripts": "0.13.0",
     "@nuxt/ui": "^4.1.0",
     "@pinia/nuxt": "^0.11.2",
@@ -43,12 +44,14 @@
     "dotenv": "^17.2.3",
     "eslint": "^9.38.0",
     "happy-dom": "^20.0.8",
+    "sharp": "^0.34.4",
     "typescript": "^5.9.3",
+    "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.3",
     "vue-tsc": "^3.1.2"
   },
   "resolutions": {
     "unimport": "4.1.1"
   },
-  "packageManager": "pnpm@10.18.2"
+  "packageManager": "pnpm@10.20.0+sha512.cf9998222162dd85864d0a8102e7892e7ba4ceadebbf5a31f9c2fce48dfce317a9c53b9f6464d1ef9042cba2e02ae02a9f7c143a2b438cd93c91840f0192b9dd"
 }

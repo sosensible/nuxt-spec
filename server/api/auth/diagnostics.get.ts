@@ -7,15 +7,28 @@ export default defineEventHandler(async (event) => {
     const sessionSecret = getSessionFromCookie(event)
     const headers = getRequestHeaders(event) as Record<string, string | undefined>
 
-    const result: Record<string, unknown> = {
+    // Only expose sensitive cookie contents or raw headers in development.
+    // In production we return a minimal response to avoid leaking session secrets.
+    const basic = {
       ok: true,
       cookiePresent: !!sessionSecret,
-      cookieValue: sessionSecret ?? null,
+    } as Record<string, unknown>
+
+    if (process.env.NODE_ENV !== 'development') {
+      // Minimal, non-sensitive diagnostics in production
+      return basic
+    }
+
+    // Development-only detailed diagnostics (masked)
+    const devResult: Record<string, unknown> = {
+      ...basic,
+      // Mask cookie value to avoid full secret leak even in dev logs
+      cookieValue: sessionSecret ? `${String(sessionSecret).slice(0, 8)}...` : null,
       requestCookieHeader: headers.cookie ?? null,
     }
 
     if (!sessionSecret) {
-      return result
+      return devResult
     }
 
     // Attempt to fetch Appwrite user with session secret
@@ -24,14 +37,14 @@ export default defineEventHandler(async (event) => {
     try {
       const appwriteUser = await account.get()
       const user = mapAppwriteUser(appwriteUser)
-      result.user = user
+      devResult.user = user
     }
     catch (err: unknown) {
       const e = err as Record<string, unknown>
-      result.userError = (e && (e.message as string | undefined)) || String(err)
+      devResult.userError = (e && (e.message as string | undefined)) || String(err)
     }
 
-    return result
+    return devResult
   }
   catch (err: unknown) {
     if (process.env.NODE_ENV === 'development') {

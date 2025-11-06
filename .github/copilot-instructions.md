@@ -44,7 +44,7 @@ Auto-generated base + repository-specific notes. Last updated: 2025-10-31
 
 ## Testing & CI hints
 
-- Unit tests: use Vitest (see `vitest.config.ts`). Runs headless by default. Coverage via `pnpm test:coverage`.
+- Unit tests: use Vitest (see `vitest.config.ts`). Runs headless by default. Coverage via `pnpm test:coverage`. Use relative imports for test files over alias paths. (e.g. `import { useAuth } from '../../composables/useAuth'`).
 - E2E: Playwright tests live under `tests/e2e/` and use `playwright.config.ts`.
 
 ## What to change in this file

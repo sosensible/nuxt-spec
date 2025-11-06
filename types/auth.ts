@@ -19,6 +19,8 @@ export interface User {
   emailVerified: boolean
   /** Avatar URL (from GitHub OAuth or custom) */
   avatar?: string
+  /** Optional application labels (mapped from Appwrite labels) */
+  labels?: string[]
   /** Registration provider */
   provider: 'email' | 'github'
   /** Account creation timestamp */
@@ -186,6 +188,7 @@ export function mapAppwriteUser(appwriteUser: AppwriteUser): User {
     name: appwriteUser.name,
     emailVerified: appwriteUser.emailVerification,
     avatar,
+    labels: appwriteUser.labels || [],
     provider: appwriteUser.labels?.includes('oauth:github') ? 'github' : 'email',
     createdAt: new Date(appwriteUser.$createdAt),
   }

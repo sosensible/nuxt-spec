@@ -1,0 +1,22 @@
+[
+  {
+    "pattern": "/admin/**",
+    "requireLogin": true,
+    "labels": [
+      "admin"
+    ]
+  },
+  {
+    "pattern": "/test-protected",
+    "requireLogin": true
+  },
+  {
+    "pattern": "/admin/secure/**",
+    "requireLogin": true,
+    "labels": [
+      "admin",
+      "staff"
+    ],
+    "labelsMode": "all"
+  }
+]

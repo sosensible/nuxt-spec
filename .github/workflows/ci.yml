@@ -6,6 +6,11 @@ jobs:
   ci:
     runs-on: ${{ matrix.os }}
 
+    # Ensure CI uses a non-conflicting port for Nuxt to avoid "port in use"
+    # failures when multiple jobs run concurrently on the same runner image.
+    env:
+      NUXT_PORT: 3001
+
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -15,17 +20,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
       - name: Install node
         uses: actions/setup-node@v5
         with:
-          node-version: ${{ matrix.node }}
-          cache: pnpm
+          # Pin to Node 22.x for CI consistency
+          node-version: '22.x'
+          # Prevent setup-node from attempting to run package-manager cache
+          # restore before pnpm is installed (causes 'pnpm not found').
+          package-manager-cache: false
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Devtools guard
+        run: NODE_ENV=production pnpm run check:devtools
 
       - name: Lint
         run: pnpm run lint
@@ -35,6 +46,12 @@ jobs:
 
       - name: Test
         run: pnpm run test
+
+      - name: Clean previous build output
+        run: |
+          # Ensure leftover output from prior runs (or cache) does not block the build.
+          # On Linux (CI) this is safe; the command ignores errors.
+          rm -rf .output || true
 
       - name: Build
         run: pnpm run build
