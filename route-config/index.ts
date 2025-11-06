@@ -70,42 +70,45 @@ export async function loadRules(): Promise<RouteRule[]> {
   // Vite's import.meta.glob requires literal patterns. Use each literal
   // pattern explicitly and merge results.
   try {
-    // Load any files in the same folder (preferred). Grab the module keys so
-    // we can filter out this index file and deduplicate rules by pattern.
-  const modulesA = (import.meta as any).glob('./*.{ts,js,json}', { eager: true }) as Record<string, unknown>
-    const entries = Object.entries(modulesA || {})
+    // Load any files in the same folder (preferred). Use non-eager glob to
+    // avoid having the same file both statically and dynamically imported
+    // (which causes Vite chunking warnings). We'll asynchronously import
+    // each module and merge the results.
+  // `import.meta.glob` is provided by Vite at build/runtime. Cast `import.meta`
+  // to `any` here so TypeScript in CI/typecheck doesn't fail when Vite types
+  // aren't available in the effective tsconfig used by the typechecker.
+  const modules = (import.meta as any).glob('./*.{ts,js,json}', { eager: false }) as Record<string, () => Promise<Record<string, unknown>>>
     const patternMap = new Map<string, RouteRule>()
-    for (const [key, mod] of entries) {
+    for (const key of Object.keys(modules || {})) {
       // ignore this index file
       if (key.includes('/index.') || key.endsWith('index.ts') || key.endsWith('index.js')) continue
-      const m = mod as { default?: RouteRule[] }
-      const arr = m?.default || []
-      for (const r of arr) {
-        if (!r || !r.pattern) continue
-        // prefer first-seen rule for a given pattern
-        if (!patternMap.has(r.pattern)) patternMap.set(r.pattern, r)
+      try {
+        const modLoader = modules[key]
+        if (!modLoader) continue
+        const mod = await modLoader()
+        const m = mod as { default?: RouteRule[] }
+        const arr = m?.default || []
+        for (const r of arr) {
+          if (!r || !r.pattern) continue
+          // prefer first-seen rule for a given pattern
+          if (!patternMap.has(r.pattern)) patternMap.set(r.pattern, r)
+        }
+      }
+      catch (e) {
+        // ignore failures to import a single module; continue with others
+        // but log to help debugging in development
+        if (process.env.NODE_ENV === 'development') console.debug('[route-config] failed to import', key, e)
       }
     }
     if (patternMap.size > 0) rules = rules.concat(Array.from(patternMap.values()))
   }
-  catch {
-    // ignore
+  catch (e) {
+    // log unexpected errors in development for easier debugging
+    if (process.env.NODE_ENV === 'development') console.debug('[route-config] glob load error', e)
   }
 
-  // As a last-resort, attempt to dynamically import a common file name
-  if (rules.length === 0) {
-    try {
-      const mod = await import('./protected')
-      if (mod?.default) {
-        for (const r of mod.default as RouteRule[]) {
-          if (r && r.pattern && !rules.find(rr => rr.pattern === r.pattern)) rules.push(r)
-        }
-      }
-    }
-    catch {
-      // ignore
-    }
-  }
+  // No dynamic fallback needed because the glob-based import covered
+  // local files. If no rules were found, we'll return an empty array.
 
   if (process.env.NODE_ENV === 'development') {
     // Print the full rules as JSON to help debug missing properties (labels, etc.)
