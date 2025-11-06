@@ -23,8 +23,6 @@ jobs:
       - name: Install pnpm
         # Use the official action to reliably install pnpm and put it on PATH
         uses: pnpm/action-setup@v4
-        with:
-          version: '10.20.0'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
