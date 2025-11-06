@@ -25,7 +25,6 @@ jobs:
         with:
           # Pin to Node 22.x for CI consistency
           node-version: '22.x'
-          cache: 'pnpm'
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
