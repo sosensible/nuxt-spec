@@ -48,5 +48,11 @@ jobs:
       - name: Test
         run: pnpm run test
 
+      - name: Clean previous build output
+        run: |
+          # Ensure leftover output from prior runs (or cache) does not block the build.
+          # On Linux (CI) this is safe; the command ignores errors.
+          rm -rf .output || true
+
       - name: Build
         run: pnpm run build
