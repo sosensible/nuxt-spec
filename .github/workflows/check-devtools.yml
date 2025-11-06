@@ -9,6 +9,8 @@ on:
 jobs:
   devtools-check:
     runs-on: ubuntu-latest
+    env:
+      NUXT_PORT: 3001
     steps:
       - name: Checkout
         uses: actions/checkout@v4

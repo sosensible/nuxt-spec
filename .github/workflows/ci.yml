@@ -6,6 +6,11 @@ jobs:
   ci:
     runs-on: ${{ matrix.os }}
 
+    # Ensure CI uses a non-conflicting port for Nuxt to avoid "port in use"
+    # failures when multiple jobs run concurrently on the same runner image.
+    env:
+      NUXT_PORT: 3001
+
     strategy:
       matrix:
         os: [ubuntu-latest]

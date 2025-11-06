@@ -74,10 +74,12 @@ export async function loadRules(): Promise<RouteRule[]> {
     // avoid having the same file both statically and dynamically imported
     // (which causes Vite chunking warnings). We'll asynchronously import
     // each module and merge the results.
-  // `import.meta.glob` is provided by Vite at build/runtime. Cast `import.meta`
-  // to `any` here so TypeScript in CI/typecheck doesn't fail when Vite types
-  // aren't available in the effective tsconfig used by the typechecker.
-  const modules = (import.meta as any).glob('./*.{ts,js,json}', { eager: false }) as Record<string, () => Promise<Record<string, unknown>>>
+  // `import.meta.glob` is provided by Vite at build/runtime. Provide a local
+  // lightweight typing so we avoid `any` and satisfy the linter in CI/typecheck.
+  type ImportMetaWithGlob = ImportMeta & {
+    glob: (pattern: string, options?: { eager?: boolean } | undefined) => Record<string, () => Promise<Record<string, unknown>>> 
+  }
+  const modules = (import.meta as unknown as ImportMetaWithGlob).glob('./*.{ts,js,json}', { eager: false })
     const patternMap = new Map<string, RouteRule>()
     for (const key of Object.keys(modules || {})) {
       // ignore this index file

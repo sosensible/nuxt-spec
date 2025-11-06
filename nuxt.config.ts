@@ -16,7 +16,9 @@ export default defineNuxtConfig({
   ],
 
   devServer: {
-    port: 3000
+    // Allow CI / concurrent runs to override the port via environment.
+    // Prefer standard PORT, then NUXT_PORT, otherwise fall back to 3000.
+    port: Number(process.env.PORT || process.env.NUXT_PORT || 3000)
   },
 
   // Route rules for performance optimization
@@ -48,7 +50,12 @@ export default defineNuxtConfig({
   // Runtime config for password reset emails
   runtimeConfig: {
     public: {
-      appUrl: process.env.NUXT_PUBLIC_APP_URL || 'http://localhost:3000'
+      // Keep runtime public app URL in sync with the chosen port. This
+      // prefers an explicit NUXT_PUBLIC_APP_URL, then derives from the
+      // environment port if set, otherwise defaults to localhost:3000.
+      appUrl:
+        process.env.NUXT_PUBLIC_APP_URL ||
+        `http://localhost:${process.env.PORT || process.env.NUXT_PORT || 3000}`
     }
   }
 })
