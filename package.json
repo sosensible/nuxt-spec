@@ -30,7 +30,7 @@
     "@pinia/nuxt": "^0.11.2",
     "@unhead/vue": "^2.0.17",
     "node-appwrite": "^20.2.1",
-    "nuxt": "^4.2.0",
+    "nuxt": "^4.2.1",
     "pinia": "^3.0.3"
   },
   "devDependencies": {
